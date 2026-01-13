@@ -2,6 +2,23 @@
 
 import React, { useState } from 'react';
 
+// Mock Data moved to client-side for Static Export compatibility
+const MOCK_DB: Record<string, any> = {
+  'A17': {
+    id: 'A17',
+    roastDate: '2023-10-25',
+    origin: 'Ethiopia / Colombia',
+    tastingNotes: ['Jasmine', 'Honey', 'Bergamot'],
+    roaster: 'Alex',
+    status: 'Verified',
+    safetyChecks: {
+      pesticides: 'Passed',
+      mycotoxins: 'Passed',
+      heavyMetals: 'Passed'
+    }
+  }
+};
+
 export const Traceability = () => {
   const [batchId, setBatchId] = useState('');
   const [data, setData] = useState<any>(null);
@@ -15,20 +32,17 @@ export const Traceability = () => {
     setError('');
     setData(null);
 
-    try {
-      const res = await fetch(`/api/batch/${batchId}`);
-      const result = await res.json();
-
-      if (!res.ok) {
-        throw new Error(result.error || 'Failed to trace batch');
+    // Simulate network delay
+    setTimeout(() => {
+      const result = MOCK_DB[batchId.toUpperCase()];
+      
+      if (result) {
+        setData(result);
+      } else {
+        setError('Batch not found. Please check your code (e.g., "A17").');
       }
-
-      setData(result);
-    } catch (err) {
-      setError('Batch not found. Please check your code (e.g., "A17").');
-    } finally {
       setLoading(false);
-    }
+    }, 800);
   };
 
   return (
