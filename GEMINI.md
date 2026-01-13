@@ -6,6 +6,8 @@ A boutique coffee platform allowing users to:
 2.  **Portfolio (Ledger)**: View favorited/hearted coffees, saved blends, and recommendations.
 3.  **Blend**: Create custom blends by combining up to 10 distinct coffees.
 4.  **Visualize**: Understand flavor profiles via multi-mode visualizations (Petal, Graph, 3D, Bar).
+5.  **Configure**: Design the physical product (Bag, Label, Grind) in 3D.
+6.  **Consult**: Interact with "The Legend" - an AI coffee expert.
 
 ## Functional Requirements
 
@@ -17,7 +19,7 @@ A boutique coffee platform allowing users to:
     -   Recommended Blends.
 -   **Filtering**: By Country, Coffee Type (Process, Roast Level, etc.).
 
-### 2. The Blend Builder (The Core Tool)
+### 2. The Blend Builder (Step 1)
 -   **Selection**: User selects up to 10 coffees from their Portfolio or the Store.
 -   **Composition**:
     -   Sliders OR Percentage Input Boxes (User preference saved).
@@ -26,26 +28,39 @@ A boutique coffee platform allowing users to:
     -   Dynamic calculation based on % composition.
     -   Tiered pricing (250g vs 1kg base rates).
 
-### 3. Visualizations (The "Petal" & More)
--   **Data Model**: Each coffee has 5 traits scored 1-10 (e.g., Aroma, Body, Acidity, Sweetness, Aftertaste).
--   **Modes**:
-    -   **Petal/Radar Chart**: 5-axis chart showing the aggregate profile.
-    -   **Bar Chart**: Shows constitution (e.g., 40% Brazil, 60% Ethiopia) and color-coded contributions.
-    -   **3D/Graph**: Alternative view for accessibility/preference.
--   **Interactivity**: Hover states to reveal detailed info per element.
+### 3. The Bag Configurator (Step 2)
+-   **3D Visualizer**: Real-time rendering of the bag.
+-   **Customization**:
+    -   **Bag**: Style, Color, Finish (Matte/Gloss).
+    -   **Label**: Upload Front/Back images. Adjust Size & Position.
+    -   **Context**: Switch backgrounds (Kitchen with Espresso Machine, Retail Shelf, Coffee Table).
+-   **Extras**: Grind option (Whole Bean vs Ground).
+
+### 4. "The Legend" (AI Advisor)
+-   **Persona**: Knowledgeable, helpful, non-intrusive expert.
+-   **Capabilities**:
+    -   **Optimization**: "This blend is great, but swap X for Y to save 15%."
+    -   **Compatibility**: "Warning: Mixing a light roast Ethiopia with a dark roast Sumatra might taste unbalanced."
+    -   **Context**: "I see you liked your last Brazil blend, this is similar."
+    -   **Support**: Brewing advice, encyclopedia questions.
+
+## UX Flow
+-   **Vertical Scroll**: Auto-scroll progression from Blending (Step 1) -> Configuration (Step 2) -> Review/Order (Step 3).
 
 ## Development Phases
 
 ### Phase 1: Portfolio & Discovery
 -   Implement the "Ledger" view.
 -   Mock Database of Single Origin Coffees.
--   "Heart" functionality (Local State for now).
 
 ### Phase 2: The Blender
 -   Interface to drag/add coffees to a blending stage.
 -   Percentage sliders + Input fields (Synced).
--   Price Calculation Engine.
 
-### Phase 3: Visualization & Polish
--   Implement dynamic Recharts/D3 visualizations.
--   Switching logic (Sliders vs Inputs, Graph vs Bar).
+### Phase 3: The 3D Configurator
+-   Three.js / React-Three-Fiber implementation for Bag Visualization.
+-   Label upload and texture mapping.
+
+### Phase 4: The Legend (AI)
+-   Chat interface overlay.
+-   Logic engine for "Compatibility Checks".
