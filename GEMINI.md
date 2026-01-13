@@ -1,42 +1,51 @@
-# GEMINI Source of Truth
+# BLENDIE - Custom Blend Platform
 
-## Project Overview
-Modernization of Blend.ie from a WordPress staging site to a high-performance Next.js/Tailwind stack. Focus on high-end UI/UX, traceability, and retail configuration.
+## Core Concept
+A boutique coffee platform allowing users to:
+1.  **Discover**: Browse single origin coffees.
+2.  **Portfolio (Ledger)**: View favorited/hearted coffees, saved blends, and recommendations.
+3.  **Blend**: Create custom blends by combining up to 10 distinct coffees.
+4.  **Visualize**: Understand flavor profiles via multi-mode visualizations (Petal, Graph, 3D, Bar).
 
-## Tech Stack
-- **Framework**: Next.js (App Router)
-- **Styling**: Tailwind CSS
-- **Language**: TypeScript
-- **State Management**: React Hooks
+## Functional Requirements
 
-## Brand Identity (Dark Mode High-End)
-- **Primary Background**: Forest Green (`#002B1B`)
-- **Accents/Foreground**: Metallic Gold (`#D4AF37`)
-- **Typography**: Clean sans-serif (Geist)
+### 1. The Portfolio (Ledger View)
+-   **Structure**: A dashboard/ledger view.
+-   **Content**:
+    -   "Liked" coffees (Hearted from store).
+    -   Saved Blends.
+    -   Recommended Blends.
+-   **Filtering**: By Country, Coffee Type (Process, Roast Level, etc.).
 
-## Roadmap (Linear Mirror)
+### 2. The Blend Builder (The Core Tool)
+-   **Selection**: User selects up to 10 coffees from their Portfolio or the Store.
+-   **Composition**:
+    -   Sliders OR Percentage Input Boxes (User preference saved).
+    -   Real-time validation (Must total 100%).
+-   **Pricing Logic**:
+    -   Dynamic calculation based on % composition.
+    -   Tiered pricing (250g vs 1kg base rates).
 
-### Ticket: UI_UX_Modernization_Logic
-**Status**: In Progress
-**Sub-tasks**:
-1.  **Hero Section Setup**: "Precision Roasting. Uncompromising Safety." headline.
-2.  **Dynamic StarFlower Component**: Interactive 5-petal SVG visualization.
-3.  **Bag Configurator Logic**: Type -> Size -> Color selection flow.
+### 3. Visualizations (The "Petal" & More)
+-   **Data Model**: Each coffee has 5 traits scored 1-10 (e.g., Aroma, Body, Acidity, Sweetness, Aftertaste).
+-   **Modes**:
+    -   **Petal/Radar Chart**: 5-axis chart showing the aggregate profile.
+    -   **Bar Chart**: Shows constitution (e.g., 40% Brazil, 60% Ethiopia) and color-coded contributions.
+    -   **3D/Graph**: Alternative view for accessibility/preference.
+-   **Interactivity**: Hover states to reveal detailed info per element.
 
-### Backend & Traceability
-- **Batch Lookup API**: Handle "Batch A17" queries.
-- **Commerce**: Stripe Checkout integration (placeholders).
+## Development Phases
 
-## Deployment
-- **Platform**: Hostinger
-- **Target IP**: `72.60.87.217`
-- **Branch**: `main` (Production)
-- **CI/CD**: Automated via Hostinger/GitHub Actions (implied).
+### Phase 1: Portfolio & Discovery
+-   Implement the "Ledger" view.
+-   Mock Database of Single Origin Coffees.
+-   "Heart" functionality (Local State for now).
 
-## Components
-- **Hero Section**: Landing page introduction.
-- **StarFlower**: Flavor/attribute visualization.
-- **Configurator**: Product selection tool.
+### Phase 2: The Blender
+-   Interface to drag/add coffees to a blending stage.
+-   Percentage sliders + Input fields (Synced).
+-   Price Calculation Engine.
 
-## Notes
-- Created by Gemini AI Assistant.
+### Phase 3: Visualization & Polish
+-   Implement dynamic Recharts/D3 visualizations.
+-   Switching logic (Sliders vs Inputs, Graph vs Bar).
