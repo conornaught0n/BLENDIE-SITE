@@ -31,6 +31,6 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./out/
-          server-dir: ./gemini_v2/
+          server-dir: ./domains/blend.ie/public_html/gemini_v2/
           protocol: ftp
           port: 21
