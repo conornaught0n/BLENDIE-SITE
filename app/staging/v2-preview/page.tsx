@@ -6,6 +6,9 @@ import { Traceability } from "@/components/Traceability";
 export default function StagingV2() {
   return (
     <main className="bg-background min-h-screen">
+      <div className="bg-yellow-500/20 border-b border-yellow-500 text-yellow-200 text-center py-2 text-sm font-mono uppercase tracking-widest">
+        Staging V2 Preview - Build ID: {Date.now()}
+      </div>
       <Hero />
       
       <section className="py-24 px-4 sm:px-6 lg:px-8 bg-black/20">
