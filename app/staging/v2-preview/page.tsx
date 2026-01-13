@@ -1,6 +1,7 @@
 import { Hero } from "@/components/Hero";
 import { StarFlower } from "@/components/StarFlower";
 import { Configurator } from "@/components/Configurator";
+import { Traceability } from "@/components/Traceability";
 
 export default function StagingV2() {
   return (
@@ -29,14 +30,8 @@ export default function StagingV2() {
         </div>
       </section>
 
-      <section className="py-24 px-4 text-center">
-         <h2 className="text-2xl text-[#D4AF37] mb-4">Traceability</h2>
-         <p className="text-white/60">Enter your batch code (e.g., A17) to trace your coffee's journey.</p>
-         {/* Placeholder for Traceability Input - can be added later or now if simple */}
-         <div className="mt-6 flex justify-center gap-2">
-            <input type="text" placeholder="Batch Code" className="bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-[#D4AF37]" />
-            <button className="bg-[#D4AF37] text-black px-6 py-2 rounded-lg font-bold">Trace</button>
-         </div>
+      <section className="py-24 px-4">
+         <Traceability />
       </section>
     </main>
   );
