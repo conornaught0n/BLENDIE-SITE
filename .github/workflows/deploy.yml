@@ -31,6 +31,7 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./out/
-          server-dir: ./domains/blend.ie/public_html/
+          server-dir: ./
           protocol: ftp
           port: 21
+          dangerous-clean-slate: false 
