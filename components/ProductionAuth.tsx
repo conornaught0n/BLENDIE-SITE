@@ -23,7 +23,7 @@ export default function ProductionAuth({ children }: { children: React.ReactNode
       setLoading(false);
 
       // 2. Listen for auth changes
-      const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      const { data: { subscription } } = supabase.auth.onAuthStateChange((_event: any, session) => {
         setUser(session?.user ?? null);
       });
 
