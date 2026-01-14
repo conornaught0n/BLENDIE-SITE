@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { Header } from "@/components/Header";
+import { BlendieAgent } from "@/components/BlendieAgent";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,6 +33,7 @@ export default function RootLayout({
         <Header />
         {children}
         <ThemeToggle />
+        <BlendieAgent />
       </body>
     </html>
   );
