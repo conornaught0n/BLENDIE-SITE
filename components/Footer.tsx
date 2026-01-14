@@ -24,12 +24,12 @@ export const Footer = () => {
 
         {/* Links (Centered) */}
         <div className="flex flex-wrap justify-center gap-8 md:gap-16 text-sm font-bold uppercase tracking-widest">
-            <a href="/shop.html" className="hover:text-fruit-citrus transition-colors">Shop</a>
-            <a href="/portfolio.html" className="hover:text-fruit-citrus transition-colors">Portfolio</a>
-            <a href="/blend.html" className="hover:text-fruit-citrus transition-colors">Builder</a>
-            <a href="/configurator.html" className="hover:text-fruit-citrus transition-colors">Design</a>
-            <a href="/about.html" className="hover:text-fruit-citrus transition-colors opacity-60 hover:opacity-100">About</a>
-            <a href="/wholesale.html" className="hover:text-fruit-citrus transition-colors opacity-60 hover:opacity-100">Wholesale</a>
+            <a href="/shop/" className="hover:text-fruit-citrus transition-colors">Shop</a>
+            <a href="/portfolio/" className="hover:text-fruit-citrus transition-colors">Portfolio</a>
+            <a href="/blend/" className="hover:text-fruit-citrus transition-colors">Builder</a>
+            <a href="/configurator/" className="hover:text-fruit-citrus transition-colors">Design</a>
+            <a href="/about/" className="hover:text-fruit-citrus transition-colors opacity-60 hover:opacity-100">About</a>
+            <a href="/wholesale/" className="hover:text-fruit-citrus transition-colors opacity-60 hover:opacity-100">Wholesale</a>
         </div>
 
       </div>
