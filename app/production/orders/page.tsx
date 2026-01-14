@@ -18,28 +18,28 @@ export default function OrderManagement() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 text-foreground">
       <header className="flex justify-between items-center mb-6">
         <div>
-            <h1 className="text-3xl font-serif font-bold text-white mb-2">Order Management</h1>
-            <p className="text-white/60 text-sm">Track, fulfill, and ship orders.</p>
+            <h1 className="text-3xl font-serif font-bold text-fruit-plum mb-2">Order Management</h1>
+            <p className="text-foreground/60 text-sm">Track, fulfill, and ship orders.</p>
         </div>
         <div className="flex gap-4">
             <input 
                 type="text" 
                 placeholder="Search Orders..." 
-                className="bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-white/30"
+                className="bg-white border border-border-color rounded-lg px-4 py-2 text-foreground focus:outline-none focus:border-fruit-plum/30 shadow-sm"
             />
-            <button className="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg font-bold transition-colors">
+            <button className="bg-fruit-plum/10 hover:bg-fruit-plum/20 text-fruit-plum px-4 py-2 rounded-lg font-bold transition-colors">
                 Filter
             </button>
         </div>
       </header>
 
-      <div className="glass-panel rounded-xl border border-white/10 overflow-hidden overflow-x-auto">
+      <div className="card-soft overflow-hidden overflow-x-auto p-0">
         <table className="w-full text-left text-sm min-w-[600px]">
             <thead>
-                <tr className="bg-white/5 text-white/50 border-b border-white/10">
+                <tr className="bg-black/5 text-foreground/50 border-b border-border-color">
                     <th className="p-4 font-normal uppercase tracking-widest text-xs">Order ID</th>
                     <th className="p-4 font-normal uppercase tracking-widest text-xs">Customer</th>
                     <th className="p-4 font-normal uppercase tracking-widest text-xs">Items</th>
@@ -48,19 +48,19 @@ export default function OrderManagement() {
                     <th className="p-4 font-normal uppercase tracking-widest text-xs">Actions</th>
                 </tr>
             </thead>
-            <tbody className="divide-y divide-white/5 text-white">
+            <tbody className="divide-y divide-border-color text-foreground">
                 {orders.map(order => (
-                    <tr key={order.id} className="hover:bg-white/5 transition-colors">
-                        <td className="p-4 font-mono font-bold">{order.id}</td>
-                        <td className="p-4">{order.customer}</td>
-                        <td className="p-4 text-white/70">{order.items}</td>
+                    <tr key={order.id} className="hover:bg-black/5 transition-colors">
+                        <td className="p-4 font-mono font-bold text-fruit-plum">{order.id}</td>
+                        <td className="p-4 font-bold">{order.customer}</td>
+                        <td className="p-4 text-foreground/70">{order.items}</td>
                         <td className="p-4 font-mono">{order.total}</td>
                         <td className="p-4">
                             <span className={`inline-block px-2 py-1 rounded text-xs font-bold ${
-                                order.status === 'Pending' ? 'bg-orange-500/20 text-orange-400' :
-                                order.status === 'In Roast' ? 'bg-blue-500/20 text-blue-400' :
-                                order.status === 'Packed' ? 'bg-purple-500/20 text-purple-400' :
-                                'bg-green-500/20 text-green-400'
+                                order.status === 'Pending' ? 'bg-fruit-citrus/20 text-fruit-citrus' :
+                                order.status === 'In Roast' ? 'bg-fruit-plum/20 text-fruit-plum' :
+                                order.status === 'Packed' ? 'bg-fruit-berry/20 text-fruit-berry' :
+                                'bg-fruit-green/20 text-fruit-green'
                             }`}>
                                 {order.status}
                             </span>
@@ -70,12 +70,12 @@ export default function OrderManagement() {
                                 {order.status !== 'Shipped' && (
                                     <button 
                                         onClick={() => updateStatus(order.id, 'Shipped')}
-                                        className="text-xs bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded transition-colors"
+                                        className="text-xs bg-fruit-plum/10 text-fruit-plum hover:bg-fruit-plum/20 px-3 py-1.5 rounded transition-colors font-bold"
                                     >
                                         Ship
                                     </button>
                                 )}
-                                <button className="text-xs text-white/50 hover:text-white px-2">Details</button>
+                                <button className="text-xs text-foreground/50 hover:text-foreground px-2">Details</button>
                             </div>
                         </td>
                     </tr>

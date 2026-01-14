@@ -35,12 +35,12 @@ export default function ProductionLayout({
 
   return (
     <ProductionAuth>
-        <div className="flex min-h-screen flex-col md:flex-row text-white bg-black">
+        <div className="flex min-h-screen flex-col md:flex-row text-foreground bg-[var(--background)]">
         {/* Mobile-First Sidebar / Navigation */}
-        <nav className="glass-panel sticky top-0 z-50 flex h-16 w-full items-center justify-between px-6 md:h-screen md:w-64 md:flex-col md:justify-start md:border-r md:border-b-0 md:pt-8 bg-black/40 border-white/10 backdrop-blur-md">
+        <nav className="glass-panel sticky top-0 z-50 flex h-16 w-full items-center justify-between px-6 md:h-screen md:w-64 md:flex-col md:justify-start md:border-r md:border-b-0 md:pt-8 bg-[var(--background)]/80 border-fruit-plum/10 backdrop-blur-md">
             <div className="flex items-center gap-2">
-                <div className="h-8 w-8 rounded-full bg-gradient-to-tr from-green-500 to-emerald-800" />
-                <span className="font-bold tracking-wider text-lg font-mono">OS 2026</span>
+                <div className="h-8 w-8 rounded-full bg-gradient-to-tr from-fruit-green to-fruit-plum" />
+                <span className="font-bold tracking-wider text-lg font-serif text-fruit-plum">OS 2026</span>
             </div>
 
             {/* Desktop Navigation */}
@@ -51,19 +51,19 @@ export default function ProductionLayout({
             </div>
 
             {/* User Profile (Desktop) */}
-            <div className="hidden md:flex flex-col gap-2 mt-auto w-full pt-6 border-t border-white/10">
+            <div className="hidden md:flex flex-col gap-2 mt-auto w-full pt-6 border-t border-fruit-plum/10">
                 <div className="flex items-center gap-2 px-2">
-                    <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center font-bold text-xs">
+                    <div className="w-8 h-8 rounded-full bg-fruit-plum/10 flex items-center justify-center font-bold text-xs text-fruit-plum">
                         {user?.email?.[0].toUpperCase()}
                     </div>
                     <div className="flex flex-col overflow-hidden">
-                        <span className="text-sm font-bold truncate">{user?.email?.split('@')[0]}</span>
-                        <span className="text-[10px] text-green-400">Online</span>
+                        <span className="text-sm font-bold truncate text-foreground">{user?.email?.split('@')[0]}</span>
+                        <span className="text-[10px] text-fruit-green">Online</span>
                     </div>
                 </div>
                 <button 
                     onClick={handleSignOut}
-                    className="text-xs text-white/40 hover:text-white text-left px-2"
+                    className="text-xs text-foreground/40 hover:text-fruit-plum text-left px-2"
                 >
                     Sign Out
                 </button>
@@ -72,17 +72,17 @@ export default function ProductionLayout({
             {/* Mobile Menu Icon */}
             <button 
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="md:hidden glass-btn p-2 border-white/20"
+                className="md:hidden glass-btn p-2 border-fruit-plum/20 text-fruit-plum"
             >
-                <span className={`block h-0.5 w-6 bg-white mb-1 transition-transform ${isMobileMenuOpen ? 'rotate-45 translate-y-1.5' : ''}`}></span>
-                <span className={`block h-0.5 w-6 bg-white mb-1 transition-opacity ${isMobileMenuOpen ? 'opacity-0' : ''}`}></span>
-                <span className={`block h-0.5 w-6 bg-white transition-transform ${isMobileMenuOpen ? '-rotate-45 -translate-y-1.5' : ''}`}></span>
+                <span className={`block h-0.5 w-6 bg-fruit-plum mb-1 transition-transform ${isMobileMenuOpen ? 'rotate-45 translate-y-1.5' : ''}`}></span>
+                <span className={`block h-0.5 w-6 bg-fruit-plum mb-1 transition-opacity ${isMobileMenuOpen ? 'opacity-0' : ''}`}></span>
+                <span className={`block h-0.5 w-6 bg-fruit-plum transition-transform ${isMobileMenuOpen ? '-rotate-45 -translate-y-1.5' : ''}`}></span>
             </button>
         </nav>
 
         {/* Mobile Menu Overlay */}
         {isMobileMenuOpen && (
-            <div className="fixed inset-0 top-16 z-40 bg-black/95 md:hidden flex flex-col p-4 animate-in fade-in slide-in-from-top-4">
+            <div className="fixed inset-0 top-16 z-40 bg-[var(--background)] md:hidden flex flex-col p-4 animate-in fade-in slide-in-from-top-4 border-t border-fruit-plum/10">
                 <div className="flex flex-col gap-2 mb-8">
                     {links.map(link => (
                         <div key={link.href} onClick={handleLinkClick}>
@@ -91,17 +91,17 @@ export default function ProductionLayout({
                     ))}
                 </div>
                 
-                <div className="mt-auto border-t border-white/10 pt-4 flex items-center justify-between">
+                <div className="mt-auto border-t border-fruit-plum/10 pt-4 flex items-center justify-between">
                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center font-bold">
+                        <div className="w-10 h-10 rounded-full bg-fruit-plum/10 text-fruit-plum flex items-center justify-center font-bold">
                             {user?.email?.[0].toUpperCase()}
                         </div>
                         <div className="flex flex-col">
-                            <span className="font-bold">{user?.email}</span>
-                            <span className="text-xs text-green-400">Operator</span>
+                            <span className="font-bold text-foreground">{user?.email}</span>
+                            <span className="text-xs text-fruit-green">Operator</span>
                         </div>
                      </div>
-                     <button onClick={handleSignOut} className="text-sm text-white/50">Sign Out</button>
+                     <button onClick={handleSignOut} className="text-sm text-foreground/50">Sign Out</button>
                 </div>
             </div>
         )}
@@ -121,8 +121,8 @@ function NavLink({ href, label, active }: { href: string; label: string; active?
       href={href} 
       className={`block w-full rounded-lg px-4 py-3 text-sm font-medium transition-all ${
         active 
-          ? 'bg-white/10 text-white shadow-lg border border-white/5' 
-          : 'text-white/60 hover:bg-white/5 hover:text-white'
+          ? 'bg-fruit-plum/10 text-fruit-plum shadow-sm border border-fruit-plum/20 font-bold' 
+          : 'text-foreground/60 hover:bg-fruit-plum/5 hover:text-fruit-plum'
       }`}
     >
       {label}

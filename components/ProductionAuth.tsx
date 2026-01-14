@@ -60,25 +60,25 @@ export default function ProductionAuth({ children }: { children: React.ReactNode
 
   if (loading) {
     return (
-        <div className="min-h-screen bg-black text-white flex items-center justify-center font-mono">
-            <span className="animate-pulse">Connecting to Neural Link...</span>
+        <div className="min-h-screen bg-[var(--background)] text-fruit-plum flex items-center justify-center font-mono">
+            <span className="animate-pulse font-serif text-xl">Connecting to Roastery OS...</span>
         </div>
     );
   }
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-4 font-mono">
-        <div className="w-full max-w-md p-8 border border-white/20 rounded-xl bg-white/5 backdrop-blur-md text-center">
+      <div className="min-h-screen bg-[var(--background)] text-foreground flex flex-col items-center justify-center p-4">
+        <div className="w-full max-w-md p-8 border border-fruit-plum/10 rounded-3xl bg-white/50 backdrop-blur-md text-center shadow-xl">
           <div className="mb-6 flex justify-center">
-             <div className="h-16 w-16 rounded-full bg-gradient-to-tr from-green-500 to-emerald-800 animate-pulse" />
+             <div className="h-16 w-16 rounded-full bg-gradient-to-tr from-fruit-green to-fruit-plum animate-pulse" />
           </div>
-          <h1 className="text-2xl font-bold mb-2 text-green-400">ROASTERY OS</h1>
-          <p className="text-white/60 mb-8 text-sm">Restricted Access. Staff Only.</p>
+          <h1 className="text-3xl font-serif font-bold mb-2 text-fruit-plum">Roastery OS</h1>
+          <p className="text-foreground/60 mb-8 text-sm font-sans">Restricted Access. Staff Only.</p>
           
           <button 
             onClick={handleGoogleLogin} 
-            className="w-full bg-white text-black font-bold py-4 rounded flex items-center justify-center gap-3 hover:bg-gray-200 transition-colors"
+            className="w-full bg-fruit-plum text-white font-bold py-4 rounded-xl flex items-center justify-center gap-3 hover:bg-fruit-berry transition-all shadow-lg hover:scale-[1.02]"
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24">
                 <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
@@ -89,7 +89,7 @@ export default function ProductionAuth({ children }: { children: React.ReactNode
             Sign in with Google
           </button>
           
-          <div className="mt-6 text-xs text-white/30 uppercase tracking-widest">
+          <div className="mt-8 text-[10px] text-fruit-plum/40 uppercase tracking-widest font-mono">
             Secure Connection /// Blendie Corp
           </div>
         </div>
@@ -99,12 +99,12 @@ export default function ProductionAuth({ children }: { children: React.ReactNode
 
   if (!isAdmin) {
      return (
-        <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-4 text-center">
-            <h1 className="text-3xl font-bold text-red-500 mb-4">Access Denied</h1>
-            <p className="text-white/60 mb-6">Your email ({user.email}) is not authorized for the Roastery OS.</p>
+        <div className="min-h-screen bg-[var(--background)] text-foreground flex flex-col items-center justify-center p-4 text-center">
+            <h1 className="text-3xl font-serif font-bold text-red-500 mb-4">Access Denied</h1>
+            <p className="text-foreground/60 mb-6 font-sans">Your email ({user.email}) is not authorized for the Roastery OS.</p>
             <button 
                 onClick={() => supabase.auth.signOut()}
-                className="bg-white/10 px-6 py-2 rounded text-sm hover:bg-white/20"
+                className="bg-fruit-plum/10 text-fruit-plum px-6 py-2 rounded-full text-sm font-bold hover:bg-fruit-plum/20 transition-colors"
             >
                 Sign Out
             </button>
