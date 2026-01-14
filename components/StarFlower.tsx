@@ -15,17 +15,16 @@ interface StarFlowerProps {
 export const StarFlower: React.FC<StarFlowerProps> = ({
   attributes = { aroma: 8, body: 7, acidity: 6, sweetness: 9, aftertaste: 8 }
 }) => {
-  const [hovered, setHovered] = useState<string | null>(null);
-
   const center = 150;
   const radius = 100;
   
+  // Updated Colors: Fresh & Fruity
   const points = [
-    { label: 'Aroma', value: attributes.aroma, angle: 0, color: '#7D4E57' }, // Purple
-    { label: 'Body', value: attributes.body, angle: 72, color: '#5D4037' }, // Brown
-    { label: 'Acidity', value: attributes.acidity, angle: 144, color: '#E6AA68' }, // Yellow
-    { label: 'Sweetness', value: attributes.sweetness, angle: 216, color: '#C04E3F' }, // Red
-    { label: 'Aftertaste', value: attributes.aftertaste, angle: 288, color: '#7D4E57' }, // Purple
+    { label: 'Aroma', value: attributes.aroma, angle: 0, color: '#540D6E' }, // Plum
+    { label: 'Body', value: attributes.body, angle: 72, color: '#1E1E24' }, // Ink (Solid Base)
+    { label: 'Acidity', value: attributes.acidity, angle: 144, color: '#FFB703' }, // Citrus
+    { label: 'Sweetness', value: attributes.sweetness, angle: 216, color: '#FF4D6D' }, // Berry
+    { label: 'Aftertaste', value: attributes.aftertaste, angle: 288, color: '#F28482' }, // Peach
   ];
 
   const getCoordinates = (value: number, angle: number) => {
@@ -41,17 +40,16 @@ export const StarFlower: React.FC<StarFlowerProps> = ({
     return `${x},${y}`;
   }).join(' ');
 
-  // Gradient ID
-  const gradId = "flower-gradient";
+  const gradId = "fruit-gradient";
 
   return (
     <div className="relative flex flex-col items-center justify-center">
-      <svg width="300" height="300" viewBox="0 0 300 300" className="drop-shadow-lg">
+      <svg width="300" height="300" viewBox="0 0 300 300" className="drop-shadow-xl">
         <defs>
           <radialGradient id={gradId} cx="0.5" cy="0.5" r="0.5">
-            <stop offset="0%" stopColor="#E6AA68" stopOpacity="0.8" /> {/* Yellow Center */}
-            <stop offset="60%" stopColor="#C04E3F" stopOpacity="0.6" /> {/* Red Mid */}
-            <stop offset="100%" stopColor="#7D4E57" stopOpacity="0.4" /> {/* Purple Edge */}
+            <stop offset="0%" stopColor="#FFB703" stopOpacity="0.9" /> {/* Citrus Center */}
+            <stop offset="50%" stopColor="#FF4D6D" stopOpacity="0.7" /> {/* Berry Mid */}
+            <stop offset="100%" stopColor="#540D6E" stopOpacity="0.5" /> {/* Plum Edge */}
           </radialGradient>
         </defs>
 
@@ -64,9 +62,9 @@ export const StarFlower: React.FC<StarFlowerProps> = ({
                return `${x},${y}`;
              }).join(' ')} 
              fill="none" 
-             stroke="#E6DCCD" 
-             strokeWidth="1" 
-             strokeDasharray="4 4"
+             stroke="#F0F0F0" 
+             strokeWidth="1.5" 
+             strokeDasharray="2 4"
            />
         ))}
 
@@ -74,8 +72,8 @@ export const StarFlower: React.FC<StarFlowerProps> = ({
         <path 
           d={`M ${polyPoints} Z`}
           fill={`url(#${gradId})`}
-          stroke="#5D4037"
-          strokeWidth="2"
+          stroke="#540D6E"
+          strokeWidth="2.5"
           className="transition-all duration-500 ease-out"
         />
 
@@ -86,7 +84,7 @@ export const StarFlower: React.FC<StarFlowerProps> = ({
             <circle 
                 key={i} 
                 cx={x} cy={y} 
-                r="6" 
+                r="5" 
                 fill={p.color} 
                 stroke="white" 
                 strokeWidth="2"

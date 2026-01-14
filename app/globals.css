@@ -1,19 +1,19 @@
 @import "tailwindcss";
 
 :root {
-  /* COFFEE SPECTRUM THEME */
-  /* Warm, organic, rich background - Off-white with a hint of cream */
-  --background: #FFFCF5; 
-  --foreground: #2C1810; /* Deep Coffee Bean Brown */
+  /* NATURAL FRUIT THEME - Vibrant, Fresh, Fun, "Cool" */
+  --background: #FFFDF9; /* Crisp Warm White */
+  --foreground: #1E1E24; /* Soft Ink Black */
   
   --card-bg: #FFFFFF;
-  --border-color: #E6DCCD;
+  --border-color: #F0F0F0;
   
-  /* The Spectrum Accents */
-  --accent-purple: #7D4E57; /* Dried Fruit / Winey */
-  --accent-red: #C04E3F;    /* Cherry / Berry */
-  --accent-yellow: #E6AA68; /* Honey / Citrus */
-  --accent-brown: #5D4037;  /* Chocolate / Nutty */
+  /* The Fruit Spectrum */
+  --accent-berry: #FF4D6D;    /* Vibrant Raspberry */
+  --accent-citrus: #FFB703;   /* Bright Yuzu/Lemon */
+  --accent-plum: #540D6E;     /* Deep Grape/Wine */
+  --accent-green: #8CB369;    /* Fresh Apple/Mint */
+  --accent-peach: #F28482;    /* Soft Peach/Floral */
   
   --radius-sm: 8px;
   --radius-md: 16px;
@@ -27,10 +27,12 @@
   --font-serif: "Cormorant Garamond", serif;
   --font-sans: "Mulish", sans-serif;
   
-  --color-coffee-purple: var(--accent-purple);
-  --color-coffee-red: var(--accent-red);
-  --color-coffee-yellow: var(--accent-yellow);
-  --color-coffee-brown: var(--accent-brown);
+  /* Mapping to Semantic Names */
+  --color-fruit-berry: var(--accent-berry);
+  --color-fruit-citrus: var(--accent-citrus);
+  --color-fruit-plum: var(--accent-plum);
+  --color-fruit-green: var(--accent-green);
+  --color-fruit-peach: var(--accent-peach);
 }
 
 body {
@@ -43,14 +45,15 @@ body {
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-serif);
   font-weight: 700;
+  letter-spacing: -0.02em;
 }
 
 @layer components {
   .btn-primary {
-    @apply px-8 py-3 rounded-full bg-foreground text-white font-bold transition-all hover:bg-coffee-brown hover:scale-105 active:scale-95 shadow-lg shadow-coffee-brown/20;
+    @apply px-8 py-3 rounded-full bg-fruit-plum text-white font-bold transition-all hover:bg-fruit-berry hover:scale-105 active:scale-95 shadow-lg shadow-fruit-plum/20;
   }
   
   .card-soft {
-    @apply bg-[var(--card-bg)] border border-[var(--border-color)] rounded-[var(--radius-md)] p-6 transition-all duration-300 hover:shadow-xl hover:border-coffee-yellow;
+    @apply bg-[var(--card-bg)] border border-[var(--border-color)] rounded-[var(--radius-md)] p-6 transition-all duration-300 hover:shadow-xl hover:border-fruit-peach;
   }
 }
