@@ -3,29 +3,41 @@
 import React, { useState } from 'react';
 import { COFFEE_DATA } from '@/lib/coffee-data';
 import { StarFlower } from '@/components/StarFlower';
+import { useBlendStore } from '@/store/blend-store';
+import { useRouter } from 'next/navigation';
 
 export default function Portfolio() {
-  const [selectedIds, setSelectedIds] = useState<string[]>([]);
-  const [step, setStep] = useState(1); // 1: Select, 2: Blend, 3: Review
+  const router = useRouter();
+  const { currentBlend, addCoffee, removeCoffee } = useBlendStore();
+  const [step, setStep] = useState(1);
   const [viewMode, setViewMode] = useState<'list' | 'grid'>('list');
 
-  const toggleSelection = (id: string) => {
-    setSelectedIds(prev => 
-      prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]
-    );
+  // Helper to check if a coffee ID is in the store
+  const isSelected = (id: string) => currentBlend.some(c => c.id === id);
+
+  const toggleSelection = (coffee: any) => {
+    if (isSelected(coffee.id)) {
+      removeCoffee(coffee.id);
+    } else {
+      addCoffee(coffee);
+    }
   };
 
-  const selectedCoffees = COFFEE_DATA.filter(c => selectedIds.includes(c.id));
-  const avgPrice = selectedCoffees.length > 0 
-    ? (selectedCoffees.reduce((acc, c) => acc + c.price_250g, 0) / selectedCoffees.length).toFixed(2)
+  // Aggregate Data from Store
+  const avgPrice = currentBlend.length > 0 
+    ? (currentBlend.reduce((acc, c) => acc + c.price_250g, 0) / currentBlend.length).toFixed(2)
     : '0.00';
   
   const aggregateFlavor = {
-    aroma: selectedCoffees.length > 0 ? Math.round(selectedCoffees.reduce((acc, c) => acc + c.aroma, 0) / selectedCoffees.length) : 0,
-    body: selectedCoffees.length > 0 ? Math.round(selectedCoffees.reduce((acc, c) => acc + c.body, 0) / selectedCoffees.length) : 0,
-    acidity: selectedCoffees.length > 0 ? Math.round(selectedCoffees.reduce((acc, c) => acc + c.acidity, 0) / selectedCoffees.length) : 0,
-    sweetness: selectedCoffees.length > 0 ? Math.round(selectedCoffees.reduce((acc, c) => acc + c.sweetness, 0) / selectedCoffees.length) : 0,
-    aftertaste: selectedCoffees.length > 0 ? Math.round(selectedCoffees.reduce((acc, c) => acc + c.aftertaste, 0) / selectedCoffees.length) : 0,
+    aroma: currentBlend.length > 0 ? Math.round(currentBlend.reduce((acc, c) => acc + c.aroma, 0) / currentBlend.length) : 0,
+    body: currentBlend.length > 0 ? Math.round(currentBlend.reduce((acc, c) => acc + c.body, 0) / currentBlend.length) : 0,
+    acidity: currentBlend.length > 0 ? Math.round(currentBlend.reduce((acc, c) => acc + c.acidity, 0) / currentBlend.length) : 0,
+    sweetness: currentBlend.length > 0 ? Math.round(currentBlend.reduce((acc, c) => acc + c.sweetness, 0) / currentBlend.length) : 0,
+    aftertaste: currentBlend.length > 0 ? Math.round(currentBlend.reduce((acc, c) => acc + c.aftertaste, 0) / currentBlend.length) : 0,
+  };
+
+  const handleProceed = () => {
+    router.push('/blend');
   };
 
   return (
@@ -42,7 +54,6 @@ export default function Portfolio() {
             <p className="opacity-60 text-sm tracking-wide uppercase">Select components from inventory</p>
           </div>
           
-          {/* View Toggle - Minimalist */}
           <div className="flex border border-border-color">
             <button 
               onClick={() => setViewMode('list')}
@@ -60,7 +71,7 @@ export default function Portfolio() {
           </div>
         </header>
 
-        {/* Filter Bar - Minimalist Line */}
+        {/* Filter Bar */}
         <div className="flex gap-8 border-b border-border-color pb-4 mb-8 text-sm uppercase tracking-widest overflow-x-auto">
            <button className="font-bold border-b-2 border-foreground pb-4 -mb-4.5">All Stock</button>
            <button className="opacity-40 hover:opacity-100 transition-opacity">Saved Blends</button>
@@ -82,11 +93,11 @@ export default function Portfolio() {
                 {COFFEE_DATA.map((coffee) => (
                   <tr 
                     key={coffee.id} 
-                    onClick={() => toggleSelection(coffee.id)}
-                    className={`group border-b border-border-color cursor-pointer transition-colors hover:bg-black/5 ${selectedIds.includes(coffee.id) ? 'bg-accent-gold/10' : ''}`}
+                    onClick={() => toggleSelection(coffee)}
+                    className={`group border-b border-border-color cursor-pointer transition-colors hover:bg-black/5 ${isSelected(coffee.id) ? 'bg-accent-gold/10' : ''}`}
                   >
                     <td className="py-6 pl-4 align-middle">
-                      <div className={`w-4 h-4 border transition-all ${selectedIds.includes(coffee.id) ? 'bg-foreground border-foreground' : 'border-border-color group-hover:border-foreground'}`} />
+                      <div className={`w-4 h-4 border transition-all ${isSelected(coffee.id) ? 'bg-foreground border-foreground' : 'border-border-color group-hover:border-foreground'}`} />
                     </td>
                     <td className="py-6 align-middle">
                       <span className="block font-serif text-lg leading-tight mb-1">{coffee.name}</span>
@@ -103,16 +114,15 @@ export default function Portfolio() {
           </table>
         ) : (
           <div className="grid grid-cols-2 lg:grid-cols-3 gap-px bg-border-color border border-border-color">
-             {/* Reusing the Shop Grid Card Style for consistency */}
              {COFFEE_DATA.map((coffee) => (
                 <div 
                   key={coffee.id}
-                  onClick={() => toggleSelection(coffee.id)}
-                  className={`bg-card-bg aspect-square p-6 flex flex-col justify-between cursor-pointer group hover:bg-black/5 transition-colors ${selectedIds.includes(coffee.id) ? 'ring-1 ring-inset ring-accent-gold' : ''}`}
+                  onClick={() => toggleSelection(coffee)}
+                  className={`bg-card-bg aspect-square p-6 flex flex-col justify-between cursor-pointer group hover:bg-black/5 transition-colors ${isSelected(coffee.id) ? 'ring-1 ring-inset ring-accent-gold' : ''}`}
                 >
                    <div className="flex justify-between items-start">
                       <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-accent-gold">{coffee.origin}</span>
-                      <div className={`w-3 h-3 border ${selectedIds.includes(coffee.id) ? 'bg-foreground border-foreground' : 'border-border-color'}`} />
+                      <div className={`w-3 h-3 border ${isSelected(coffee.id) ? 'bg-foreground border-foreground' : 'border-border-color'}`} />
                    </div>
                    <div>
                       <h3 className="font-serif text-xl leading-none mb-2">{coffee.name}</h3>
@@ -133,7 +143,7 @@ export default function Portfolio() {
                 <div className="absolute inset-0 border border-border-color rounded-full opacity-20" />
                 <div className="absolute inset-4 border border-border-color rounded-full opacity-20" />
                 <div className="absolute inset-0 flex items-center justify-center">
-                    {selectedIds.length > 0 ? (
+                    {currentBlend.length > 0 ? (
                         <StarFlower attributes={aggregateFlavor} />
                     ) : (
                         <span className="text-xs uppercase tracking-widest opacity-30 text-center">Select To<br/>Visualize</span>
@@ -144,7 +154,7 @@ export default function Portfolio() {
             <div className="w-full border-t border-b border-border-color py-6 space-y-4">
                 <div className="flex justify-between items-center">
                     <span className="text-xs uppercase tracking-widest opacity-50">Composition</span>
-                    <span className="font-serif text-xl">{selectedIds.length} <span className="text-sm font-sans opacity-40">Beans</span></span>
+                    <span className="font-serif text-xl">{currentBlend.length} <span className="text-sm font-sans opacity-40">Beans</span></span>
                 </div>
                 <div className="flex justify-between items-center">
                     <span className="text-xs uppercase tracking-widest opacity-50">Base Estimate</span>
@@ -156,8 +166,8 @@ export default function Portfolio() {
          {/* Navigation Actions */}
          <div className="mt-12">
             <button 
-                onClick={() => setStep(2)}
-                disabled={selectedIds.length === 0}
+                onClick={handleProceed}
+                disabled={currentBlend.length === 0}
                 className="btn-paris w-full disabled:opacity-20 disabled:cursor-not-allowed group relative overflow-hidden"
             >
                 <span className="relative z-10 group-hover:text-background transition-colors">Proceed to Mixing</span>
