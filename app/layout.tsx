@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Playfair_Display, Inter } from "next/font/google";
 import "./globals.css";
-import { ThemeToggle } from "@/components/ThemeToggle";
 import { Header } from "@/components/Header";
 import { BlendieAgent } from "@/components/BlendieAgent";
 
@@ -34,7 +33,6 @@ export default function RootLayout({
       >
         <Header />
         {children}
-        <ThemeToggle />
         <BlendieAgent />
       </body>
     </html>
