@@ -17,71 +17,72 @@ export default function Shop() {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground p-4 md:p-8">
-      <header className="mb-12 flex justify-between items-end">
-        <div>
-          <h1 className="text-4xl font-bold tracking-tight mb-2">Shop Coffees</h1>
-          <p className="opacity-60">Browse our single origin collection. Heart your favorites to add to Portfolio.</p>
+    <div className="min-h-screen bg-background text-foreground p-8 md:p-16">
+      
+      {/* Header - Perfectly Aligned */}
+      <header className="mb-16 flex flex-col md:flex-row justify-between items-end border-b border-border-color pb-8">
+        <div className="max-w-xl">
+          <h1 className="text-5xl md:text-7xl font-medium tracking-tight mb-4 font-serif">The Collection</h1>
+          <p className="opacity-60 font-sans tracking-wide text-sm uppercase">Single Origin • Limited Release • Micro-Lot</p>
         </div>
-        <Link href="/portfolio" className="estrid-btn flex items-center gap-2">
-          Go to Portfolio ({favorites.length}) →
+        <Link href="/portfolio" className="btn-paris flex items-center gap-3">
+          <span>View Portfolio</span>
+          <span className="bg-accent-gold text-white text-[10px] w-5 h-5 flex items-center justify-center rounded-full font-sans">
+            {favorites.length}
+          </span>
         </Link>
       </header>
 
-      {/* Grid View (30+ Coffees) */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+      {/* Grid View - Strict Alignment */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-px bg-border-color border border-border-color">
         {COFFEE_DATA.map(coffee => (
           <div 
             key={coffee.id}
             onMouseEnter={() => setHoveredId(coffee.id)}
             onMouseLeave={() => setHoveredId(null)}
-            className="group relative aspect-[3/4] bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all cursor-pointer border border-black/5"
+            className="group relative bg-card-bg aspect-[3/4] overflow-hidden cursor-pointer hover:z-10"
           >
-            {/* Image Placeholder */}
-            <div className="h-3/5 bg-[#F5F5F4] relative overflow-hidden">
-               <div className="absolute inset-0 flex items-center justify-center opacity-10">
-                  <span className="text-6xl font-black rotate-[-15deg]">{coffee.origin.substring(0,3).toUpperCase()}</span>
-               </div>
+            {/* Image Placeholder - Full Bleed */}
+            <div className="h-[65%] bg-[#F9F9F9] relative flex items-center justify-center overflow-hidden">
+               <span className="text-[8vw] font-serif opacity-5 text-foreground group-hover:scale-110 transition-transform duration-700 ease-out">
+                  {coffee.origin.substring(0,3).toUpperCase()}
+               </span>
                
-               {/* Heart Button */}
+               {/* Heart Button - Minimalist */}
                <button 
                  onClick={(e) => toggleHeart(e, coffee.id)}
-                 className={`absolute top-2 right-2 z-20 w-8 h-8 rounded-full bg-white shadow-sm flex items-center justify-center transition-all ${favorites.includes(coffee.id) ? 'text-red-500 scale-110' : 'text-gray-300 hover:text-red-300'}`}
+                 className={`absolute top-4 right-4 z-20 w-8 h-8 flex items-center justify-center transition-colors ${favorites.includes(coffee.id) ? 'text-accent-gold' : 'text-foreground/20 hover:text-foreground'}`}
                >
-                 {favorites.includes(coffee.id) ? '❤️' : '🤍'}
+                 {favorites.includes(coffee.id) ? '♥' : '♡'}
                </button>
 
-               {/* Hover Overlay Details */}
-               <div className={`absolute inset-0 bg-black/80 backdrop-blur-sm p-4 flex flex-col justify-center text-white transition-opacity duration-200 ${hoveredId === coffee.id ? 'opacity-100' : 'opacity-0'}`}>
-                  <div className="space-y-2 text-xs">
-                    <div className="flex justify-between border-b border-white/20 pb-1">
+               {/* Hover Overlay - Sharp Fade */}
+               <div className={`absolute inset-0 bg-foreground/90 p-8 flex flex-col justify-center text-background transition-opacity duration-300 ${hoveredId === coffee.id ? 'opacity-100' : 'opacity-0'}`}>
+                  <div className="space-y-4 font-sans text-xs tracking-widest uppercase">
+                    <div className="flex justify-between border-b border-white/20 pb-2">
                       <span>Process</span>
                       <span>{coffee.process}</span>
                     </div>
-                    <div className="flex justify-between border-b border-white/20 pb-1">
+                    <div className="flex justify-between border-b border-white/20 pb-2">
                       <span>Altitude</span>
                       <span>{coffee.altitude}</span>
                     </div>
-                    <div className="flex flex-wrap gap-1 pt-2">
-                      {coffee.tags.slice(0,3).map(t => (
-                        <span key={t} className="bg-white/20 px-2 py-0.5 rounded-full text-[10px]">{t}</span>
-                      ))}
+                    <div className="pt-2 text-center text-accent-gold">
+                      Double Click to View
                     </div>
                   </div>
                </div>
             </div>
 
-            {/* Content */}
-            <div className="p-4 flex flex-col justify-between h-2/5">
+            {/* Content - Editorial Typography */}
+            <div className="h-[35%] p-6 flex flex-col justify-between border-t border-border-color group-hover:border-transparent transition-colors">
                <div>
-                  <h3 className="font-bold text-sm leading-tight mb-1 line-clamp-2">{coffee.name}</h3>
-                  <p className="text-[10px] opacity-50 uppercase tracking-wide">{coffee.origin}</p>
+                  <p className="text-[10px] font-bold tracking-[0.2em] uppercase text-accent-gold mb-2">{coffee.origin}</p>
+                  <h3 className="font-serif text-2xl leading-none mb-1">{coffee.name}</h3>
                </div>
-               <div className="flex justify-between items-end">
-                  <span className="font-mono font-bold">€{coffee.price_250g.toFixed(2)}</span>
-                  <span className="text-[10px] bg-[#D4AF37]/10 text-[#D4AF37] px-2 py-1 rounded-full font-bold">
-                    {((coffee.aroma + coffee.body + coffee.acidity)/3).toFixed(1)}
-                  </span>
+               <div className="flex justify-between items-baseline font-sans">
+                  <span className="text-lg">€{coffee.price_250g.toFixed(2)}</span>
+                  <span className="text-[10px] opacity-40 uppercase tracking-widest">250g</span>
                </div>
             </div>
           </div>
