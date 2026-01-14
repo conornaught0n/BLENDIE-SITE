@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
 export const BlendieAgent = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -8,8 +8,35 @@ export const BlendieAgent = () => {
   const [messages, setMessages] = useState([
     { role: 'blendie', text: "Hey! I'm Blendie. I'm literally a coffee bean. Ask me anything!" }
   ]);
+  
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   const toggleChat = () => setIsOpen(!isOpen);
+
+  // Auto-scroll to bottom on new messages or open
+  useEffect(() => {
+    if (scrollRef.current) {
+        scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  }, [messages, isOpen]);
+
+  const handleSend = () => {
+    if (!input.trim()) return;
+    
+    // User Message
+    const userMsg = { role: 'user', text: input };
+    setMessages(prev => [...prev, userMsg]);
+    
+    // Simulate Response
+    setTimeout(() => {
+      setMessages(prev => [...prev, { 
+        role: 'blendie', 
+        text: "That sounds interesting! Let's optimize that roast." 
+      }]);
+    }, 1000);
+
+    setInput('');
+  };
 
   // Quick Actions Logic
   const handleQuickAction = (action: string) => {
@@ -51,7 +78,10 @@ export const BlendieAgent = () => {
           <button onClick={toggleChat} className="text-white/50 hover:text-white">✕</button>
         </div>
         
-        <div className="h-64 p-4 overflow-y-auto bg-[#F9F9F9] space-y-3">
+        <div 
+            ref={scrollRef}
+            className="h-64 p-4 overflow-y-auto bg-[#F9F9F9] space-y-3"
+        >
           {messages.map((msg, i) => (
             <div key={i} className={`flex ${msg.role === 'blendie' ? 'justify-start' : 'justify-end'}`}>
               <div className={`max-w-[85%] px-4 py-3 text-sm shadow-sm ${
@@ -81,9 +111,18 @@ export const BlendieAgent = () => {
         <div className="p-3 bg-white flex gap-2">
           <input 
             type="text" 
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyPress={(e) => e.key === 'Enter' && handleSend()}
             placeholder="Ask Blendie..." 
             className="flex-1 bg-black/5 rounded-full px-4 py-2 text-sm focus:outline-none"
           />
+          <button 
+            onClick={handleSend}
+            className="bg-fruit-citrus text-black w-8 h-8 rounded-full flex items-center justify-center hover:opacity-90 font-bold text-xs"
+          >
+            ➤
+          </button>
         </div>
       </div>
 
