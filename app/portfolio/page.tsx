@@ -2,144 +2,124 @@
 
 import React, { useState } from 'react';
 import { COFFEE_DATA } from '@/lib/coffee-data';
+import { StarFlower } from '@/components/StarFlower';
 
 export default function Portfolio() {
-  const [favorites, setFavorites] = useState<string[]>([]);
-  const [filter, setFilter] = useState('All');
-
-  const toggleHeart = (id: string) => {
-    setFavorites(prev => 
-      prev.includes(id) ? prev.filter(f => f !== id) : [...prev, id]
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  
+  // Toggle selection logic
+  const toggleSelection = (id: string) => {
+    setSelectedIds(prev => 
+      prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]
     );
   };
 
-  const filteredCoffees = filter === 'All' 
-    ? COFFEE_DATA 
-    : COFFEE_DATA.filter(c => c.origin === filter || c.type === (filter === 'Single Origin' ? 'Single Origin' : 'Blend Component'));
-
-  // Extract unique origins for filter
-  const origins = Array.from(new Set(COFFEE_DATA.map(c => c.origin)));
+  // Calculate Aggregate Stats for Selection
+  const selectedCoffees = COFFEE_DATA.filter(c => selectedIds.includes(c.id));
+  const avgPrice = selectedCoffees.length > 0 
+    ? (selectedCoffees.reduce((acc, c) => acc + c.price_250g, 0) / selectedCoffees.length).toFixed(2)
+    : '0.00';
+  
+  const aggregateFlavor = {
+    aroma: selectedCoffees.length > 0 ? Math.round(selectedCoffees.reduce((acc, c) => acc + c.aroma, 0) / selectedCoffees.length) : 0,
+    body: selectedCoffees.length > 0 ? Math.round(selectedCoffees.reduce((acc, c) => acc + c.body, 0) / selectedCoffees.length) : 0,
+    acidity: selectedCoffees.length > 0 ? Math.round(selectedCoffees.reduce((acc, c) => acc + c.acidity, 0) / selectedCoffees.length) : 0,
+    sweetness: selectedCoffees.length > 0 ? Math.round(selectedCoffees.reduce((acc, c) => acc + c.sweetness, 0) / selectedCoffees.length) : 0,
+    aftertaste: selectedCoffees.length > 0 ? Math.round(selectedCoffees.reduce((acc, c) => acc + c.aftertaste, 0) / selectedCoffees.length) : 0,
+  };
 
   return (
-    <div className="min-h-screen bg-black text-white p-8">
-      <header className="mb-12 text-center">
-        <h1 className="text-4xl font-bold text-[#D4AF37] mb-4">Your Coffee Portfolio</h1>
-        <p className="text-white/60 max-w-2xl mx-auto">
-          Manage your favorites, explore origins, and select beans for your custom blend.
-        </p>
-      </header>
+    <div className="min-h-screen bg-black text-white flex flex-col md:flex-row">
+      
+      {/* LEFT: The Ledger (Data Table) */}
+      <div className="w-full md:w-2/3 p-8 overflow-y-auto h-screen border-r border-white/10">
+        <header className="mb-8">
+          <h1 className="text-3xl font-bold text-[#D4AF37]">Coffee Ledger</h1>
+          <p className="text-white/50 text-sm">Select coffees to analyze and blend.</p>
+        </header>
 
-      {/* Filter Bar */}
-      <div className="flex justify-center gap-4 mb-12 flex-wrap">
-        <FilterBtn label="All" active={filter === 'All'} onClick={() => setFilter('All')} />
-        <FilterBtn label="Single Origins" active={filter === 'Single Origin'} onClick={() => setFilter('Single Origin')} />
-        <FilterBtn label="Blend Components" active={filter === 'Blend Component'} onClick={() => setFilter('Blend Component')} />
-        <div className="w-full md:w-auto h-px md:h-8 bg-white/10 mx-2" />
-        {origins.map(origin => (
-          <FilterBtn 
-            key={origin} 
-            label={origin} 
-            active={filter === origin} 
-            onClick={() => setFilter(origin)} 
-          />
-        ))}
-      </div>
-
-      {/* Ledger Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
-        {filteredCoffees.map(coffee => (
-          <div key={coffee.id} className="group relative bg-[#0a0a0a] border border-white/10 rounded-2xl overflow-hidden hover:border-[#D4AF37]/50 transition-all duration-300">
-            
-            {/* Card Header */}
-            <div className="p-6 pb-4 border-b border-white/5 flex justify-between items-start">
-              <div>
-                <h3 className="text-xl font-bold text-white mb-1 group-hover:text-[#D4AF37] transition-colors">{coffee.name}</h3>
-                <span className="text-xs font-mono text-white/40 uppercase tracking-widest">{coffee.origin} • {coffee.process}</span>
-                <p className="text-xs text-white/30 mt-1">{coffee.producer}</p>
-              </div>
-              <button 
-                onClick={() => toggleHeart(coffee.id)}
-                className="text-2xl transition-transform active:scale-90"
-              >
-                {favorites.includes(coffee.id) ? '❤️' : '🤍'}
-              </button>
-            </div>
-
-            {/* Flavor Profile (Mini Bars) */}
-            <div className="p-6 space-y-3">
-              <TraitBar label="Aroma" value={coffee.aroma} />
-              <TraitBar label="Body" value={coffee.body} />
-              <TraitBar label="Acidity" value={coffee.acidity} />
-              <TraitBar label="Sweetness" value={coffee.sweetness} />
-            </div>
-
-            {/* Tags & Price */}
-            <div className="p-6 pt-4 bg-white/5 flex items-center justify-between">
-              <div className="flex gap-2 flex-wrap max-w-[70%]">
-                {coffee.tags.slice(0, 3).map(tag => (
-                  <span key={tag} className="text-[10px] bg-black border border-white/10 px-2 py-1 rounded text-white/60">
-                    {tag}
-                  </span>
-                ))}
-              </div>
-              <div className="text-right">
-                <p className="text-[#D4AF37] font-bold">€{coffee.price_250g.toFixed(2)}</p>
-                <p className="text-[10px] text-white/40">per 250g</p>
-              </div>
-            </div>
-
-            {/* Hover Overlay for "Add to Blend" */}
-            <div className="absolute inset-0 bg-black/80 backdrop-blur-sm flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-               <button className="bg-[#D4AF37] text-black font-bold px-8 py-3 rounded-full mb-4 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">
-                 Add to Blend
-               </button>
-               <button className="text-white/80 hover:text-white underline text-sm transform translate-y-4 group-hover:translate-y-0 transition-all duration-300 delay-75">
-                 View Full Profile
-               </button>
-            </div>
-
-          </div>
-        ))}
-      </div>
-
-      {/* Bottom Action Bar (Fixed) */}
-      <div className="fixed bottom-0 left-0 right-0 bg-black/90 backdrop-blur-md border-t border-[#D4AF37]/20 p-4 transform translate-y-full animate-in slide-in-from-bottom-full duration-500 fill-mode-forwards" style={{ transform: favorites.length > 0 ? 'translateY(0)' : 'translateY(100%)' }}>
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <span className="text-[#D4AF37] font-bold text-xl">{favorites.length}</span>
-            <span className="text-white/60">Coffees Selected</span>
-          </div>
-          <button className="bg-[#D4AF37] hover:bg-[#E5C158] text-black px-8 py-3 rounded-full font-bold shadow-[0_0_20px_rgba(212,175,55,0.3)] hover:shadow-[0_0_30px_rgba(212,175,55,0.5)] transition-all">
-            Start Blending &rarr;
-          </button>
+        {/* Data Table */}
+        <div className="w-full overflow-x-auto">
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr className="text-xs text-white/40 uppercase tracking-widest border-b border-white/10">
+                <th className="py-4 pl-4">Select</th>
+                <th className="py-4">Coffee Name</th>
+                <th className="py-4">Origin</th>
+                <th className="py-4">Process</th>
+                <th className="py-4 text-right">Score</th>
+                <th className="py-4 text-right pr-4">Price (250g)</th>
+              </tr>
+            </thead>
+            <tbody className="text-sm">
+              {COFFEE_DATA.map((coffee) => (
+                <tr 
+                  key={coffee.id} 
+                  onClick={() => toggleSelection(coffee.id)}
+                  className={`border-b border-white/5 cursor-pointer transition-colors hover:bg-white/5 ${selectedIds.includes(coffee.id) ? 'bg-[#D4AF37]/10' : ''}`}
+                >
+                  <td className="py-4 pl-4">
+                    <div className={`w-5 h-5 rounded border flex items-center justify-center transition-all ${selectedIds.includes(coffee.id) ? 'bg-[#D4AF37] border-[#D4AF37] text-black' : 'border-white/20'}`}>
+                      {selectedIds.includes(coffee.id) && '✓'}
+                    </div>
+                  </td>
+                  <td className="py-4 font-medium text-white">
+                    {coffee.name}
+                    <div className="text-xs text-white/30 hidden sm:block">{coffee.tags.slice(0, 2).join(', ')}</div>
+                  </td>
+                  <td className="py-4 text-white/70">{coffee.origin}</td>
+                  <td className="py-4 text-white/70">{coffee.process}</td>
+                  <td className="py-4 text-right font-mono text-[#D4AF37]">
+                    {((coffee.aroma + coffee.body + coffee.acidity + coffee.sweetness) / 4).toFixed(1)}
+                  </td>
+                  <td className="py-4 text-right pr-4 font-mono">€{coffee.price_250g.toFixed(2)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
+
+      {/* RIGHT: The Preview (Fixed Panel) */}
+      <div className="w-full md:w-1/3 bg-[#0a0a0a] p-8 flex flex-col items-center justify-center border-l border-white/10 relative">
+        <div className="sticky top-8 w-full flex flex-col items-center">
+            
+            <h2 className="text-xl font-bold text-white mb-6">Blend Preview</h2>
+            
+            {/* The Flower Visualizer */}
+            <div className="w-full aspect-square max-w-[300px] mb-8 bg-black/20 rounded-full border border-white/5 flex items-center justify-center">
+                {selectedIds.length > 0 ? (
+                    <StarFlower attributes={aggregateFlavor} />
+                ) : (
+                    <div className="text-white/30 text-center text-sm">
+                        Select coffees from the ledger<br/>to visualize flavor.
+                    </div>
+                )}
+            </div>
+
+            {/* Selection Summary */}
+            <div className="w-full space-y-4">
+                <div className="flex justify-between text-sm border-b border-white/10 pb-2">
+                    <span className="text-white/50">Selected Count</span>
+                    <span className="text-white font-mono">{selectedIds.length}</span>
+                </div>
+                <div className="flex justify-between text-sm border-b border-white/10 pb-2">
+                    <span className="text-white/50">Est. Avg Price</span>
+                    <span className="text-[#D4AF37] font-mono font-bold">€{avgPrice}</span>
+                </div>
+            </div>
+
+            {/* Actions */}
+            <button 
+                disabled={selectedIds.length === 0}
+                className="mt-8 w-full bg-[#D4AF37] disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#E5C158] text-black font-bold py-4 rounded-full shadow-lg transition-all"
+            >
+                Proceed to Mix ({selectedIds.length}) &rarr;
+            </button>
+
+        </div>
+      </div>
+
     </div>
   );
 }
-
-const FilterBtn = ({ label, active, onClick }: { label: string, active: boolean, onClick: () => void }) => (
-  <button
-    onClick={onClick}
-    className={`px-4 py-2 rounded-full border text-sm transition-all ${
-      active 
-        ? 'bg-[#D4AF37] border-[#D4AF37] text-black font-bold' 
-        : 'bg-transparent border-white/20 text-white hover:border-[#D4AF37]/50'
-    }`}
-  >
-    {label}
-  </button>
-);
-
-const TraitBar = ({ label, value }: { label: string, value: number }) => (
-  <div className="flex items-center gap-3 text-sm">
-    <span className="w-16 text-white/50 text-xs uppercase tracking-wide">{label}</span>
-    <div className="flex-1 h-1.5 bg-white/10 rounded-full overflow-hidden">
-      <div 
-        className="h-full bg-gradient-to-r from-[#D4AF37]/50 to-[#D4AF37]" 
-        style={{ width: `${value * 10}%` }} 
-      />
-    </div>
-    <span className="w-4 text-right text-xs text-[#D4AF37]">{value}</span>
-  </div>
-);
