@@ -1,80 +1,71 @@
 @import "tailwindcss";
 
 :root {
-  /* Estrid Inspired: Soft, Rounded, Bold but Pastel */
-  --background: #FDFBF7; /* Warm Off-White (Paper) */
-  --foreground: #1A1A1A;
+  /* PARISIAN MODERN - Editorial, Sharp, Elegant */
+  --background: #FFFFFF;
+  --foreground: #111111;
   
   --card-bg: #FFFFFF;
-  --border-color: #E6E6E6;
+  --border-color: #E5E5E5;
   
-  /* Brand Colors - Playful yet Premium */
-  --brand-primary: #D4AF37; /* Metallic Gold (Legacy Brand) */
-  --brand-secondary: #E8DCC6; /* Soft Beige */
-  --brand-accent: #2C3E50; /* Deep Navy/Charcoal for text */
+  --accent-gold: #C6A87C; /* Muted Champagne Gold - Classy */
+  --accent-dark: #1A1A1A;
   
-  --radius-xl: 32px; /* Super rounded corners like Estrid */
-  --radius-lg: 24px;
+  --radius-sm: 2px;
+  --radius-md: 4px;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-    --card-bg: #171717;
-    --border-color: #262626;
+    --background: #080808;
+    --foreground: #F2F2F2;
+    --card-bg: #121212;
+    --border-color: #333333;
+    --accent-gold: #D4AF37;
   }
 }
 
 .light {
-  --background: #FDFBF7;
-  --foreground: #1A1A1A;
+  --background: #FFFFFF;
+  --foreground: #111111;
   --card-bg: #FFFFFF;
-  --border-color: #E6E6E6;
+  --border-color: #E5E5E5;
 }
 
 .dark {
-  --background: #0a0a0a;
-  --foreground: #ededed;
-  --card-bg: #171717;
-  --border-color: #262626;
+  --background: #080808;
+  --foreground: #F2F2F2;
+  --card-bg: #121212;
+  --border-color: #333333;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card-bg);
-  --font-sans: var(--font-geist-sans);
+  --font-serif: "Playfair Display", serif;
+  --font-sans: "Inter", sans-serif;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-sans), Arial, sans-serif;
+  font-family: var(--font-sans);
   antialiased: true;
-  transition: background-color 0.3s ease;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-serif);
+  font-weight: 500;
+  letter-spacing: -0.02em;
 }
 
 @layer components {
-  /* Estrid-Style Cards */
-  .estrid-card {
-    @apply bg-[var(--card-bg)] rounded-[32px] overflow-hidden transition-all duration-500 ease-out;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+  .btn-paris {
+    @apply px-8 py-3 text-sm uppercase tracking-widest font-bold border border-foreground hover:bg-foreground hover:text-background transition-all duration-300 rounded-sm;
   }
   
-  .estrid-card:hover {
-    transform: translateY(-4px) scale(1.01);
-    box-shadow: 0 12px 30px rgba(0,0,0,0.08);
-  }
-
-  .estrid-btn {
-    @apply rounded-full px-8 py-4 font-bold tracking-wide transition-all duration-300;
-    background-color: var(--foreground);
-    color: var(--background);
-  }
-  
-  .estrid-btn:hover {
-    opacity: 0.9;
-    transform: scale(1.02);
+  .card-paris {
+    @apply bg-[var(--card-bg)] border border-[var(--border-color)] p-6 transition-all duration-500 hover:shadow-xl hover:border-[var(--accent-gold)];
   }
 }
