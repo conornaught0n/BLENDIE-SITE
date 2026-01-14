@@ -9,121 +9,127 @@ export default function Home() {
       {/* 1. HERO */}
       <Hero />
 
-      {/* 2. COMPACT PROCESS (Timeline) */}
-      <section className="py-16 max-w-5xl mx-auto px-4 relative">
-        <div className="absolute left-1/2 top-0 bottom-0 w-px bg-fruit-plum/10 -translate-x-px hidden md:block" />
-        
-        {/* Step 1 */}
-        <CompactStep 
-          number="01" 
-          title="Curate" 
-          description="Browse single origins & manage portfolio."
-          link="/portfolio"
-          side="left"
-        />
+      {/* 2. THE PROCESS (Horizontal 1-2-3) */}
+      <section className="py-24 max-w-7xl mx-auto px-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 relative">
+            
+            {/* Connector Line (Desktop Only) */}
+            <div className="hidden md:block absolute top-12 left-[16%] right-[16%] h-px bg-fruit-plum/10 -z-10 border-t border-dashed border-fruit-plum/20" />
 
-        {/* Pro Tip Break 1 */}
-        <ProTip 
-            tip="Use the 'Rao Spin' logic in your blend: Pair a soluble washed coffee with a dense natural for balanced extraction."
-            author="Blendie OS"
-        />
-
-        {/* Step 2 */}
-        <CompactStep 
-          number="02" 
-          title="Design" 
-          description="Customize packaging & visualize in 3D."
-          link="/configurator"
-          side="right"
-        />
-
-        {/* Pro Tip Break 2 */}
-        <ProTip 
-            tip="Did you know? Our 'Natural Fruit' palette matches the actual flavor compounds found in high-altitude fermentation."
-            author="Science Dept"
-        />
-
-        {/* Step 3 */}
-        <CompactStep 
-          number="03" 
-          title="Order" 
-          description="Volume discounts & automated shipping."
-          link="/checkout"
-          side="left"
-        />
+            <StepCard 
+                number="01" 
+                title="Curate" 
+                icon="☕"
+                desc="Browse origins, build your portfolio, and mix percentages."
+                link="/portfolio"
+            />
+            <StepCard 
+                number="02" 
+                title="Design" 
+                icon="🎨"
+                desc="Customize your bag, label, and brand identity in 3D."
+                link="/configurator"
+            />
+            <StepCard 
+                number="03" 
+                title="Order" 
+                icon="📦"
+                desc="Unlock volume discounts. We roast, pack, and ship."
+                link="/checkout"
+            />
+        </div>
       </section>
 
-      {/* 3. CONSOLIDATED EDUCATION (Grid) */}
-      <section className="py-16 bg-fruit-peach/10 border-y border-fruit-plum/5">
-        <div className="max-w-6xl mx-auto px-4">
-            <h2 className="text-center font-serif font-bold text-2xl mb-8 text-fruit-plum">Why Build Your Own?</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <EduCard 
-                    icon="🏢" 
-                    title="Commercial Identity" 
-                    text="Stop serving someone else's brand. Create a House Blend that is uniquely yours. We handle the roasting; you handle the glory."
+      {/* 3. WHY? (Commercial vs Home) */}
+      <section className="py-24 bg-[#FFFCF5] border-y border-border-color">
+        <div className="max-w-5xl mx-auto px-8">
+            <div className="text-center mb-16">
+                <h2 className="text-4xl font-serif font-bold text-fruit-plum mb-4">Why Blendie?</h2>
+                <p className="opacity-60 max-w-2xl mx-auto">Whether you're a cafe scaling up or a connoisseur dialing in.</p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
+                <WhyCard 
+                    title="For Business" 
+                    subtitle="Commercial & Cafe"
+                    points={[
+                        "Your Brand, Your Coffee (White Label).",
+                        "Wholesale pricing from 5kg+.",
+                        "Consistent precision roasting on Loring Smart Roasters.",
+                        "Automated fulfillment integration."
+                    ]}
                 />
-                <EduCard 
-                    icon="💰" 
-                    title="Volume Savings" 
-                    text="Buying single origins in 250g bags is for amateurs. Blending in bulk (5kg+) unlocks wholesale rates usually reserved for cafes."
-                />
-                <EduCard 
-                    icon="🔬" 
-                    title="Precision Quality" 
-                    text="We use Loring Smart Roasters and verify every batch with ColorTrack. Your custom blend isn't a guess; it's science."
+                <WhyCard 
+                    title="For Home" 
+                    subtitle="Barista & Enthusiast"
+                    points={[
+                        "Drink better coffee for less (Bulk savings).",
+                        "Create the exact flavor profile you love.",
+                        "Freshly roasted to order.",
+                        "Learn with our Sample Kits & AI Guide."
+                    ]}
                 />
             </div>
         </div>
       </section>
 
-      {/* 4. SAMPLE PACK CTA */}
-      <section className="py-16 px-4 text-center">
-        <h2 className="text-2xl font-serif font-bold text-fruit-plum mb-2">Master Blending Kit</h2>
-        <p className="opacity-60 mb-6 text-sm">8x50g Origins + Cupping Guide</p>
-        <button className="btn-primary py-3 px-8 text-sm">
-          Order Sample Pack (€35)
-        </button>
+      {/* 4. FAQ */}
+      <section className="py-24 max-w-3xl mx-auto px-8">
+        <h2 className="text-3xl font-serif font-bold text-center mb-12">Common Questions</h2>
+        <div className="space-y-4">
+            <FAQItem q="What is the minimum order?" a="You can order as little as 250g to sample, but volume discounts kick in at 1kg and 5kg." />
+            <FAQItem q="Can I design my own label?" a="Yes! Our 3D configurator lets you upload custom art or use our AI generator." />
+            <FAQItem q="How fresh is the roast?" a="We roast on demand. Your coffee is typically shipped within 48 hours of roasting." />
+        </div>
       </section>
 
     </main>
   );
 }
 
-function CompactStep({ number, title, description, link, side }: any) {
-  return (
-    <div className={`relative py-8 flex flex-col md:flex-row ${side === 'left' ? 'md:justify-end md:text-right' : 'md:justify-start'}`}>
-      
-      {/* Dot */}
-      <div className="hidden md:block absolute left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 w-3 h-3 rounded-full bg-white border-2 border-fruit-plum z-10" />
-      
-      <div className={`md:w-5/12 ${side === 'left' ? 'md:pr-12' : 'md:pl-12'}`}>
-        <span className="text-fruit-citrus font-bold text-[10px] uppercase tracking-widest mb-1 block">Step {number}</span>
-        <h3 className="text-2xl font-serif font-bold text-fruit-plum mb-2 hover:text-fruit-berry transition-colors">
-            <Link href={link}>{title} →</Link>
-        </h3>
-        <p className="opacity-60 text-sm leading-relaxed">{description}</p>
-      </div>
-    </div>
-  );
-}
-
-function ProTip({ tip, author }: any) {
+function StepCard({ number, title, desc, link, icon }: any) {
     return (
-        <div className="max-w-md mx-auto my-8 bg-white border border-fruit-citrus/20 rounded-lg p-4 text-center shadow-sm relative overflow-hidden">
-            <div className="absolute top-0 left-0 w-1 h-full bg-fruit-citrus" />
-            <p className="text-xs font-serif italic opacity-80 mb-2">"{tip}"</p>
-            <p className="text-[10px] font-bold uppercase tracking-widest text-fruit-plum opacity-50">— {author}</p>
+        <div className="flex flex-col items-center text-center group">
+            <div className="w-24 h-24 rounded-full bg-white border border-border-color flex items-center justify-center text-4xl shadow-sm mb-6 group-hover:scale-110 transition-transform group-hover:border-fruit-citrus relative z-10">
+                {icon}
+                <div className="absolute -top-2 -right-2 bg-fruit-plum text-white text-[10px] font-bold w-6 h-6 rounded-full flex items-center justify-center">
+                    {number}
+                </div>
+            </div>
+            <h3 className="text-xl font-bold font-serif mb-2">{title}</h3>
+            <p className="text-sm opacity-60 mb-4 px-4">{desc}</p>
+            <Link href={link} className="text-xs font-bold uppercase tracking-widest text-fruit-berry hover:underline underline-offset-4">
+                Start {title}
+            </Link>
         </div>
     )
 }
 
-function EduCard({ title, text, icon }: any) {
+function WhyCard({ title, subtitle, points }: any) {
     return (
-        <div className="bg-white p-6 rounded-xl border border-border-color hover:border-fruit-plum/20 transition-colors shadow-sm">
-            <span className="text-2xl block mb-3">{icon}</span>
-            <h4 className="font-serif font-bold text-lg mb-2 text-fruit-plum">{title}</h4>
-            <p className="text-xs opacity-70 leading-relaxed">{text}</p>
+        <div className="bg-white p-8 rounded-xl border border-border-color shadow-sm hover:shadow-md transition-shadow">
+            <h3 className="text-2xl font-serif font-bold mb-1 text-fruit-plum">{title}</h3>
+            <p className="text-xs uppercase tracking-widest opacity-50 mb-6">{subtitle}</p>
+            <ul className="space-y-3">
+                {points.map((p: string, i: number) => (
+                    <li key={i} className="flex gap-3 text-sm opacity-80">
+                        <span className="text-fruit-citrus">✓</span>
+                        {p}
+                    </li>
+                ))}
+            </ul>
+        </div>
+    )
+}
+
+function FAQItem({ q, a }: any) {
+    return (
+        <div className="border border-border-color rounded-lg p-6 hover:bg-[#F9F9F9] transition-colors cursor-pointer group">
+            <h4 className="font-bold text-lg mb-2 flex justify-between">
+                {q}
+                <span className="text-fruit-plum opacity-50 group-hover:opacity-100">+</span>
+            </h4>
+            <p className="text-sm opacity-60 leading-relaxed">{a}</p>
         </div>
     )
 }
