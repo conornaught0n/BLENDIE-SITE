@@ -1,15 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-
-// Mock Data matching our new Schema
-const MOCK_COFFEES = [
-  { id: '1', name: 'Ethiopia Yirgacheffe', type: 'Single Origin', origin: 'Ethiopia', process: 'Washed', price_250g: 15, price_1kg: 45, aroma: 9, body: 4, acidity: 8, sweetness: 7, aftertaste: 8, tags: ['Floral', 'Citrus'] },
-  { id: '2', name: 'Brazil Santos', type: 'Single Origin', origin: 'Brazil', process: 'Natural', price_250g: 12, price_1kg: 38, aroma: 5, body: 8, acidity: 4, sweetness: 9, aftertaste: 6, tags: ['Nutty', 'Chocolate'] },
-  { id: '3', name: 'Colombia Supremo', type: 'Single Origin', origin: 'Colombia', process: 'Washed', price_250g: 14, price_1kg: 42, aroma: 7, body: 6, acidity: 6, sweetness: 8, aftertaste: 7, tags: ['Caramel', 'Balanced'] },
-  { id: '4', name: 'Sumatra Mandheling', type: 'Single Origin', origin: 'Indonesia', process: 'Wet Hull', price_250g: 16, price_1kg: 48, aroma: 6, body: 10, acidity: 3, sweetness: 6, aftertaste: 9, tags: ['Earth', 'Spice'] },
-  { id: '5', name: 'Kenya AA', type: 'Single Origin', origin: 'Kenya', process: 'Washed', price_250g: 18, price_1kg: 55, aroma: 9, body: 7, acidity: 9, sweetness: 8, aftertaste: 9, tags: ['Berry', 'Wine'] },
-];
+import { COFFEE_DATA } from '@/lib/coffee-data';
 
 export default function Portfolio() {
   const [favorites, setFavorites] = useState<string[]>([]);
@@ -22,8 +14,11 @@ export default function Portfolio() {
   };
 
   const filteredCoffees = filter === 'All' 
-    ? MOCK_COFFEES 
-    : MOCK_COFFEES.filter(c => c.origin === filter);
+    ? COFFEE_DATA 
+    : COFFEE_DATA.filter(c => c.origin === filter || c.type === (filter === 'Single Origin' ? 'Single Origin' : 'Blend Component'));
+
+  // Extract unique origins for filter
+  const origins = Array.from(new Set(COFFEE_DATA.map(c => c.origin)));
 
   return (
     <div className="min-h-screen bg-black text-white p-8">
@@ -35,19 +30,18 @@ export default function Portfolio() {
       </header>
 
       {/* Filter Bar */}
-      <div className="flex justify-center gap-4 mb-12">
-        {['All', 'Ethiopia', 'Brazil', 'Colombia', 'Indonesia', 'Kenya'].map(f => (
-          <button
-            key={f}
-            onClick={() => setFilter(f)}
-            className={`px-6 py-2 rounded-full border transition-all ${
-              filter === f 
-                ? 'bg-[#D4AF37] border-[#D4AF37] text-black font-bold' 
-                : 'bg-transparent border-white/20 text-white hover:border-[#D4AF37]/50'
-            }`}
-          >
-            {f}
-          </button>
+      <div className="flex justify-center gap-4 mb-12 flex-wrap">
+        <FilterBtn label="All" active={filter === 'All'} onClick={() => setFilter('All')} />
+        <FilterBtn label="Single Origins" active={filter === 'Single Origin'} onClick={() => setFilter('Single Origin')} />
+        <FilterBtn label="Blend Components" active={filter === 'Blend Component'} onClick={() => setFilter('Blend Component')} />
+        <div className="w-full md:w-auto h-px md:h-8 bg-white/10 mx-2" />
+        {origins.map(origin => (
+          <FilterBtn 
+            key={origin} 
+            label={origin} 
+            active={filter === origin} 
+            onClick={() => setFilter(origin)} 
+          />
         ))}
       </div>
 
@@ -56,11 +50,12 @@ export default function Portfolio() {
         {filteredCoffees.map(coffee => (
           <div key={coffee.id} className="group relative bg-[#0a0a0a] border border-white/10 rounded-2xl overflow-hidden hover:border-[#D4AF37]/50 transition-all duration-300">
             
-            {/* Card Header (Origin & Process) */}
+            {/* Card Header */}
             <div className="p-6 pb-4 border-b border-white/5 flex justify-between items-start">
               <div>
                 <h3 className="text-xl font-bold text-white mb-1 group-hover:text-[#D4AF37] transition-colors">{coffee.name}</h3>
                 <span className="text-xs font-mono text-white/40 uppercase tracking-widest">{coffee.origin} • {coffee.process}</span>
+                <p className="text-xs text-white/30 mt-1">{coffee.producer}</p>
               </div>
               <button 
                 onClick={() => toggleHeart(coffee.id)}
@@ -80,15 +75,15 @@ export default function Portfolio() {
 
             {/* Tags & Price */}
             <div className="p-6 pt-4 bg-white/5 flex items-center justify-between">
-              <div className="flex gap-2">
-                {coffee.tags.map(tag => (
-                  <span key={tag} className="text-xs bg-black border border-white/10 px-2 py-1 rounded text-white/60">
+              <div className="flex gap-2 flex-wrap max-w-[70%]">
+                {coffee.tags.slice(0, 3).map(tag => (
+                  <span key={tag} className="text-[10px] bg-black border border-white/10 px-2 py-1 rounded text-white/60">
                     {tag}
                   </span>
                 ))}
               </div>
               <div className="text-right">
-                <p className="text-[#D4AF37] font-bold">€{coffee.price_250g}</p>
+                <p className="text-[#D4AF37] font-bold">€{coffee.price_250g.toFixed(2)}</p>
                 <p className="text-[10px] text-white/40">per 250g</p>
               </div>
             </div>
@@ -122,6 +117,19 @@ export default function Portfolio() {
     </div>
   );
 }
+
+const FilterBtn = ({ label, active, onClick }: { label: string, active: boolean, onClick: () => void }) => (
+  <button
+    onClick={onClick}
+    className={`px-4 py-2 rounded-full border text-sm transition-all ${
+      active 
+        ? 'bg-[#D4AF37] border-[#D4AF37] text-black font-bold' 
+        : 'bg-transparent border-white/20 text-white hover:border-[#D4AF37]/50'
+    }`}
+  >
+    {label}
+  </button>
+);
 
 const TraitBar = ({ label, value }: { label: string, value: number }) => (
   <div className="flex items-center gap-3 text-sm">
