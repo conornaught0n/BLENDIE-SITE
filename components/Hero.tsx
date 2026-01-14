@@ -2,30 +2,41 @@ import React from 'react';
 
 export const Hero = () => {
   return (
-    <section className="relative flex min-h-[80vh] flex-col items-center justify-center overflow-hidden bg-background text-foreground px-4 sm:px-6 lg:px-8">
-      {/* Background Gradients */}
-      <div className="absolute top-0 left-1/4 h-96 w-96 rounded-full bg-[#D4AF37]/10 blur-[128px]" />
-      <div className="absolute bottom-0 right-1/4 h-96 w-96 rounded-full bg-[#001f13]/50 blur-[128px]" />
+    <section className="relative flex min-h-[90vh] flex-col items-center justify-center overflow-hidden bg-background text-foreground">
+      {/* Background Image (Coffee Roasting / Farm) */}
+      <div className="absolute inset-0 z-0">
+        <div className="absolute inset-0 bg-black/60 z-10" /> {/* Dark Overlay */}
+        {/* Placeholder for a high-res roasting image. In production, use next/image */}
+        <img 
+          src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&q=80&w=2000" 
+          alt="Coffee Roasting" 
+          className="h-full w-full object-cover opacity-80"
+        />
+      </div>
 
-      <div className="relative z-10 mx-auto max-w-5xl text-center">
-        <h1 className="bg-gradient-to-b from-[#D4AF37] to-[#8C7324] bg-clip-text text-transparent text-5xl font-bold tracking-tight sm:text-7xl md:text-8xl">
-          BLENDIE
+      <div className="relative z-20 mx-auto max-w-5xl text-center px-4">
+        <h1 className="text-6xl font-bold tracking-tight text-white sm:text-8xl md:text-9xl mb-6 drop-shadow-2xl">
+          MASTER<br/>THE ROAST
         </h1>
-        <h2 className="mt-4 text-2xl font-semibold tracking-wide text-[#E5C158] sm:text-3xl md:text-4xl">
-          Precision Roasting. Uncompromising Safety.
-        </h2>
-        <p className="mt-6 text-lg tracking-wide text-white/80 sm:text-xl md:text-2xl max-w-2xl mx-auto">
-          Experience the seamless fusion of design, technology, and flavor.
+        <p className="mt-4 text-xl tracking-wide text-white/90 sm:text-2xl max-w-3xl mx-auto font-light drop-shadow-md">
+          A professional platform for blending, roasting, and designing your own coffee brand.
         </p>
         
-        <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
-          <button className="group relative rounded-full bg-[#D4AF37] px-8 py-3 text-[#002B1B] transition-all hover:bg-[#E5C158] hover:shadow-lg hover:shadow-[#D4AF37]/20">
-            <span className="relative z-10 font-bold">Discover More</span>
+        <div className="mt-12 flex flex-col items-center justify-center gap-6 sm:flex-row">
+          <button className="group relative rounded-full bg-[#D4AF37] px-10 py-4 text-black text-lg font-bold transition-all hover:bg-white hover:scale-105 shadow-xl shadow-black/50">
+            Start Blending
           </button>
-          <button className="rounded-full border border-[#D4AF37] px-8 py-3 text-[#D4AF37] transition-colors hover:bg-[#D4AF37]/10">
-            View Batches
+          <button className="rounded-full border border-white/30 bg-black/30 backdrop-blur-md px-10 py-4 text-white font-medium transition-colors hover:bg-white/10 hover:border-white">
+            View Ledger
           </button>
         </div>
+      </div>
+
+      {/* Scroll Indicator */}
+      <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-20 animate-bounce">
+        <svg className="w-6 h-6 text-white/50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+        </svg>
       </div>
     </section>
   );
