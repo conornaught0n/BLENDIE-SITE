@@ -5,6 +5,7 @@ const nextConfig: NextConfig = {
   images: {
     unoptimized: true,
   },
+  trailingSlash: true, // Forces /about/index.html structure which is safer for static hosts
 };
 
 export default nextConfig;

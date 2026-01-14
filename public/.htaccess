@@ -2,18 +2,14 @@
 # Enable Rewrite Engine
 RewriteEngine On
 
-# If the requested filename exists, serve it
-RewriteCond %{REQUEST_FILENAME} -f
-RewriteRule ^ - [L]
-
-# If the requested directory exists, serve it
-RewriteCond %{REQUEST_FILENAME} -d
-RewriteRule ^ - [L]
-
-# Enable .html extension hiding
+# Redirect /path to /path.html if it exists
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME}.html -f
 RewriteRule ^(.*)$ $1.html [L]
+
+# Handle trailing slashes
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)/$ $1.html [L]
 
 # Custom 404
 ErrorDocument 404 /404.html

@@ -9,71 +9,39 @@ export default function Home() {
       {/* 1. HERO */}
       <Hero />
 
-      {/* 2. THE PROCESS (Horizontal 1-2-3) */}
+      {/* 2. TRUST BAR */}
+      <section className="py-8 border-b border-border-color bg-white overflow-hidden">
+        <p className="text-center text-[10px] uppercase tracking-widest opacity-40 mb-4">Trusted Partners</p>
+        <div className="flex justify-center items-center gap-12 md:gap-24 opacity-30 grayscale">
+            {/* Mock Logos - Text for now */}
+            <span className="font-serif font-bold text-xl">FALCON</span>
+            <span className="font-serif font-bold text-xl">INGENIOUS</span>
+            <span className="font-serif font-bold text-xl">LORING</span>
+            <span className="font-serif font-bold text-xl">ALGRANO</span>
+        </div>
+      </section>
+
+      {/* 3. THE PROCESS (Horizontal 1-2-3) */}
       <section className="py-24 max-w-7xl mx-auto px-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 relative">
-            
-            {/* Connector Line (Desktop Only) */}
             <div className="hidden md:block absolute top-12 left-[16%] right-[16%] h-px bg-fruit-plum/10 -z-10 border-t border-dashed border-fruit-plum/20" />
-
-            <StepCard 
-                number="01" 
-                title="Curate" 
-                icon="☕"
-                desc="Browse origins, build your portfolio, and mix percentages."
-                link="/portfolio"
-            />
-            <StepCard 
-                number="02" 
-                title="Design" 
-                icon="🎨"
-                desc="Customize your bag, label, and brand identity in 3D."
-                link="/configurator"
-            />
-            <StepCard 
-                number="03" 
-                title="Order" 
-                icon="📦"
-                desc="Unlock volume discounts. We roast, pack, and ship."
-                link="/checkout"
-            />
+            <StepCard number="01" title="Curate" icon="☕" desc="Browse origins, build your portfolio, and mix percentages." link="/portfolio" />
+            <StepCard number="02" title="Design" icon="🎨" desc="Customize your bag, label, and brand identity in 3D." link="/configurator" />
+            <StepCard number="03" title="Order" icon="📦" desc="Unlock volume discounts. We roast, pack, and ship." link="/checkout" />
         </div>
       </section>
 
-      {/* 3. WHY? (Commercial vs Home) */}
+      {/* 4. WHY? */}
       <section className="py-24 bg-[#FFFCF5] border-y border-border-color">
         <div className="max-w-5xl mx-auto px-8">
-            <div className="text-center mb-16">
-                <h2 className="text-4xl font-serif font-bold text-fruit-plum mb-4">Why Blendie?</h2>
-                <p className="opacity-60 max-w-2xl mx-auto">Whether you're a cafe scaling up or a connoisseur dialing in.</p>
-            </div>
-
             <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
-                <WhyCard 
-                    title="For Business" 
-                    subtitle="Commercial & Cafe"
-                    points={[
-                        "Your Brand, Your Coffee (White Label).",
-                        "Wholesale pricing from 5kg+.",
-                        "Consistent precision roasting on Loring Smart Roasters.",
-                        "Automated fulfillment integration."
-                    ]}
-                />
-                <WhyCard 
-                    title="For Home" 
-                    subtitle="Barista & Enthusiast"
-                    points={[
-                        "Drink better coffee for less (Bulk savings).",
-                        "Create the exact flavor profile you love.",
-                        "Freshly roasted to order.",
-                        "Learn with our Sample Kits & AI Guide."
-                    ]}
-                />
+                <WhyCard title="For Business" subtitle="Commercial & Cafe" points={["Your Brand, Your Coffee (White Label).", "Wholesale pricing from 5kg+.", "Consistent precision roasting.", "Automated fulfillment integration."]} />
+                <WhyCard title="For Home" subtitle="Barista & Enthusiast" points={["Drink better coffee for less (Bulk savings).", "Create the exact flavor profile you love.", "Freshly roasted to order.", "Learn with our Sample Kits."]} />
             </div>
         </div>
       </section>
 
-      {/* 4. FAQ */}
+      {/* 5. FAQ */}
       <section className="py-24 max-w-3xl mx-auto px-8">
         <h2 className="text-3xl font-serif font-bold text-center mb-12">Common Questions</h2>
         <div className="space-y-4">
@@ -81,6 +49,17 @@ export default function Home() {
             <FAQItem q="Can I design my own label?" a="Yes! Our 3D configurator lets you upload custom art or use our AI generator." />
             <FAQItem q="How fresh is the roast?" a="We roast on demand. Your coffee is typically shipped within 48 hours of roasting." />
         </div>
+      </section>
+
+      {/* 6. SAMPLE PACK CTA */}
+      <section className="py-24 px-4 text-center">
+        <h2 className="text-3xl font-serif font-bold text-fruit-plum mb-4">Not ready to commit?</h2>
+        <p className="opacity-60 mb-8 max-w-xl mx-auto">
+          Order a <strong>Master Blending Kit</strong>. Includes 8x50g single origins, professional cupping bowls, and a guide to finding your flavor.
+        </p>
+        <button className="btn-primary">
+          Order Sample Pack (€35)
+        </button>
       </section>
 
     </main>

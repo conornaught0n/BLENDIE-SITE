@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Fraunces, DM_Sans } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/Header";
+import { Footer } from "@/components/Footer";
 import { BlendieAgent } from "@/components/BlendieAgent";
 import PageTransition from "@/components/PageTransition";
 
@@ -9,7 +10,7 @@ const fraunces = Fraunces({
   variable: "--font-serif",
   subsets: ["latin"],
   display: "swap",
-  axes: ["SOFT", "WONK", "opsz"], // Enable Softness axis
+  axes: ["SOFT", "WONK", "opsz"],
 });
 
 const dmSans = DM_Sans({
@@ -31,12 +32,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${fraunces.variable} ${dmSans.variable} antialiased overflow-x-hidden`}
+        className={`${fraunces.variable} ${dmSans.variable} antialiased overflow-x-hidden flex flex-col min-h-screen`}
       >
         <Header />
-        <PageTransition>
-          {children}
-        </PageTransition>
+        <div className="flex-1">
+            <PageTransition>
+            {children}
+            </PageTransition>
+        </div>
+        <Footer />
         <BlendieAgent />
       </body>
     </html>
