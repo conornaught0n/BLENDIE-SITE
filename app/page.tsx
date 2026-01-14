@@ -9,7 +9,7 @@ export default function Home() {
       {/* 1. HERO */}
       <Hero />
 
-      {/* 2. TRUST MARQUEE (Scrolling) */}
+      {/* 2. TRUST MARQUEE */}
       <section className="py-8 border-b border-border-color bg-white overflow-hidden">
         <p className="text-center text-[10px] uppercase tracking-widest opacity-40 mb-4 font-bold">Trusted By & Featured In</p>
         <div className="relative flex overflow-x-hidden">
@@ -20,7 +20,6 @@ export default function Home() {
             <span className="font-serif font-bold text-2xl mx-8">LORING SMART ROAST</span>
             <span className="font-serif font-bold text-2xl mx-8">ALGRANO</span>
             <span className="font-serif font-bold text-2xl mx-8">PERFECT DAILY GRIND</span>
-            {/* Duplicate for seamless loop */}
             <span className="font-serif font-bold text-2xl mx-8">ROAST MAGAZINE</span>
             <span className="font-serif font-bold text-2xl mx-8">FALCON SPECIALTY</span>
             <span className="font-serif font-bold text-2xl mx-8">INGENIOUS</span>
@@ -38,7 +37,6 @@ export default function Home() {
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 relative">
-            {/* Connector Line */}
             <div className="hidden md:block absolute top-12 left-[16%] right-[16%] h-px bg-fruit-plum/10 -z-10 border-t border-dashed border-fruit-plum/20" />
 
             <StepCard 
@@ -46,21 +44,21 @@ export default function Home() {
                 title="Build" 
                 icon="☕"
                 desc="Browse origins, manage your portfolio, and craft your perfect roast profile."
-                link="/portfolio"
+                link="/portfolio.html"
             />
             <StepCard 
                 number="02" 
                 title="Design" 
                 icon="🎨"
                 desc="Customize your bag, label, and brand identity in 3D."
-                link="/configurator"
+                link="/configurator.html"
             />
             <StepCard 
                 number="03" 
                 title="Order" 
                 icon="📦"
                 desc="Unlock volume discounts. We roast, pack, and ship."
-                link="/checkout"
+                link="/checkout.html"
             />
         </div>
       </section>
@@ -111,9 +109,9 @@ function StepCard({ number, title, desc, link, icon }: any) {
             </div>
             <h3 className="text-2xl font-bold font-serif mb-2 text-fruit-plum">{title}</h3>
             <p className="text-sm opacity-60 mb-6 px-4 leading-relaxed">{desc}</p>
-            <Link href={link} className="btn-primary py-2 px-6 text-xs uppercase tracking-widest shadow-none hover:shadow-md">
+            <a href={link} className="btn-primary py-2 px-6 text-xs uppercase tracking-widest shadow-none hover:shadow-md">
                 Start {title}
-            </Link>
+            </a>
         </div>
     )
 }

@@ -11,19 +11,20 @@ export const Header = () => {
   const toggleMenu = () => setIsOpen(!isOpen);
 
   const NavLink = ({ href, label, mobile = false }: { href: string; label: string; mobile?: boolean }) => {
-    const isActive = pathname === href;
+    // Basic active check (ignores .html extension logic for matching)
+    const isActive = pathname?.startsWith(href.replace('.html', ''));
+    
     const baseClass = mobile 
       ? "text-3xl font-serif font-bold text-foreground" 
       : `text-sm uppercase tracking-widest font-bold font-sans transition-colors hover:text-fruit-berry ${isActive ? 'text-fruit-berry underline underline-offset-4' : 'text-foreground/60'}`;
 
     return (
-      <Link 
+      <a 
         href={href} 
-        onClick={() => setIsOpen(false)}
         className={baseClass}
       >
         {label}
-      </Link>
+      </a>
     );
   };
 
@@ -34,13 +35,13 @@ export const Header = () => {
         
         {/* Desktop Navigation (Left) */}
         <nav className="hidden md:flex gap-8 items-center w-1/3">
-          <NavLink href="/shop" label="Shop" />
-          <NavLink href="/portfolio" label="Portfolio" />
+          <NavLink href="/shop.html" label="Shop" />
+          <NavLink href="/portfolio.html" label="Portfolio" />
         </nav>
 
         {/* Logo (Center) - Curved SVG */}
         <div className="w-1/3 flex justify-center">
-          <Link href="/" className="group relative w-40 h-16 flex items-center justify-center">
+          <a href="/index.html" className="group relative w-40 h-16 flex items-center justify-center">
             <svg viewBox="0 0 200 60" className="w-full h-full overflow-visible">
                 <path id="curve" d="M 20,50 Q 100,10 180,50" fill="transparent" />
                 <text className="font-serif text-4xl font-bold fill-fruit-plum group-hover:fill-fruit-berry transition-colors duration-300">
@@ -49,12 +50,12 @@ export const Header = () => {
                     </textPath>
                 </text>
             </svg>
-          </Link>
+          </a>
         </div>
 
         {/* Desktop Actions (Right) */}
         <div className="hidden md:flex gap-6 items-center justify-end w-1/3">
-           <NavLink href="/production" label="OS" />
+           <NavLink href="/production.html" label="OS" />
            <button className="text-sm uppercase tracking-widest font-bold font-sans text-foreground hover:text-fruit-berry">
              Cart (0)
            </button>
@@ -72,10 +73,10 @@ export const Header = () => {
       {/* Mobile Overlay Menu */}
       <div className={`fixed inset-0 bg-background z-40 flex flex-col justify-center items-center transition-all duration-500 ${isOpen ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'}`}>
         <nav className="flex flex-col gap-8 text-center">
-          <NavLink href="/" label="Home" mobile />
-          <NavLink href="/shop" label="Shop" mobile />
-          <NavLink href="/portfolio" label="Portfolio" mobile />
-          <NavLink href="/production" label="Production OS" mobile />
+          <NavLink href="/index.html" label="Home" mobile />
+          <NavLink href="/shop.html" label="Shop" mobile />
+          <NavLink href="/portfolio.html" label="Portfolio" mobile />
+          <NavLink href="/production.html" label="Production OS" mobile />
         </nav>
       </div>
     </>
