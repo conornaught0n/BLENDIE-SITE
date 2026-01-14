@@ -1,15 +1,15 @@
 @import "tailwindcss";
 
 :root {
-  /* NATURAL FRUIT THEME - Vibrant, Fresh, Fun, "Cool" */
-  --background: #FFFDF9; /* Crisp Warm White */
-  --foreground: #1E1E24; /* Soft Ink Black */
+  /* NATURAL FRUIT THEME - Updated: Less Red, More Gold/Amber */
+  --background: #FFFDF9;
+  --foreground: #1E1E24;
   
   --card-bg: #FFFFFF;
   --border-color: #F0F0F0;
   
-  /* The Fruit Spectrum */
-  --accent-berry: #FF4D6D;    /* Vibrant Raspberry */
+  /* The Fruit Spectrum (Refined) */
+  --accent-berry: #D97706;    /* Shifted Red -> Amber/Gold */
   --accent-citrus: #FFB703;   /* Bright Yuzu/Lemon */
   --accent-plum: #540D6E;     /* Deep Grape/Wine */
   --accent-green: #8CB369;    /* Fresh Apple/Mint */
