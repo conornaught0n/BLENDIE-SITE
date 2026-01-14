@@ -48,7 +48,7 @@ export default function BrandIdentity() {
         <h2 className="text-xs font-bold uppercase tracking-widest opacity-40 mb-6">Natural Fruit Palette</h2>
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
           <ColorSwatch name="Plum Deep" hex="#540D6E" className="bg-[#540D6E] text-white" />
-          <ColorSwatch name="Berry Pop" hex="#FF4D6D" className="bg-[#FF4D6D] text-white" />
+          <ColorSwatch name="Berry Pop" hex="#D97706" className="bg-[#D97706] text-white" /> {/* Updated Amber */}
           <ColorSwatch name="Citrus Zest" hex="#FFB703" className="bg-[#FFB703] text-black" />
           <ColorSwatch name="Fresh Green" hex="#8CB369" className="bg-[#8CB369] text-black" />
           <ColorSwatch name="Soft Peach" hex="#F28482" className="bg-[#F28482] text-black" />
@@ -81,7 +81,7 @@ export default function BrandIdentity() {
           <div className="space-y-4">
             <h3 className="font-serif text-xl font-bold">Visualizer</h3>
             <div className="bg-white border border-border-color rounded-2xl p-8 flex items-center justify-center shadow-sm">
-               <StarFlower />
+               <StarFlower attributes={{ body: 7, dark: 5, bright: 8, fruity: 9, sweet: 6 }} />
             </div>
           </div>
 
