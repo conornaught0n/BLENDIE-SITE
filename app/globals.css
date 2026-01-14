@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  /* NATURAL FRUIT THEME - Updated: Less Red, More Gold/Amber */
+  /* NATURAL FRUIT THEME */
   --background: #FFFDF9;
   --foreground: #1E1E24;
   
@@ -9,11 +9,11 @@
   --border-color: #F0F0F0;
   
   /* The Fruit Spectrum (Refined) */
-  --accent-berry: #D97706;    /* Shifted Red -> Amber/Gold */
-  --accent-citrus: #FFB703;   /* Bright Yuzu/Lemon */
-  --accent-plum: #540D6E;     /* Deep Grape/Wine */
-  --accent-green: #8CB369;    /* Fresh Apple/Mint */
-  --accent-peach: #F28482;    /* Soft Peach/Floral */
+  --accent-berry: #D97706;    /* Amber/Gold */
+  --accent-citrus: #FFB703;   /* Bright Yuzu */
+  --accent-plum: #540D6E;     /* Deep Grape */
+  --accent-green: #8CB369;    /* Fresh Apple */
+  --accent-peach: #F28482;    /* Soft Peach */
   
   --radius-sm: 8px;
   --radius-md: 16px;
@@ -27,12 +27,18 @@
   --font-serif: "Fraunces", serif;
   --font-sans: "DM Sans", sans-serif;
   
-  /* Mapping to Semantic Names */
   --color-fruit-berry: var(--accent-berry);
   --color-fruit-citrus: var(--accent-citrus);
   --color-fruit-plum: var(--accent-plum);
   --color-fruit-green: var(--accent-green);
   --color-fruit-peach: var(--accent-peach);
+  
+  --animate-marquee: marquee 25s linear infinite;
+  
+  @keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
 }
 
 body {

@@ -9,25 +9,59 @@ export default function Home() {
       {/* 1. HERO */}
       <Hero />
 
-      {/* 2. TRUST BAR */}
+      {/* 2. TRUST MARQUEE (Scrolling) */}
       <section className="py-8 border-b border-border-color bg-white overflow-hidden">
-        <p className="text-center text-[10px] uppercase tracking-widest opacity-40 mb-4">Trusted Partners</p>
-        <div className="flex justify-center items-center gap-12 md:gap-24 opacity-30 grayscale">
-            {/* Mock Logos - Text for now */}
-            <span className="font-serif font-bold text-xl">FALCON</span>
-            <span className="font-serif font-bold text-xl">INGENIOUS</span>
-            <span className="font-serif font-bold text-xl">LORING</span>
-            <span className="font-serif font-bold text-xl">ALGRANO</span>
+        <p className="text-center text-[10px] uppercase tracking-widest opacity-40 mb-4 font-bold">Trusted By & Featured In</p>
+        <div className="relative flex overflow-x-hidden">
+          <div className="animate-marquee whitespace-nowrap flex gap-16 opacity-30 grayscale items-center">
+            <span className="font-serif font-bold text-2xl mx-8">ROAST MAGAZINE</span>
+            <span className="font-serif font-bold text-2xl mx-8">FALCON SPECIALTY</span>
+            <span className="font-serif font-bold text-2xl mx-8">INGENIOUS</span>
+            <span className="font-serif font-bold text-2xl mx-8">LORING SMART ROAST</span>
+            <span className="font-serif font-bold text-2xl mx-8">ALGRANO</span>
+            <span className="font-serif font-bold text-2xl mx-8">PERFECT DAILY GRIND</span>
+            {/* Duplicate for seamless loop */}
+            <span className="font-serif font-bold text-2xl mx-8">ROAST MAGAZINE</span>
+            <span className="font-serif font-bold text-2xl mx-8">FALCON SPECIALTY</span>
+            <span className="font-serif font-bold text-2xl mx-8">INGENIOUS</span>
+            <span className="font-serif font-bold text-2xl mx-8">LORING SMART ROAST</span>
+            <span className="font-serif font-bold text-2xl mx-8">ALGRANO</span>
+            <span className="font-serif font-bold text-2xl mx-8">PERFECT DAILY GRIND</span>
+          </div>
         </div>
       </section>
 
-      {/* 3. THE PROCESS (Horizontal 1-2-3) */}
+      {/* 3. THE PROCESS (Centered 1-2-3) */}
       <section className="py-24 max-w-7xl mx-auto px-8">
+        <div className="text-center mb-16">
+            <h2 className="text-4xl font-serif font-bold text-fruit-plum">How It Works</h2>
+        </div>
+        
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 relative">
+            {/* Connector Line */}
             <div className="hidden md:block absolute top-12 left-[16%] right-[16%] h-px bg-fruit-plum/10 -z-10 border-t border-dashed border-fruit-plum/20" />
-            <StepCard number="01" title="Curate" icon="☕" desc="Browse origins, build your portfolio, and mix percentages." link="/portfolio" />
-            <StepCard number="02" title="Design" icon="🎨" desc="Customize your bag, label, and brand identity in 3D." link="/configurator" />
-            <StepCard number="03" title="Order" icon="📦" desc="Unlock volume discounts. We roast, pack, and ship." link="/checkout" />
+
+            <StepCard 
+                number="01" 
+                title="Build" 
+                icon="☕"
+                desc="Browse origins, manage your portfolio, and craft your perfect roast profile."
+                link="/portfolio"
+            />
+            <StepCard 
+                number="02" 
+                title="Design" 
+                icon="🎨"
+                desc="Customize your bag, label, and brand identity in 3D."
+                link="/configurator"
+            />
+            <StepCard 
+                number="03" 
+                title="Order" 
+                icon="📦"
+                desc="Unlock volume discounts. We roast, pack, and ship."
+                link="/checkout"
+            />
         </div>
       </section>
 
@@ -43,7 +77,7 @@ export default function Home() {
 
       {/* 5. FAQ */}
       <section className="py-24 max-w-3xl mx-auto px-8">
-        <h2 className="text-3xl font-serif font-bold text-center mb-12">Common Questions</h2>
+        <h2 className="text-3xl font-serif font-bold text-center mb-12 text-fruit-plum">Common Questions</h2>
         <div className="space-y-4">
             <FAQItem q="What is the minimum order?" a="You can order as little as 250g to sample, but volume discounts kick in at 1kg and 5kg." />
             <FAQItem q="Can I design my own label?" a="Yes! Our 3D configurator lets you upload custom art or use our AI generator." />
@@ -75,9 +109,9 @@ function StepCard({ number, title, desc, link, icon }: any) {
                     {number}
                 </div>
             </div>
-            <h3 className="text-xl font-bold font-serif mb-2">{title}</h3>
-            <p className="text-sm opacity-60 mb-4 px-4">{desc}</p>
-            <Link href={link} className="text-xs font-bold uppercase tracking-widest text-fruit-berry hover:underline underline-offset-4">
+            <h3 className="text-2xl font-bold font-serif mb-2 text-fruit-plum">{title}</h3>
+            <p className="text-sm opacity-60 mb-6 px-4 leading-relaxed">{desc}</p>
+            <Link href={link} className="btn-primary py-2 px-6 text-xs uppercase tracking-widest shadow-none hover:shadow-md">
                 Start {title}
             </Link>
         </div>
@@ -86,13 +120,13 @@ function StepCard({ number, title, desc, link, icon }: any) {
 
 function WhyCard({ title, subtitle, points }: any) {
     return (
-        <div className="bg-white p-8 rounded-xl border border-border-color shadow-sm hover:shadow-md transition-shadow">
+        <div className="bg-white p-8 rounded-2xl border border-border-color shadow-sm hover:shadow-md transition-shadow text-center md:text-left">
             <h3 className="text-2xl font-serif font-bold mb-1 text-fruit-plum">{title}</h3>
             <p className="text-xs uppercase tracking-widest opacity-50 mb-6">{subtitle}</p>
-            <ul className="space-y-3">
+            <ul className="space-y-3 text-left inline-block">
                 {points.map((p: string, i: number) => (
                     <li key={i} className="flex gap-3 text-sm opacity-80">
-                        <span className="text-fruit-citrus">✓</span>
+                        <span className="text-fruit-citrus font-bold">✓</span>
                         {p}
                     </li>
                 ))}
@@ -103,10 +137,10 @@ function WhyCard({ title, subtitle, points }: any) {
 
 function FAQItem({ q, a }: any) {
     return (
-        <div className="border border-border-color rounded-lg p-6 hover:bg-[#F9F9F9] transition-colors cursor-pointer group">
-            <h4 className="font-bold text-lg mb-2 flex justify-between">
+        <div className="border border-border-color rounded-xl p-6 hover:bg-[#F9F9F9] transition-colors cursor-pointer group text-left">
+            <h4 className="font-bold text-lg mb-2 flex justify-between items-center">
                 {q}
-                <span className="text-fruit-plum opacity-50 group-hover:opacity-100">+</span>
+                <span className="text-fruit-plum opacity-50 group-hover:opacity-100 text-2xl font-light">+</span>
             </h4>
             <p className="text-sm opacity-60 leading-relaxed">{a}</p>
         </div>
