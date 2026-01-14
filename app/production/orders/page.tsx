@@ -36,8 +36,8 @@ export default function OrderManagement() {
         </div>
       </header>
 
-      <div className="glass-panel rounded-xl border border-white/10 overflow-hidden">
-        <table className="w-full text-left text-sm">
+      <div className="glass-panel rounded-xl border border-white/10 overflow-hidden overflow-x-auto">
+        <table className="w-full text-left text-sm min-w-[600px]">
             <thead>
                 <tr className="bg-white/5 text-white/50 border-b border-white/10">
                     <th className="p-4 font-normal uppercase tracking-widest text-xs">Order ID</th>

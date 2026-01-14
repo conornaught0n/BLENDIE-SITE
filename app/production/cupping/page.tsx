@@ -127,7 +127,7 @@ export default function CuppingForm() {
                     step="0.25"
                     value={value}
                     onChange={(e) => handleScoreChange(key, parseFloat(e.target.value))}
-                    className="w-full h-2 bg-white/10 rounded-lg appearance-none cursor-pointer accent-green-500"
+                    className="w-full h-8 bg-white/10 rounded-lg appearance-none cursor-pointer accent-green-500 touch-pan-x"
                   />
                 </div>
               ))}
