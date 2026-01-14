@@ -1,0 +1,89 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// -- COMMERCE CORE --
+
+model Product {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  description String?
+  price_250g  Decimal
+  price_1kg   Decimal
+  type        String   // 'single_origin', 'blend_component', 'merch'
+  origin      String?
+  process     String?
+  roastLevel  Int?     // 1-5
+  
+  // Flavor Profile (Petal Data)
+  aroma       Int      @default(5)
+  body        Int      @default(5)
+  acidity     Int      @default(5)
+  sweetness   Int      @default(5)
+  aftertaste  Int      @default(5)
+
+  inventory_kg Decimal @default(0) // Green bean inventory link
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Order {
+  id            String      @id @default(cuid())
+  orderNumber   String      @unique // Friendly ID for humans (e.g., #1042)
+  status        String      // 'pending', 'production', 'qc_check', 'shipped'
+  customerEmail String
+  customerName  String
+  total         Decimal
+  
+  items         OrderItem[]
+  
+  // Logistics
+  trackingNumber String?
+  shippingLabel  String?    // URL to PDF
+  
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+}
+
+model OrderItem {
+  id          String  @id @default(cuid())
+  orderId     String
+  order       Order   @relation(fields: [orderId], references: [id])
+  
+  productId   String? // Null if custom blend
+  productName String
+  quantity    Int
+  weight      String  // '250g', '1kg'
+  
+  // For Custom Blends
+  isCustomBlend Boolean @default(false)
+  blendRecipe   Json?   // Stores the array of component coffees and % [{id: 'ethiopia', pct: 40}, ...]
+}
+
+// -- PRODUCTION OS --
+
+model RoastBatch {
+  id          String   @id @default(cuid())
+  batchCode   String   @unique // e.g., "A17-001"
+  roastDate   DateTime @default(now())
+  profileName String   // e.g., "Ethiopia Light Filter"
+  
+  // Firescope Data
+  dropTemp    Decimal?
+  duration    String?
+  weightLoss  Decimal?
+  graphData   Json?    // Stores the raw curve points
+  
+  // Traceability
+  orders      Json?    // Array of Order IDs fulfilled by this batch
+}
