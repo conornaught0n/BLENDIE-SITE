@@ -4,7 +4,7 @@ import React, { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { easing } from 'maath';
 
-export const CoffeeBagModel = ({ color = "#1a1a1a", finish = "matte", ...props }: any) => {
+export const CoffeeBagModel = ({ color = "#2C1810", finish = "matte", ...props }: any) => {
   const meshRef = useRef<any>(null);
 
   useFrame((state, delta) => {
@@ -17,27 +17,30 @@ export const CoffeeBagModel = ({ color = "#1a1a1a", finish = "matte", ...props }
 
   return (
     <group {...props} ref={meshRef}>
-      {/* Main Bag Body (Box Geometry with bevels - Placeholder for GLTF) */}
+      {/* Main Bag Body (Procedural shape with slightly rounded bottom) */}
       <mesh position={[0, 0, 0]} castShadow receiveShadow>
-        <boxGeometry args={[2, 3.5, 1]} />
+        <boxGeometry args={[2, 3.5, 1, 4, 4, 4]} /> {/* Segments for smoother lighting */}
         <meshStandardMaterial 
             color={color} 
-            roughness={finish === 'matte' ? 0.8 : 0.2}
-            metalness={finish === 'matte' ? 0.1 : 0.4}
+            roughness={finish === 'matte' ? 0.9 : 0.3}
+            metalness={finish === 'matte' ? 0.0 : 0.2}
         />
       </mesh>
 
-      {/* Bag Top (Sealed Edge) */}
+      {/* Bag Top (Sealed Edge - Crimped) */}
       <mesh position={[0, 1.8, 0]} castShadow>
-        <boxGeometry args={[2, 0.2, 0.1]} />
-        <meshStandardMaterial color="#333" />
+        <boxGeometry args={[2.1, 0.3, 0.15]} />
+        <meshStandardMaterial 
+            color={color}
+            roughness={0.9}
+        />
       </mesh>
 
       {/* Label Area (Front) */}
-      <mesh position={[0, 0, 0.51]}>
-        <planeGeometry args={[1.5, 2]} />
-        <meshStandardMaterial color="#ffffff" />
-        {/* Text Texture would go here */}
+      <mesh position={[0, -0.2, 0.51]}>
+        <planeGeometry args={[1.6, 2.2]} />
+        <meshStandardMaterial color="#FFF" roughness={0.5} />
+        {/* Placeholder Text as Texture would go here */}
       </mesh>
     </group>
   );
