@@ -1,50 +1,50 @@
 @import "tailwindcss";
 
 :root {
-  /* Day Mode (Default) - Clean, Minimalist, High Contrast */
-  --background: #fdfdfd;
-  --foreground: #171717;
+  /* Day Mode (Default) - Off-White, Clean, High Contrast */
+  --background: #f5f5f4; /* Stone-100/Warm Grey */
+  --foreground: #1c1917; /* Stone-900 */
   --card-bg: #ffffff;
-  --border-color: #e5e5e5;
-  --accent-gold: #bfa15f; /* Muted Gold for Day */
+  --border-color: #d6d3d1; /* Stone-300 */
+  --accent-gold: #b45309; /* Darker Amber/Gold for contrast on white */
   
-  --glass-bg: rgba(255, 255, 255, 0.7);
-  --glass-border: rgba(0, 0, 0, 0.05);
+  --glass-bg: rgba(255, 255, 255, 0.85);
+  --glass-border: rgba(0, 0, 0, 0.08);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    /* Night Mode - Deep Black, High-End, OLED friendly */
-    --background: #000000;
-    --foreground: #ededed;
-    --card-bg: #0a0a0a;
-    --border-color: #262626;
-    --accent-gold: #D4AF37; /* Metallic Gold for Night */
+    /* Night Mode - Optional via Toggle */
+    --background: #0c0a09; /* Stone-950 */
+    --foreground: #f5f5f4;
+    --card-bg: #1c1917;
+    --border-color: #292524;
+    --accent-gold: #D4AF37; 
     
-    --glass-bg: rgba(10, 10, 10, 0.6);
+    --glass-bg: rgba(28, 25, 23, 0.8);
     --glass-border: rgba(255, 255, 255, 0.1);
   }
 }
 
 /* Explicit Class Overrides for Toggle */
 .dark {
-  --background: #000000;
-  --foreground: #ededed;
-  --card-bg: #0a0a0a;
-  --border-color: #262626;
+  --background: #0c0a09;
+  --foreground: #f5f5f4;
+  --card-bg: #1c1917;
+  --border-color: #292524;
   --accent-gold: #D4AF37;
-  --glass-bg: rgba(10, 10, 10, 0.6);
+  --glass-bg: rgba(28, 25, 23, 0.8);
   --glass-border: rgba(255, 255, 255, 0.1);
 }
 
 .light {
-  --background: #fdfdfd;
-  --foreground: #171717;
+  --background: #f5f5f4;
+  --foreground: #1c1917;
   --card-bg: #ffffff;
-  --border-color: #e5e5e5;
-  --accent-gold: #bfa15f;
-  --glass-bg: rgba(255, 255, 255, 0.7);
-  --glass-border: rgba(0, 0, 0, 0.05);
+  --border-color: #d6d3d1;
+  --accent-gold: #b45309;
+  --glass-bg: rgba(255, 255, 255, 0.85);
+  --glass-border: rgba(0, 0, 0, 0.08);
 }
 
 @theme inline {
@@ -69,13 +69,13 @@ body {
 /* Glassmorphism Utilities - Adaptive */
 @layer components {
   .glass-panel {
-    @apply backdrop-blur-xl shadow-xl transition-colors duration-300;
+    @apply backdrop-blur-xl shadow-sm transition-colors duration-300;
     background-color: var(--glass-bg);
     border: 1px solid var(--glass-border);
   }
   
   .glass-card {
-    @apply backdrop-blur-md rounded-xl transition-all duration-300;
+    @apply backdrop-blur-md rounded-xl transition-all duration-300 shadow-sm;
     background-color: var(--card-bg);
     border: 1px solid var(--border-color);
   }
@@ -83,6 +83,7 @@ body {
   .glass-card:hover {
     border-color: var(--accent-gold);
     transform: translateY(-2px);
+    @apply shadow-md;
   }
 
   .glass-input {

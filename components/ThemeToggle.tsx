@@ -3,7 +3,8 @@
 import React, { useEffect, useState } from 'react';
 
 export const ThemeToggle = () => {
-  const [theme, setTheme] = useState<'light' | 'dark'>('dark');
+  // Default to 'light' for readability as requested
+  const [theme, setTheme] = useState<'light' | 'dark'>('light');
 
   useEffect(() => {
     // Check local storage or system preference on mount
@@ -11,9 +12,10 @@ export const ThemeToggle = () => {
     if (saved) {
       setTheme(saved);
       document.documentElement.classList.add(saved);
-    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      setTheme('dark');
-      document.documentElement.classList.add('dark');
+    } else {
+      // Default to Light Mode if no preference
+      setTheme('light');
+      document.documentElement.classList.add('light');
     }
   }, []);
 
