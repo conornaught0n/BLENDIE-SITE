@@ -1,94 +1,96 @@
-import React from 'react';
+"use client";
+
+import React, { useState } from 'react';
+import { useBlendStore } from '@/store/blend-store';
 
 export default function ProductionDashboard() {
+  // Mock Data for Dashboard
+  const orders = [
+    { id: '#1042', status: 'Pending', items: '2x Ethiopia', time: '10 min ago' },
+    { id: '#1041', status: 'In Roast', items: 'Custom Blend A', time: '45 min ago' },
+    { id: '#1040', status: 'Ready', items: 'Brazil Santos', time: '2h ago' },
+  ];
+
+  const roastQueue = [
+    { batch: 'A17-004', coffee: 'Ethiopia Yirgacheffe', weight: '12kg', profile: 'Filter Light' },
+    { batch: 'A17-005', coffee: 'Brazil Santos', weight: '20kg', profile: 'Espresso Medium' },
+  ];
+
   return (
-    <div className="space-y-6">
-      <header className="flex items-center justify-between">
+    <div className="p-8 font-sans text-white">
+      <header className="flex justify-between items-end mb-8">
         <div>
-          <h1 className="text-2xl font-bold">Production Overview</h1>
-          <p className="text-white/50 text-sm">Tuesday, Jan 13 • Shift A</p>
+            <h1 className="text-3xl font-serif font-bold mb-1">Production Command</h1>
+            <p className="opacity-50 text-xs uppercase tracking-widest">Tuesday, Jan 14 • Shift A</p>
         </div>
-        <button className="glass-btn text-sm">+ Scan Batch</button>
+        <button className="bg-green-600 text-black font-bold px-6 py-3 rounded-full hover:bg-green-500 transition-colors flex items-center gap-2">
+            <span>📷</span> Scan Batch QR
+        </button>
       </header>
 
-      {/* KPI Grid */}
-      <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-        <KPICard title="Total Orders" value="42" change="+12%" />
-        <KPICard title="To Roast (kg)" value="128.5" change="High" highlight />
-        <KPICard title="Pending QC" value="8" change="-2" />
-        <KPICard title="Shipped" value="34" change="+5" />
-      </div>
-
-      {/* Live Production Queue */}
-      <div className="glass-panel rounded-2xl p-6">
-        <h2 className="mb-4 text-lg font-semibold">Live Roast Queue</h2>
-        <div className="space-y-3">
-          <QueueItem batch="A17-001" blend="Signature House" weight="12kg" status="Roasting" time="04:20" />
-          <QueueItem batch="A17-002" blend="Ethiopia Single" weight="8kg" status="Queued" />
-          <QueueItem batch="A17-003" blend="Espresso Dark" weight="15kg" status="Queued" />
-        </div>
-      </div>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Inventory Alert */}
-        <div className="glass-panel rounded-2xl p-6">
-           <h2 className="mb-4 text-lg font-semibold text-red-300">Inventory Alerts</h2>
-           <div className="space-y-2">
-             <div className="flex justify-between items-center text-sm p-2 bg-red-500/10 border border-red-500/20 rounded-lg">
-               <span>Green Bean: Colombia Supremo</span>
-               <span className="font-bold text-red-400">Low (15kg)</span>
-             </div>
-           </div>
-        </div>
-
-         {/* Scanner Shortcut */}
-         <div className="glass-panel rounded-2xl p-6 flex flex-col items-center justify-center text-center cursor-pointer hover:bg-white/10 transition-colors border-dashed border-2 border-white/20">
-            <div className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center mb-4">
-              <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
-              </svg>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        {/* Column 1: Orders In */}
+        <div className="glass-panel p-6 rounded-xl border border-white/10">
+            <h3 className="text-sm font-bold uppercase tracking-widest mb-6 text-green-400">Orders In (3)</h3>
+            <div className="space-y-3">
+                {orders.map(order => (
+                    <div key={order.id} className="bg-white/5 p-4 rounded-lg border border-white/5 hover:border-white/20 transition-colors cursor-pointer">
+                        <div className="flex justify-between mb-1">
+                            <span className="font-bold">{order.id}</span>
+                            <span className="text-xs opacity-50">{order.time}</span>
+                        </div>
+                        <p className="text-sm opacity-80">{order.items}</p>
+                        <div className="mt-2 flex justify-between items-center">
+                            <span className="text-[10px] bg-white/10 px-2 py-0.5 rounded text-white/60">{order.status}</span>
+                            <button className="text-[10px] text-green-400 hover:underline">Print Label →</button>
+                        </div>
+                    </div>
+                ))}
             </div>
-            <h3 className="font-bold">Open Scanner</h3>
-            <p className="text-xs text-white/50">Traceability & QC Entry</p>
-         </div>
-      </div>
-    </div>
-  );
-}
-
-function KPICard({ title, value, change, highlight }: any) {
-  return (
-    <div className={`glass-card p-4 ${highlight ? 'bg-gradient-to-br from-green-900/40 to-emerald-900/40 border-green-500/30' : ''}`}>
-      <p className="text-xs font-medium text-white/60 uppercase tracking-wide">{title}</p>
-      <div className="mt-2 flex items-baseline gap-2">
-        <span className="text-2xl font-bold text-white">{value}</span>
-        <span className={`text-xs ${change.includes('+') ? 'text-green-400' : change.includes('-') ? 'text-red-400' : 'text-white/40'}`}>
-          {change}
-        </span>
-      </div>
-    </div>
-  );
-}
-
-function QueueItem({ batch, blend, weight, status, time }: any) {
-  return (
-    <div className="flex items-center justify-between rounded-lg bg-white/5 p-3 hover:bg-white/10 transition-colors border border-white/5">
-      <div className="flex items-center gap-4">
-        <div className="h-10 w-10 rounded-full bg-white/10 flex items-center justify-center text-xs font-bold font-mono">
-          {batch.split('-')[1]}
         </div>
-        <div>
-          <h4 className="font-medium text-white">{blend}</h4>
-          <p className="text-xs text-white/50">{batch} • {weight}</p>
+
+        {/* Column 2: Roast Queue */}
+        <div className="glass-panel p-6 rounded-xl border border-white/10">
+            <h3 className="text-sm font-bold uppercase tracking-widest mb-6 text-orange-400">Roast Queue</h3>
+            <div className="space-y-3">
+                {roastQueue.map(item => (
+                    <div key={item.batch} className="bg-white/5 p-4 rounded-lg border border-white/5 flex flex-col gap-2">
+                        <div className="flex justify-between items-center">
+                            <span className="font-mono text-xs text-orange-400">{item.batch}</span>
+                            <span className="font-bold text-lg">{item.weight}</span>
+                        </div>
+                        <h4 className="font-serif text-lg leading-tight">{item.coffee}</h4>
+                        <p className="text-xs opacity-50">{item.profile}</p>
+                        <button className="w-full mt-2 bg-orange-500/20 text-orange-300 py-2 rounded text-xs font-bold hover:bg-orange-500/30">Start Roast</button>
+                    </div>
+                ))}
+            </div>
         </div>
-      </div>
-      <div className="text-right">
-        <span className={`inline-block px-2 py-1 rounded text-xs font-bold uppercase ${
-          status === 'Roasting' ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30 animate-pulse' : 'bg-white/10 text-white/60'
-        }`}>
-          {status}
-        </span>
-        {time && <p className="text-xs text-white/40 mt-1 font-mono">{time} rem</p>}
+
+        {/* Column 3: Stats & Logs */}
+        <div className="space-y-6">
+            <div className="glass-panel p-6 rounded-xl border border-white/10">
+                <h3 className="text-sm font-bold uppercase tracking-widest mb-4">Daily Output</h3>
+                <div className="text-5xl font-mono font-bold mb-1">48.5<span className="text-xl opacity-50">kg</span></div>
+                <p className="text-xs opacity-50">Target: 120kg</p>
+                <div className="w-full h-2 bg-white/10 rounded-full mt-4 overflow-hidden">
+                    <div className="h-full bg-green-500 w-[40%]" />
+                </div>
+            </div>
+
+            <div className="glass-panel p-6 rounded-xl border border-white/10">
+                <h3 className="text-sm font-bold uppercase tracking-widest mb-4">Inventory Alert</h3>
+                <div className="flex items-center gap-3 text-red-400 bg-red-900/20 p-3 rounded-lg border border-red-500/20">
+                    <span className="text-xl">⚠️</span>
+                    <div className="text-sm">
+                        <span className="font-bold block">Colombia Supremo</span>
+                        <span className="opacity-80">Low Stock (12kg remaining)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
       </div>
     </div>
   );

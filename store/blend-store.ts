@@ -15,16 +15,19 @@ type Coffee = {
 type BlendItem = Coffee & { percentage: number };
 
 interface BlendState {
-  // Current Active Blend
   currentBlend: BlendItem[];
+  cart: {
+    items: { type: 'blend' | 'sample', name: string, price: number }[];
+    total: number;
+  };
   
-  // Actions
   addCoffee: (coffee: Coffee) => void;
   removeCoffee: (id: string) => void;
   updatePercentage: (id: string, pct: number) => void;
   clearBlend: () => void;
   
-  // Computed (Helper)
+  addSamplePack: () => void; // New Action
+  
   getTotalPercentage: () => number;
 }
 
@@ -32,13 +35,10 @@ export const useBlendStore = create<BlendState>()(
   persist(
     (set, get) => ({
       currentBlend: [],
+      cart: { items: [], total: 0 },
 
       addCoffee: (coffee) => set((state) => {
-        // Prevent duplicates
         if (state.currentBlend.find(c => c.id === coffee.id)) return state;
-        
-        // Add new coffee with 0% initially, or split remaining?
-        // Let's add with 0% and let user adjust, or auto-balance later.
         return { currentBlend: [...state.currentBlend, { ...coffee, percentage: 0 }] };
       }),
 
@@ -54,12 +54,20 @@ export const useBlendStore = create<BlendState>()(
 
       clearBlend: () => set({ currentBlend: [] }),
 
+      // Sample Pack Logic
+      addSamplePack: () => set((state) => ({
+        cart: {
+            items: [...state.cart.items, { type: 'sample', name: 'Master Blending Kit (8x50g)', price: 35 }],
+            total: state.cart.total + 35
+        }
+      })),
+
       getTotalPercentage: () => {
         return get().currentBlend.reduce((acc, c) => acc + c.percentage, 0);
       }
     }),
     {
-      name: 'blendie-storage', // Persistence key
+      name: 'blendie-storage',
     }
   )
 );
