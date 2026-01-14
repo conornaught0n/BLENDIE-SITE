@@ -1,12 +1,25 @@
+"use client";
+
 import React from 'react';
 import Link from 'next/link';
-import ProductionAuth from '@/components/ProductionAuth'; // Wrap the layout
+import { usePathname } from 'next/navigation';
+import ProductionAuth from '@/components/ProductionAuth';
 
 export default function ProductionLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const pathname = usePathname();
+
+  const links = [
+    { href: '/production', label: 'Home' },
+    { href: '/production/owner', label: 'Owner Dashboard' },
+    { href: '/production/floor', label: 'Production Floor' },
+    { href: '/production/orders', label: 'Orders' },
+    { href: '/production/cupping', label: 'Cupping' },
+  ];
+
   return (
     <ProductionAuth>
         <div className="flex min-h-screen flex-col md:flex-row text-white bg-black">
@@ -18,10 +31,9 @@ export default function ProductionLayout({
             </div>
 
             <div className="hidden md:mt-10 md:flex md:w-full md:flex-col md:gap-2">
-            <NavLink href="/production" label="Dashboard" active />
-            <NavLink href="/production/orders" label="Live Orders" />
-            <NavLink href="/production/inventory" label="Inventory" />
-            <NavLink href="/production/qc" label="Quality Control" />
+                {links.map(link => (
+                    <NavLink key={link.href} href={link.href} label={link.label} active={pathname === link.href} />
+                ))}
             </div>
 
             {/* Mobile Menu Icon (Placeholder) */}
