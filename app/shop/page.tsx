@@ -52,6 +52,12 @@ export default function Shop() {
                  <div className="absolute inset-0 flex items-center justify-center opacity-10">
                     <span className="text-6xl font-black rotate-[-15deg]">{coffee.origin.substring(0,3).toUpperCase()}</span>
                  </div>
+                 
+                 {/* Quality Marker (New) */}
+                 <div className="absolute top-3 left-3 bg-white/50 backdrop-blur-md px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wide text-fruit-plum border border-white/20">
+                    {coffee.quality || 'Premium'}
+                 </div>
+
                  <div className="absolute bottom-4 left-4 right-4">
                     <h3 className="font-bold text-sm leading-tight mb-1">{coffee.name}</h3>
                     <p className="text-[10px] opacity-50 uppercase tracking-wide">{coffee.origin}</p>
