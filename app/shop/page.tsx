@@ -7,12 +7,11 @@ import { useBlendStore } from '@/store/blend-store';
 
 export default function Shop() {
   const { addCoffee, removeCoffee, currentBlend } = useBlendStore();
-  const [hoveredId, setHoveredId] = useState<string | null>(null);
+  const [activeCard, setActiveCard] = useState<string | null>(null); // For Mobile Flip Logic
 
   const toggleHeart = (e: React.MouseEvent, coffee: any) => {
     e.stopPropagation();
     e.preventDefault();
-    
     const isSelected = currentBlend.some(c => c.id === coffee.id);
     if (isSelected) {
       removeCoffee(coffee.id);
@@ -21,78 +20,76 @@ export default function Shop() {
     }
   };
 
+  const handleMobileFlip = (id: string) => {
+    setActiveCard(activeCard === id ? null : id);
+  };
+
   return (
-    <div className="min-h-screen bg-background text-foreground p-8 md:p-16">
-      
-      {/* Header */}
-      <header className="mb-16 flex flex-col md:flex-row justify-between items-end border-b border-border-color pb-8">
-        <div className="max-w-xl">
-          <h1 className="text-5xl md:text-7xl font-medium tracking-tight mb-4 font-serif">The Collection</h1>
-          <p className="opacity-60 font-sans tracking-wide text-sm uppercase">Single Origin • Limited Release • Micro-Lot</p>
+    <div className="min-h-screen bg-background text-foreground p-4 md:p-8 font-sans">
+      <header className="mb-8 flex justify-between items-end">
+        <div>
+          <h1 className="text-3xl font-serif font-bold tracking-tight text-fruit-plum">Market</h1>
+          <p className="opacity-60 text-xs uppercase tracking-widest">Browse 30+ Single Origins</p>
         </div>
-        <Link href="/portfolio" className="btn-paris flex items-center gap-3">
-          <span>View Portfolio</span>
-          <span className="bg-accent-gold text-white text-[10px] w-5 h-5 flex items-center justify-center rounded-full font-sans">
-            {currentBlend.length}
-          </span>
+        <Link href="/portfolio" className="bg-fruit-plum text-white px-6 py-2 rounded-full text-xs font-bold uppercase tracking-widest hover:bg-fruit-berry transition-colors flex items-center gap-2">
+          Portfolio <span className="bg-white text-fruit-plum w-4 h-4 flex items-center justify-center rounded-full text-[9px]">{currentBlend.length}</span>
         </Link>
       </header>
 
-      {/* Grid View */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-px bg-border-color border border-border-color">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
         {COFFEE_DATA.map(coffee => {
           const isSelected = currentBlend.some(c => c.id === coffee.id);
+          const isActive = activeCard === coffee.id;
           
           return (
             <div 
               key={coffee.id}
-              onMouseEnter={() => setHoveredId(coffee.id)}
-              onMouseLeave={() => setHoveredId(null)}
-              className="group relative bg-card-bg aspect-[3/4] overflow-hidden cursor-pointer hover:z-10"
+              onClick={() => handleMobileFlip(coffee.id)}
+              className="group relative aspect-[3/4] bg-white rounded-xl overflow-hidden shadow-sm border border-border-color cursor-pointer"
             >
-              {/* Image Placeholder */}
-              <div className="h-[65%] bg-[#F9F9F9] relative flex items-center justify-center overflow-hidden">
-                 <span className="text-[8vw] font-serif opacity-5 text-foreground group-hover:scale-110 transition-transform duration-700 ease-out">
-                    {coffee.origin.substring(0,3).toUpperCase()}
-                 </span>
-                 
-                 {/* Heart Button */}
-                 <button 
-                   onClick={(e) => toggleHeart(e, coffee)}
-                   className={`absolute top-4 right-4 z-20 w-8 h-8 flex items-center justify-center transition-colors ${isSelected ? 'text-accent-gold' : 'text-foreground/20 hover:text-foreground'}`}
-                 >
-                   {isSelected ? '♥' : '♡'}
-                 </button>
-  
-                 {/* Hover Overlay */}
-                 <div className={`absolute inset-0 bg-foreground/90 p-8 flex flex-col justify-center text-background transition-opacity duration-300 ${hoveredId === coffee.id ? 'opacity-100' : 'opacity-0'}`}>
-                    <div className="space-y-4 font-sans text-xs tracking-widest uppercase">
-                      <div className="flex justify-between border-b border-white/20 pb-2">
-                        <span>Process</span>
-                        <span>{coffee.process}</span>
-                      </div>
-                      <div className="flex justify-between border-b border-white/20 pb-2">
-                        <span>Altitude</span>
-                        <span>{coffee.altitude}</span>
-                      </div>
-                      <div className="pt-2 text-center text-accent-gold">
-                        {isSelected ? 'Added to Portfolio' : 'Add to Portfolio'}
-                      </div>
+              {/* Front Face (Image) */}
+              <div className={`absolute inset-0 bg-[#F5F5F4] transition-opacity duration-300 ${isActive ? 'opacity-0 pointer-events-none' : 'opacity-100 group-hover:opacity-0'}`}>
+                 <div className="absolute inset-0 flex items-center justify-center opacity-10">
+                    <span className="text-6xl font-black rotate-[-15deg]">{coffee.origin.substring(0,3).toUpperCase()}</span>
+                 </div>
+                 <div className="absolute bottom-4 left-4 right-4">
+                    <h3 className="font-bold text-sm leading-tight mb-1">{coffee.name}</h3>
+                    <p className="text-[10px] opacity-50 uppercase tracking-wide">{coffee.origin}</p>
+                 </div>
+              </div>
+
+              {/* Back Face (Details - Visible on Hover or Click) */}
+              <div className={`absolute inset-0 bg-fruit-plum/95 p-6 flex flex-col justify-center text-white transition-opacity duration-300 ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
+                  <div className="space-y-3 text-xs">
+                    <div className="flex justify-between border-b border-white/20 pb-1">
+                      <span className="opacity-60">Process</span>
+                      <span>{coffee.process}</span>
                     </div>
-                 </div>
+                    <div className="flex justify-between border-b border-white/20 pb-1">
+                      <span className="opacity-60">Score</span>
+                      <span className="text-fruit-citrus font-bold">{((coffee.aroma + coffee.body + coffee.acidity)/3).toFixed(1)}</span>
+                    </div>
+                    <div className="pt-2 text-center text-xs opacity-60 italic">
+                      "Notes of {coffee.tags.slice(0,2).join(', ')}"
+                    </div>
+                  </div>
+                  
+                  {/* Highlighted Add Button */}
+                  <button 
+                    onClick={(e) => toggleHeart(e, coffee)}
+                    className={`mt-4 w-full py-2 rounded-full font-bold text-[10px] uppercase tracking-widest transition-all ${isSelected ? 'bg-white text-fruit-plum' : 'bg-fruit-berry text-white hover:bg-white hover:text-fruit-berry'}`}
+                  >
+                    {isSelected ? 'In Portfolio' : 'Add to Blend'}
+                  </button>
               </div>
-  
-              {/* Content */}
-              <div className="h-[35%] p-6 flex flex-col justify-between border-t border-border-color group-hover:border-transparent transition-colors">
-                 <div>
-                    <p className="text-[10px] font-bold tracking-[0.2em] uppercase text-accent-gold mb-2">{coffee.origin}</p>
-                    <h3 className="font-serif text-2xl leading-none mb-1">{coffee.name}</h3>
-                 </div>
-                 <div className="flex justify-between items-baseline font-sans">
-                    <span className="text-lg">€{coffee.price_250g.toFixed(2)}</span>
-                    <span className="text-[10px] opacity-40 uppercase tracking-widest">250g</span>
-                 </div>
-              </div>
+
+              {/* Persistent Heart (Top Right) */}
+              <button 
+                 onClick={(e) => toggleHeart(e, coffee)}
+                 className={`absolute top-2 right-2 z-20 w-8 h-8 rounded-full flex items-center justify-center transition-all ${isSelected ? 'text-fruit-berry bg-white shadow-sm' : 'text-black/20 hover:text-fruit-berry'}`}
+              >
+                 {isSelected ? '♥' : '♡'}
+              </button>
             </div>
           );
         })}

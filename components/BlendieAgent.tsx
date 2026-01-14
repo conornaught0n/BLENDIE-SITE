@@ -2,74 +2,62 @@
 
 import React, { useState } from 'react';
 
-// Knowledge Base inspired by Scott Rao & Jonathan Gagné
-const KNOWLEDGE_BASE = [
-  { keywords: ['extract', 'yield', 'ey'], response: "Targeting 20-22% extraction yield is ideal for filter. If it tastes astringent, you've likely channeled or ground too fine. Check your bed depth." },
-  { keywords: ['grind', 'fine', 'coarse'], response: "Grind size determines surface area. For percolation, you want the finest grind that doesn't clog the filter. Fines migration is the enemy of clarity." },
-  { keywords: ['water', 'temp', 'temperature'], response: "Use boiling water (99-100°C) for light roasts! You can't burn coffee that has already been roasted at 200°C+. High temp maximizes extraction of dense beans." },
-  { keywords: ['ratio', 'recipe'], response: "Start with 1:16 or 1:17 (60g/L). It's the golden ratio for a reason. Adjust strength by changing the ratio, adjust extraction by changing grind." },
-  { keywords: ['agitate', 'spin', 'swirl'], response: "A gentle swirl after pouring (The Rao Spin) flattens the bed and prevents channeling. Don't over-agitate or you'll clog the filter with fines." },
-  { keywords: ['blend', 'mix'], response: "When blending, match solubility. Don't mix a super dense Ethiopian with a porous dark roast Brazil—they will extract at different rates." },
-];
-
 export const BlendieAgent = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState([
-    { role: 'blendie', text: "Hey! I'm Blendie. I know a thing or two about extraction physics. Ask me about brewing!" }
+    { role: 'blendie', text: "Hey! I'm Blendie. I'm literally a coffee bean. Ask me anything!" }
   ]);
 
   const toggleChat = () => setIsOpen(!isOpen);
 
-  const handleSend = () => {
-    if (!input.trim()) return;
+  // Quick Actions Logic
+  const handleQuickAction = (action: string) => {
+    const responseMap: Record<string, string> = {
+      'Cheaper?': "To lower the cost, try increasing the ratio of Brazilian or Mexican beans. They offer great body at a lower price point!",
+      'Espresso?': "For espresso, aim for low acidity and high body. A 50% Brazil / 50% Colombia blend is a classic starting point.",
+      'Filter?': "For filter, go wild with Ethiopians and Kenyans! Keep the roast light to preserve those floral notes.",
+      'Decaf?': "Our Sugar Cane Decaf from Colombia is surprisingly sweet. You won't even miss the caffeine."
+    };
     
-    // User Message
-    const userMsg = { role: 'user', text: input };
-    setMessages(prev => [...prev, userMsg]);
-    
-    // Logic: Find matching keywords
-    const lowerInput = input.toLowerCase();
-    const hit = KNOWLEDGE_BASE.find(k => k.keywords.some(word => lowerInput.includes(word)));
-    
-    const replyText = hit 
-      ? hit.response 
-      : "That's an interesting variable. Generally, focus on even extraction and consistent water temperature. Have you checked your grind distribution?";
-
-    // Simulate Response
-    setTimeout(() => {
-      setMessages(prev => [...prev, { role: 'blendie', text: replyText }]);
-    }, 1000);
-
-    setInput('');
+    setMessages(prev => [...prev, 
+        { role: 'user', text: action },
+        { role: 'blendie', text: responseMap[action] || "I can help with that!" }
+    ]);
   };
 
   return (
     <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end font-sans">
       
-      {/* Chat Bubble / Window */}
+      {/* Chat Bubble */}
       <div 
-        className={`mb-4 w-80 bg-background rounded-lg shadow-2xl border border-border-color overflow-hidden transition-all duration-300 origin-bottom-right ${
+        className={`mb-4 w-80 bg-white rounded-3xl rounded-br-none shadow-2xl border border-border-color overflow-hidden transition-all duration-300 origin-bottom-right ${
           isOpen ? 'scale-100 opacity-100' : 'scale-0 opacity-0 pointer-events-none'
         }`}
       >
-        <div className="bg-fruit-plum text-white p-4 flex items-center gap-3">
-          <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-xl shadow-sm">
-            🧞‍♂️
+        <div className="bg-fruit-plum text-white p-4 flex justify-between items-center">
+          <div className="flex items-center gap-3">
+             {/* Bean Character Avatar */}
+             <div className="w-10 h-10 bg-[#5D4037] rounded-full flex items-center justify-center border-2 border-white/20 relative overflow-hidden">
+                <div className="w-1 h-6 bg-black/20 absolute left-1/2 -translate-x-1/2 rotate-12 rounded-full" /> {/* Bean Split */}
+                <div className="w-2 h-2 bg-white rounded-full absolute top-2 right-2 opacity-50" /> {/* Eye */}
+                <div className="w-2 h-2 bg-white rounded-full absolute top-2 left-2 opacity-50" /> {/* Eye */}
+             </div>
+             <div>
+                <h3 className="font-bold text-sm">Blendie</h3>
+                <p className="opacity-60 text-[10px] uppercase tracking-widest">AI Roaster</p>
+             </div>
           </div>
-          <div>
-            <h3 className="font-bold text-sm">Blendie McBlenderson</h3>
-            <p className="opacity-80 text-xs uppercase tracking-widest">Extraction Expert</p>
-          </div>
+          <button onClick={toggleChat} className="text-white/50 hover:text-white">✕</button>
         </div>
         
-        <div className="h-64 p-4 overflow-y-auto bg-black/5 space-y-3">
+        <div className="h-64 p-4 overflow-y-auto bg-[#F9F9F9] space-y-3">
           {messages.map((msg, i) => (
             <div key={i} className={`flex ${msg.role === 'blendie' ? 'justify-start' : 'justify-end'}`}>
-              <div className={`max-w-[80%] px-4 py-2 text-sm ${
+              <div className={`max-w-[85%] px-4 py-3 text-sm shadow-sm ${
                 msg.role === 'blendie' 
-                  ? 'bg-background text-foreground border border-border-color rounded-r-lg rounded-bl-lg' 
-                  : 'bg-fruit-plum text-white rounded-l-lg rounded-br-lg'
+                  ? 'bg-white text-foreground rounded-2xl rounded-tl-none border border-black/5' 
+                  : 'bg-fruit-citrus text-black rounded-2xl rounded-tr-none font-medium'
               }`}>
                 {msg.text}
               </div>
@@ -77,33 +65,44 @@ export const BlendieAgent = () => {
           ))}
         </div>
 
-        <div className="p-3 bg-background border-t border-border-color flex gap-2">
+        {/* Quick Actions */}
+        <div className="px-4 py-2 flex gap-2 overflow-x-auto scrollbar-hide bg-white border-t border-black/5">
+            {['Cheaper?', 'Espresso?', 'Filter?', 'Decaf?'].map(action => (
+                <button 
+                    key={action}
+                    onClick={() => handleQuickAction(action)}
+                    className="whitespace-nowrap px-3 py-1 rounded-full bg-black/5 text-[10px] font-bold hover:bg-fruit-plum hover:text-white transition-colors"
+                >
+                    {action}
+                </button>
+            ))}
+        </div>
+
+        <div className="p-3 bg-white flex gap-2">
           <input 
             type="text" 
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyPress={(e) => e.key === 'Enter' && handleSend()}
-            placeholder="Ask about ratio, grind, temp..." 
-            className="flex-1 bg-black/5 rounded px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-fruit-citrus"
+            placeholder="Ask Blendie..." 
+            className="flex-1 bg-black/5 rounded-full px-4 py-2 text-sm focus:outline-none"
           />
-          <button 
-            onClick={handleSend}
-            className="bg-fruit-citrus text-black w-10 h-10 rounded flex items-center justify-center hover:opacity-90 transition-opacity font-bold"
-          >
-            ➤
-          </button>
         </div>
       </div>
 
-      {/* Floating Avatar Trigger */}
+      {/* Floating Bean Trigger */}
       <button 
         onClick={toggleChat}
-        className="group relative w-14 h-14 bg-card-bg rounded-full shadow-lg border border-border-color flex items-center justify-center hover:scale-110 transition-transform active:scale-95"
+        className={`group relative w-16 h-16 bg-[#5D4037] rounded-full shadow-2xl border-4 border-white flex items-center justify-center hover:scale-110 transition-transform active:scale-95 ${isOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
       >
-        <span className="text-2xl animate-pulse">🧞‍♂️</span>
-        <span className="absolute -top-1 -right-1 flex h-3 w-3">
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-fruit-citrus opacity-75"></span>
-          <span className="relative inline-flex rounded-full h-3 w-3 bg-fruit-citrus"></span>
+        {/* Simple CSS Bean Shape */}
+        <div className="w-8 h-10 bg-[#3E2723] rounded-[50%] relative overflow-hidden rotate-[-15deg]">
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1 h-8 bg-black/30 rounded-full rotate-[15deg]" />
+            <div className="absolute top-2 right-2 w-1.5 h-1.5 bg-white rounded-full opacity-80" />
+            <div className="absolute top-2 left-2 w-1.5 h-1.5 bg-white rounded-full opacity-80" />
+            <div className="absolute bottom-3 left-1/2 -translate-x-1/2 w-4 h-2 bg-black/30 rounded-full" /> {/* Smile */}
+        </div>
+        
+        {/* Notification Bubble */}
+        <span className="absolute -top-1 -right-1 bg-fruit-berry text-white text-[10px] font-bold px-2 py-0.5 rounded-full border-2 border-white animate-bounce">
+            Hi!
         </span>
       </button>
 
