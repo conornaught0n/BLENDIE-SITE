@@ -1,66 +1,42 @@
-# BLENDIE - Custom Blend Platform
+# BLENDIE 2026 PRODUCTION OS
 
-## Core Concept
-A boutique coffee platform allowing users to:
-1.  **Discover**: Browse single origin coffees.
-2.  **Portfolio (Ledger)**: View favorited/hearted coffees, saved blends, and recommendations.
-3.  **Blend**: Create custom blends by combining up to 10 distinct coffees.
-4.  **Visualize**: Understand flavor profiles via multi-mode visualizations (Petal, Graph, 3D, Bar).
-5.  **Configure**: Design the physical product (Bag, Label, Grind) in 3D.
-6.  **Consult**: Interact with "The Legend" - an AI coffee expert.
+## Project Overview
+A high-performance Next.js application for automated roastery management, serving as the "Operating System" for Blendie's physical production. It bridges the gap between e-commerce orders, roasting data (Firescope), and shipping logistics.
 
-## Functional Requirements
+## Architecture
+-   **Framework**: Next.js 14+ (App Router)
+-   **Styling**: Tailwind CSS (Glassmorphism Design System)
+-   **Database**: PostgreSQL (via Prisma)
+-   **Auth**: Internal Authentication (NextAuth.js)
 
-### 1. The Portfolio (Ledger View)
--   **Structure**: A dashboard/ledger view.
--   **Content**:
-    -   "Liked" coffees (Hearted from store).
-    -   Saved Blends.
-    -   Recommended Blends.
--   **Filtering**: By Country, Coffee Type (Process, Roast Level, etc.).
+## Core Modules
 
-### 2. The Blend Builder (Step 1)
--   **Selection**: User selects up to 10 coffees from their Portfolio or the Store.
--   **Composition**:
-    -   Sliders OR Percentage Input Boxes (User preference saved).
-    -   Real-time validation (Must total 100%).
--   **Pricing Logic**:
-    -   Dynamic calculation based on % composition.
-    -   Tiered pricing (250g vs 1kg base rates).
+### 1. Data Infrastructure (Integration Layer)
+-   **Firescope Scraper**: Backend service to normalize roast data (Profile, Time, Weight Loss %).
+-   **Commerce Sync**: Polls shopping plugin API for pending orders.
+-   **Shipping Automation**: Auto-generates tracking and shipping labels.
 
-### 3. The Bag Configurator (Step 2)
--   **3D Visualizer**: Real-time rendering of the bag.
--   **Customization**:
-    -   **Bag**: Style, Color, Finish (Matte/Gloss).
-    -   **Label**: Upload Front/Back images. Adjust Size & Position.
-    -   **Context**: Switch backgrounds (Kitchen with Espresso Machine, Retail Shelf, Coffee Table).
--   **Extras**: Grind option (Whole Bean vs Ground).
+### 2. Roastery Operator Interface (Mobile-First)
+-   **QR/Barcode Engine**: Scans Order QRs to access processing flow.
+-   **Workflow**:
+    -   Update Status (In Production -> Shipped).
+    -   QC Input (Final Weight, Batch ID Link).
+    -   **Blending Logic**: Scans component bean barcodes to verify recipes against the digital order.
 
-### 4. "The Legend" (AI Advisor)
--   **Persona**: Knowledgeable, helpful, non-intrusive expert.
--   **Capabilities**:
-    -   **Optimization**: "This blend is great, but swap X for Y to save 15%."
-    -   **Compatibility**: "Warning: Mixing a light roast Ethiopia with a dark roast Sumatra might taste unbalanced."
-    -   **Context**: "I see you liked your last Brazil blend, this is similar."
-    -   **Support**: Brewing advice, encyclopedia questions.
+### 3. Production Logic & Analytics
+-   **Workday Dashboard**: Collates total daily roasting requirements.
+-   **Inventory Bridge**: Auto-deducts green bean inventory upon roast confirmation.
 
-## UX Flow
--   **Vertical Scroll**: Auto-scroll progression from Blending (Step 1) -> Configuration (Step 2) -> Review/Order (Step 3).
+## Visual Design
+-   **Style**: **Glassmorphism**. Frosted glass panels, translucent backgrounds, high-contrast text for utility.
+-   **Focus**: Utility-first. No marketing "hero" sections. Dense, actionable data.
 
-## Development Phases
+## Roadmap (Linear Mirror)
+-   [ ] **Scraper_Engine**: Ingest roast profiles.
+-   [ ] **Print_Automation**: Sync orders & print labels.
+-   [ ] **QR_Scan_Logic**: The operator's handheld scanner interface.
+-   [ ] **Inventory_Bridge**: Stock management logic.
 
-### Phase 1: Portfolio & Discovery
--   Implement the "Ledger" view.
--   Mock Database of Single Origin Coffees.
-
-### Phase 2: The Blender
--   Interface to drag/add coffees to a blending stage.
--   Percentage sliders + Input fields (Synced).
-
-### Phase 3: The 3D Configurator
--   Three.js / React-Three-Fiber implementation for Bag Visualization.
--   Label upload and texture mapping.
-
-### Phase 4: The Legend (AI)
--   Chat interface overlay.
--   Logic engine for "Compatibility Checks".
+## Deployment
+-   **Production**: `blend.ie` (Consumer facing)
+-   **Internal OS**: Protected routes (e.g., `/production`, `/admin`).
