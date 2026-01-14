@@ -1,8 +1,15 @@
 "use client";
 
 import React, { useState } from 'react';
+import dynamic from 'next/dynamic';
+
+// Dynamic import to avoid SSR issues with DOM-dependent library
+const QRScanner = dynamic(() => import('@/components/QRScanner'), { ssr: false });
 
 export default function ProductionFloor() {
+  const [showScanner, setShowScanner] = useState(false);
+  const [scanResult, setScanResult] = useState<string | null>(null);
+
   // Mock Data for Dashboard
   const orders = [
     { id: '#1042', status: 'Pending', items: '2x Ethiopia', time: '10 min ago' },
@@ -15,14 +22,53 @@ export default function ProductionFloor() {
     { batch: 'A17-005', coffee: 'Brazil Santos', weight: '20kg', profile: 'Espresso Medium' },
   ];
 
+  const handleScanSuccess = (decodedText: string) => {
+    setScanResult(decodedText);
+    setShowScanner(false);
+    alert(`Batch Scanned: ${decodedText}\nProcessing status updated to: 'In Production'`);
+    // In real app: Call API to update status
+  };
+
+  const handlePrint = (orderId: string) => {
+    // Mock Print
+    const confirm = window.confirm(`Send print job for Order ${orderId} to Printer A?`);
+    if (confirm) {
+        // Here we would call the upload API with a 'print job' JSON
+        alert(`Label sent to Printer A for ${orderId}`);
+    }
+  };
+
   return (
-    <div className="font-sans text-white h-full">
+    <div className="font-sans text-white h-full relative">
+      
+      {/* Scanner Overlay */}
+      {showScanner && (
+        <div className="fixed inset-0 z-[60] bg-black/90 flex flex-col items-center justify-center p-4">
+            <h2 className="text-xl font-bold mb-4 text-white">Scan Batch QR Code</h2>
+            <QRScanner 
+                fps={10}
+                qrbox={250}
+                disableFlip={false}
+                qrCodeSuccessCallback={handleScanSuccess}
+            />
+            <button 
+                onClick={() => setShowScanner(false)}
+                className="mt-6 bg-white/10 px-6 py-3 rounded-full text-white font-bold"
+            >
+                Cancel Scan
+            </button>
+        </div>
+      )}
+
       <header className="flex justify-between items-end mb-8">
         <div>
             <h1 className="text-3xl font-serif font-bold mb-1">Production Floor</h1>
             <p className="opacity-50 text-xs uppercase tracking-widest">Tuesday, Jan 14 • Shift A</p>
         </div>
-        <button className="bg-green-600 text-black font-bold px-6 py-3 rounded-full hover:bg-green-500 transition-colors flex items-center gap-2">
+        <button 
+            onClick={() => setShowScanner(true)}
+            className="bg-green-600 text-black font-bold px-6 py-3 rounded-full hover:bg-green-500 transition-colors flex items-center gap-2"
+        >
             <span>📷</span> Scan Batch QR
         </button>
       </header>
@@ -42,7 +88,12 @@ export default function ProductionFloor() {
                         <p className="text-sm opacity-80">{order.items}</p>
                         <div className="mt-2 flex justify-between items-center">
                             <span className="text-[10px] bg-white/10 px-2 py-0.5 rounded text-white/60">{order.status}</span>
-                            <button className="text-[10px] text-green-400 hover:underline">Print Label →</button>
+                            <button 
+                                onClick={(e) => { e.stopPropagation(); handlePrint(order.id); }}
+                                className="text-[10px] text-green-400 hover:underline"
+                            >
+                                Print Label →
+                            </button>
                         </div>
                     </div>
                 ))}
