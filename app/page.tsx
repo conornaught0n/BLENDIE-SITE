@@ -44,21 +44,21 @@ export default function Home() {
                 title="Build" 
                 icon="☕"
                 desc="Browse origins, manage your portfolio, and craft your perfect roast profile."
-                link="/portfolio.html"
+                link="/portfolio/"
             />
             <StepCard 
                 number="02" 
                 title="Design" 
                 icon="🎨"
                 desc="Customize your bag, label, and brand identity in 3D."
-                link="/configurator.html"
+                link="/configurator/"
             />
             <StepCard 
                 number="03" 
                 title="Order" 
                 icon="📦"
                 desc="Unlock volume discounts. We roast, pack, and ship."
-                link="/checkout.html"
+                link="/checkout/"
             />
         </div>
       </section>
