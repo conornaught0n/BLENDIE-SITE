@@ -13,6 +13,7 @@ export default function Configurator() {
   const [bgContext, setBgContext] = useState<'studio' | 'kitchen' | 'cafe'>('studio');
   const [finish, setFinish] = useState<'matte' | 'gloss'>('matte');
   const [bagStyle, setBagStyle] = useState<'pouch' | 'box'>('box');
+  const [activePanel, setActivePanel] = useState<'style' | 'label' | 'none'>('style');
 
   const bgImages = {
     studio: 'bg-[#FFFCF5]',
@@ -20,15 +21,24 @@ export default function Configurator() {
     cafe: 'bg-[url("https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&q=80")]'
   };
 
+  const colors = [
+    { hex: '#2C1810', name: 'Bean' },
+    { hex: '#FFFFFF', name: 'White' },
+    { hex: '#1A1A1A', name: 'Charcoal' },
+    { hex: '#E6DCCD', name: 'Kraft' },
+    { hex: '#7D4E57', name: 'Berry' },
+    { hex: '#5D4037', name: 'Roast' }
+  ];
+
   return (
-    <div className="min-h-screen bg-background flex flex-col md:flex-row font-sans">
+    <div className="h-screen w-screen overflow-hidden relative font-sans">
       
-      {/* 3D Canvas Area */}
-      <div className={`relative w-full md:w-2/3 h-[60vh] md:h-screen transition-all duration-700 bg-cover bg-center ${bgImages[bgContext]}`}>
-        {bgContext !== 'studio' && <div className="absolute inset-0 bg-black/20 backdrop-blur-[2px]" />}
+      {/* 3D Canvas - Full Screen */}
+      <div className={`absolute inset-0 transition-all duration-1000 bg-cover bg-center ${bgImages[bgContext]}`}>
+        {bgContext !== 'studio' && <div className="absolute inset-0 bg-black/10 backdrop-blur-[1px]" />}
         
-        <Canvas shadows camera={{ position: [0, 0, 6], fov: 45 }} className="z-10">
-          <ambientLight intensity={0.7} />
+        <Canvas shadows camera={{ position: [0, 0, 5.5], fov: 45 }} className="z-10">
+          <ambientLight intensity={0.8} />
           <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} shadow-mapSize={2048} castShadow />
           
           <Suspense fallback={null}>
@@ -39,14 +49,22 @@ export default function Configurator() {
           
           <OrbitControls minPolarAngle={Math.PI / 2} maxPolarAngle={Math.PI / 2} enableZoom={true} />
         </Canvas>
+      </div>
 
-        {/* Context Switcher (Floating) */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2 z-20 bg-white/80 backdrop-blur-md p-2 rounded-full border border-border-color shadow-lg">
+      {/* HEADER HUD */}
+      <div className="absolute top-0 left-0 right-0 p-6 flex justify-between items-start pointer-events-none">
+        <div className="pointer-events-auto bg-white/90 backdrop-blur-md px-6 py-4 rounded-2xl shadow-sm border border-black/5">
+            <h1 className="font-serif text-2xl font-bold text-fruit-plum mb-1">Packaging Design</h1>
+            <p className="text-xs opacity-60 uppercase tracking-widest">{currentBlend.length > 0 ? `${currentBlend.length} Bean Blend` : 'Standard Roast'}</p>
+        </div>
+        
+        {/* Context Switcher */}
+        <div className="pointer-events-auto flex gap-2 bg-white/90 backdrop-blur-md p-2 rounded-full border border-black/5 shadow-sm">
             {['studio', 'kitchen', 'cafe'].map((ctx) => (
                 <button 
                     key={ctx}
                     onClick={() => setBgContext(ctx as any)}
-                    className={`px-4 py-2 rounded-full text-xs font-bold uppercase tracking-widest transition-all ${bgContext === ctx ? 'bg-foreground text-white shadow-md' : 'text-foreground/60 hover:bg-black/5'}`}
+                    className={`px-4 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest transition-all ${bgContext === ctx ? 'bg-fruit-plum text-white shadow-md' : 'text-black/60 hover:bg-black/5'}`}
                 >
                     {ctx}
                 </button>
@@ -54,100 +72,47 @@ export default function Configurator() {
         </div>
       </div>
 
-      {/* Controls Sidebar */}
-      <div className="w-full md:w-1/3 bg-background border-l border-border-color p-8 overflow-y-auto z-20">
-         <header className="mb-12">
-            <span className="text-xs font-bold uppercase tracking-widest opacity-40">Step 02</span>
-            <h1 className="text-4xl font-serif mt-2">Design Packaging</h1>
-            <p className="text-sm opacity-60 mt-2">Customize your {currentBlend.length > 0 ? 'Custom Blend' : 'Coffee'} bag.</p>
-         </header>
-
-         {/* Bag Style */}
-         <div className="mb-10">
-            <label className="block text-xs font-bold uppercase tracking-widest opacity-60 mb-4">Bag Style</label>
-            <div className="flex bg-black/5 rounded-lg p-1">
-                <button 
-                    onClick={() => setBagStyle('box')}
-                    className={`flex-1 py-3 rounded-md text-sm font-bold transition-all ${bagStyle === 'box' ? 'bg-white shadow-sm text-foreground' : 'opacity-50'}`}
-                >
-                    Box Bottom
-                </button>
-                <button 
-                    onClick={() => setBagStyle('pouch')}
-                    className={`flex-1 py-3 rounded-md text-sm font-bold transition-all ${bagStyle === 'pouch' ? 'bg-white shadow-sm text-foreground' : 'opacity-50'}`}
-                >
-                    Stand-up Pouch
-                </button>
+      {/* BOTTOM CONTROL HUD */}
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4 w-full max-w-2xl px-4 pointer-events-none">
+        
+        {/* Control Toolbar */}
+        <div className="pointer-events-auto bg-white/95 backdrop-blur-xl border border-black/5 rounded-2xl shadow-xl p-2 flex gap-2 w-full justify-between items-center">
+            
+            {/* Left: Style Toggles */}
+            <div className="flex gap-2">
+                <div className="flex bg-black/5 rounded-xl p-1">
+                    <button onClick={() => setBagStyle('box')} className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${bagStyle === 'box' ? 'bg-white shadow-sm' : 'opacity-50'}`}>Box</button>
+                    <button onClick={() => setBagStyle('pouch')} className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${bagStyle === 'pouch' ? 'bg-white shadow-sm' : 'opacity-50'}`}>Pouch</button>
+                </div>
+                <div className="flex bg-black/5 rounded-xl p-1">
+                    <button onClick={() => setFinish('matte')} className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${finish === 'matte' ? 'bg-white shadow-sm' : 'opacity-50'}`}>Matte</button>
+                    <button onClick={() => setFinish('gloss')} className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${finish === 'gloss' ? 'bg-white shadow-sm' : 'opacity-50'}`}>Gloss</button>
+                </div>
             </div>
-         </div>
 
-         {/* Bag Color */}
-         <div className="mb-10">
-            <label className="block text-xs font-bold uppercase tracking-widest opacity-60 mb-4">Bag Color</label>
-            <div className="flex gap-4 flex-wrap">
-                {[
-                    { hex: '#2C1810', name: 'Coffee Bean' },
-                    { hex: '#FFFFFF', name: 'White' },
-                    { hex: '#1A1A1A', name: 'Charcoal' },
-                    { hex: '#E6DCCD', name: 'Kraft' },
-                    { hex: '#7D4E57', name: 'Berry' },
-                    { hex: '#5D4037', name: 'Roast' }
-                ].map(color => (
+            {/* Right: Color Picker */}
+            <div className="flex gap-2 items-center pr-2">
+                <span className="text-[10px] font-bold opacity-40 uppercase tracking-widest mr-2">Color</span>
+                {colors.map(color => (
                     <button 
                         key={color.hex}
                         onClick={() => setBagColor(color.hex)}
-                        title={color.name}
-                        className={`w-10 h-10 rounded-full border transition-transform hover:scale-110 ${bagColor === color.hex ? 'border-foreground ring-2 ring-offset-2 ring-foreground' : 'border-border-color'}`}
+                        className={`w-8 h-8 rounded-full border-2 transition-transform hover:scale-110 ${bagColor === color.hex ? 'border-fruit-plum ring-2 ring-offset-1 ring-fruit-plum' : 'border-black/10'}`}
                         style={{ backgroundColor: color.hex }}
                     />
                 ))}
             </div>
-         </div>
+        </div>
 
-         {/* Finish */}
-         <div className="mb-10">
-            <label className="block text-xs font-bold uppercase tracking-widest opacity-60 mb-4">Finish</label>
-            <div className="flex bg-black/5 rounded-lg p-1">
-                <button 
-                    onClick={() => setFinish('matte')}
-                    className={`flex-1 py-3 rounded-md text-sm font-bold transition-all ${finish === 'matte' ? 'bg-white shadow-sm text-foreground' : 'opacity-50'}`}
-                >
-                    Matte
-                </button>
-                <button 
-                    onClick={() => setFinish('gloss')}
-                    className={`flex-1 py-3 rounded-md text-sm font-bold transition-all ${finish === 'gloss' ? 'bg-white shadow-sm text-foreground' : 'opacity-50'}`}
-                >
-                    Gloss
-                </button>
-            </div>
-         </div>
-
-         {/* Label Upload (Mock) */}
-         <div className="mb-12">
-            <label className="block text-xs font-bold uppercase tracking-widest opacity-60 mb-4">Label Design</label>
-            <div className="border-2 border-dashed border-border-color rounded-xl p-8 text-center hover:border-coffee-brown cursor-pointer transition-colors bg-white hover:bg-coffee-yellow/5">
-                <span className="text-2xl block mb-2 opacity-50">📤</span>
-                <p className="text-sm font-bold">Upload Custom Label</p>
-                <p className="text-xs opacity-50 mt-1">PNG or JPG (Max 5MB)</p>
-            </div>
-            
-            <div className="mt-6 p-4 bg-coffee-yellow/10 rounded-xl border border-coffee-yellow/20">
-                <div className="flex items-center gap-2 mb-2">
-                    <span className="text-xl">✨</span>
-                    <h4 className="font-bold text-sm text-coffee-brown">AI Label Generator</h4>
-                </div>
-                <p className="text-xs opacity-70 mb-3">Create a "Birthday Blend" or unique art in seconds.</p>
-                <button className="w-full py-2 bg-white border border-coffee-brown/20 rounded-lg text-xs font-bold text-coffee-brown hover:bg-coffee-brown hover:text-white transition-colors">
-                    Launch Generator
-                </button>
-            </div>
-         </div>
-
-         {/* Action */}
-         <button className="btn-primary w-full shadow-xl">
-            Review Order & Checkout →
-         </button>
+        {/* Action Bar */}
+        <div className="pointer-events-auto flex gap-4 w-full">
+            <button className="flex-1 bg-white hover:bg-fruit-peach/10 text-fruit-plum font-bold py-4 rounded-xl shadow-lg border border-white/50 backdrop-blur-md transition-all">
+                Upload Label 📤
+            </button>
+            <button className="flex-[2] btn-primary py-4 rounded-xl shadow-xl text-sm uppercase tracking-widest">
+                Confirm Design & Checkout →
+            </button>
+        </div>
 
       </div>
 
