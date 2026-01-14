@@ -7,15 +7,14 @@ import { StarFlower } from '@/components/StarFlower';
 export default function Portfolio() {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [step, setStep] = useState(1); // 1: Select, 2: Blend, 3: Review
+  const [viewMode, setViewMode] = useState<'list' | 'grid'>('list');
 
-  // Toggle selection logic
   const toggleSelection = (id: string) => {
     setSelectedIds(prev => 
       prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]
     );
   };
 
-  // Aggregate Data
   const selectedCoffees = COFFEE_DATA.filter(c => selectedIds.includes(c.id));
   const avgPrice = selectedCoffees.length > 0 
     ? (selectedCoffees.reduce((acc, c) => acc + c.price_250g, 0) / selectedCoffees.length).toFixed(2)
@@ -30,109 +29,139 @@ export default function Portfolio() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F5F5F4] text-foreground flex flex-col md:flex-row overflow-hidden">
+    <div className="min-h-screen bg-background text-foreground flex flex-col md:flex-row overflow-hidden font-sans">
       
       {/* LEFT: Ledger (Step 1) */}
-      <div className={`w-full md:w-2/3 h-screen overflow-y-auto p-8 border-r border-black/5 transition-transform duration-500 ease-in-out ${step === 1 ? 'translate-x-0' : '-translate-x-full hidden md:block'}`}>
-        <header className="mb-8">
-          <div className="flex items-center gap-2 mb-2">
-            <span className="bg-black text-white w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold">1</span>
-            <h1 className="text-2xl font-bold">Select Components</h1>
+      <div className={`w-full md:w-2/3 h-screen overflow-y-auto p-8 md:p-12 border-r border-border-color transition-transform duration-500 ease-in-out ${step === 1 ? 'translate-x-0' : '-translate-x-full hidden md:block'}`}>
+        <header className="mb-12 flex justify-between items-end">
+          <div>
+            <div className="flex items-center gap-3 mb-4">
+              <span className="bg-foreground text-background w-8 h-8 flex items-center justify-center text-sm font-bold border border-foreground">01</span>
+              <h1 className="text-4xl font-serif">Curate Portfolio</h1>
+            </div>
+            <p className="opacity-60 text-sm tracking-wide uppercase">Select components from inventory</p>
           </div>
           
-          {/* Advanced Filter Bar (Placeholder) */}
-          <div className="flex gap-4 p-4 bg-white rounded-xl shadow-sm border border-black/5 text-sm overflow-x-auto">
-             <select className="bg-transparent font-medium focus:outline-none"><option>Region: All</option></select>
-             <div className="w-px h-4 bg-black/10"/>
-             <select className="bg-transparent font-medium focus:outline-none"><option>Process: All</option></select>
-             <div className="w-px h-4 bg-black/10"/>
-             <label className="flex items-center gap-2 cursor-pointer"><input type="checkbox"/> In Stock Only</label>
+          {/* View Toggle - Minimalist */}
+          <div className="flex border border-border-color">
+            <button 
+              onClick={() => setViewMode('list')}
+              className={`px-4 py-2 text-xs uppercase tracking-widest transition-colors ${viewMode === 'list' ? 'bg-foreground text-background' : 'hover:bg-black/5'}`}
+            >
+              List
+            </button>
+            <div className="w-px bg-border-color"></div>
+            <button 
+              onClick={() => setViewMode('grid')}
+              className={`px-4 py-2 text-xs uppercase tracking-widest transition-colors ${viewMode === 'grid' ? 'bg-foreground text-background' : 'hover:bg-black/5'}`}
+            >
+              Grid
+            </button>
           </div>
         </header>
 
-        {/* Saved Blends Separator */}
-        <div className="mb-8">
-           <h3 className="text-xs font-bold uppercase tracking-widest opacity-40 mb-4 border-b border-black/5 pb-2">Saved Blends & Templates</h3>
-           <div className="p-4 border border-dashed border-black/10 rounded-lg text-center text-sm opacity-50 hover:bg-white hover:opacity-100 cursor-pointer transition-all">
-              + Create New Template
-           </div>
+        {/* Filter Bar - Minimalist Line */}
+        <div className="flex gap-8 border-b border-border-color pb-4 mb-8 text-sm uppercase tracking-widest overflow-x-auto">
+           <button className="font-bold border-b-2 border-foreground pb-4 -mb-4.5">All Stock</button>
+           <button className="opacity-40 hover:opacity-100 transition-opacity">Saved Blends</button>
+           <button className="opacity-40 hover:opacity-100 transition-opacity">Templates</button>
         </div>
 
-        <h3 className="text-xs font-bold uppercase tracking-widest opacity-40 mb-4 border-b border-black/5 pb-2">Stock Coffees</h3>
-        <table className="w-full text-left">
-            <thead className="text-xs uppercase tracking-wider opacity-40">
-              <tr>
-                <th className="pb-4 pl-4">Add</th>
-                <th className="pb-4">Coffee</th>
-                <th className="pb-4">Origin</th>
-                <th className="pb-4 text-right">Score</th>
-                <th className="pb-4 text-right pr-4">Price</th>
-              </tr>
-            </thead>
-            <tbody className="text-sm">
-              {COFFEE_DATA.map((coffee) => (
-                <tr 
-                  key={coffee.id} 
-                  onClick={() => toggleSelection(coffee.id)}
-                  className={`group border-b border-black/5 cursor-pointer transition-all hover:bg-white ${selectedIds.includes(coffee.id) ? 'bg-[#D4AF37]/5' : ''}`}
-                >
-                  <td className="py-3 pl-4">
-                    <div className={`w-4 h-4 rounded border flex items-center justify-center transition-all ${selectedIds.includes(coffee.id) ? 'bg-black border-black text-white' : 'border-black/20'}`}>
-                      {selectedIds.includes(coffee.id) && '✓'}
-                    </div>
-                  </td>
-                  <td className="py-3 font-medium">
-                    {coffee.name}
-                    <span className="ml-2 text-[10px] bg-black/5 px-1.5 rounded text-black/50">{coffee.process}</span>
-                  </td>
-                  <td className="py-3 opacity-60">{coffee.origin}</td>
-                  <td className="py-3 text-right font-mono font-bold text-[#D4AF37]">
-                    {((coffee.aroma + coffee.body + coffee.acidity)/3).toFixed(1)}
-                  </td>
-                  <td className="py-3 text-right pr-4 font-mono">€{coffee.price_250g}</td>
+        {viewMode === 'list' ? (
+          <table className="w-full text-left border-collapse">
+              <thead className="text-[10px] uppercase tracking-[0.2em] opacity-40 border-b border-border-color">
+                <tr>
+                  <th className="pb-4 pl-4 w-12">Add</th>
+                  <th className="pb-4">Coffee Profile</th>
+                  <th className="pb-4 hidden md:table-cell">Origin</th>
+                  <th className="pb-4 text-right">Score</th>
+                  <th className="pb-4 text-right pr-4">Price / 250g</th>
                 </tr>
-              ))}
-            </tbody>
-        </table>
+              </thead>
+              <tbody className="text-sm font-light">
+                {COFFEE_DATA.map((coffee) => (
+                  <tr 
+                    key={coffee.id} 
+                    onClick={() => toggleSelection(coffee.id)}
+                    className={`group border-b border-border-color cursor-pointer transition-colors hover:bg-black/5 ${selectedIds.includes(coffee.id) ? 'bg-accent-gold/10' : ''}`}
+                  >
+                    <td className="py-6 pl-4 align-middle">
+                      <div className={`w-4 h-4 border transition-all ${selectedIds.includes(coffee.id) ? 'bg-foreground border-foreground' : 'border-border-color group-hover:border-foreground'}`} />
+                    </td>
+                    <td className="py-6 align-middle">
+                      <span className="block font-serif text-lg leading-tight mb-1">{coffee.name}</span>
+                      <span className="text-xs opacity-50 uppercase tracking-wide">{coffee.process}</span>
+                    </td>
+                    <td className="py-6 hidden md:table-cell align-middle opacity-60 uppercase tracking-widest text-xs">{coffee.origin}</td>
+                    <td className="py-6 text-right font-mono text-accent-gold align-middle">
+                      {((coffee.aroma + coffee.body + coffee.acidity)/3).toFixed(1)}
+                    </td>
+                    <td className="py-6 text-right pr-4 font-mono text-lg align-middle">€{coffee.price_250g.toFixed(2)}</td>
+                  </tr>
+                ))}
+              </tbody>
+          </table>
+        ) : (
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-px bg-border-color border border-border-color">
+             {/* Reusing the Shop Grid Card Style for consistency */}
+             {COFFEE_DATA.map((coffee) => (
+                <div 
+                  key={coffee.id}
+                  onClick={() => toggleSelection(coffee.id)}
+                  className={`bg-card-bg aspect-square p-6 flex flex-col justify-between cursor-pointer group hover:bg-black/5 transition-colors ${selectedIds.includes(coffee.id) ? 'ring-1 ring-inset ring-accent-gold' : ''}`}
+                >
+                   <div className="flex justify-between items-start">
+                      <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-accent-gold">{coffee.origin}</span>
+                      <div className={`w-3 h-3 border ${selectedIds.includes(coffee.id) ? 'bg-foreground border-foreground' : 'border-border-color'}`} />
+                   </div>
+                   <div>
+                      <h3 className="font-serif text-xl leading-none mb-2">{coffee.name}</h3>
+                      <p className="font-mono text-sm">€{coffee.price_250g}</p>
+                   </div>
+                </div>
+             ))}
+          </div>
+        )}
       </div>
 
-      {/* RIGHT: Live Preview & Steps (Fixed) */}
-      <div className="w-full md:w-1/3 bg-white border-l border-black/5 p-8 flex flex-col relative z-10 shadow-xl">
+      {/* RIGHT: Live Preview (Fixed Panel) */}
+      <div className="w-full md:w-1/3 bg-card-bg border-l border-border-color p-12 flex flex-col relative z-10">
          
          <div className="flex-1 flex flex-col items-center justify-center">
-            <h2 className="text-lg font-bold mb-6">Flavor Profile</h2>
-            <div className="w-64 h-64 mb-8">
-                {selectedIds.length > 0 ? (
-                    <StarFlower attributes={aggregateFlavor} />
-                ) : (
-                    <div className="w-full h-full rounded-full border-2 border-dashed border-black/10 flex items-center justify-center text-center p-8 text-sm opacity-40">
-                        Select coffees from the ledger to see flavor visualization
-                    </div>
-                )}
+            <h2 className="font-serif text-2xl mb-8">Flavor Analysis</h2>
+            <div className="w-full aspect-square max-w-[280px] mb-12 relative">
+                <div className="absolute inset-0 border border-border-color rounded-full opacity-20" />
+                <div className="absolute inset-4 border border-border-color rounded-full opacity-20" />
+                <div className="absolute inset-0 flex items-center justify-center">
+                    {selectedIds.length > 0 ? (
+                        <StarFlower attributes={aggregateFlavor} />
+                    ) : (
+                        <span className="text-xs uppercase tracking-widest opacity-30 text-center">Select To<br/>Visualize</span>
+                    )}
+                </div>
             </div>
 
-            <div className="w-full bg-[#F5F5F4] rounded-xl p-4 space-y-2">
-                <div className="flex justify-between text-sm">
-                    <span className="opacity-50">Selected</span>
-                    <span className="font-bold">{selectedIds.length} Coffees</span>
+            <div className="w-full border-t border-b border-border-color py-6 space-y-4">
+                <div className="flex justify-between items-center">
+                    <span className="text-xs uppercase tracking-widest opacity-50">Composition</span>
+                    <span className="font-serif text-xl">{selectedIds.length} <span className="text-sm font-sans opacity-40">Beans</span></span>
                 </div>
-                <div className="flex justify-between text-sm">
-                    <span className="opacity-50">Est. Price (250g)</span>
-                    <span className="font-bold text-[#D4AF37]">€{avgPrice}</span>
+                <div className="flex justify-between items-center">
+                    <span className="text-xs uppercase tracking-widest opacity-50">Base Estimate</span>
+                    <span className="font-serif text-xl text-accent-gold">€{avgPrice}</span>
                 </div>
             </div>
          </div>
 
          {/* Navigation Actions */}
-         <div className="mt-8 space-y-3">
+         <div className="mt-12">
             <button 
                 onClick={() => setStep(2)}
                 disabled={selectedIds.length === 0}
-                className="w-full bg-black text-white py-4 rounded-full font-bold hover:scale-105 transition-transform disabled:opacity-50 disabled:scale-100 shadow-lg"
+                className="btn-paris w-full disabled:opacity-20 disabled:cursor-not-allowed group relative overflow-hidden"
             >
-                Proceed to Blend (Step 2) →
+                <span className="relative z-10 group-hover:text-background transition-colors">Proceed to Mixing</span>
             </button>
-            <p className="text-center text-xs opacity-40">Next: Adjust percentages & ratios</p>
          </div>
 
       </div>
