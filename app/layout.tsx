@@ -3,6 +3,7 @@ import { Playfair_Display, Inter } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/Header";
 import { BlendieAgent } from "@/components/BlendieAgent";
+import PageTransition from "@/components/PageTransition";
 
 const playfair = Playfair_Display({
   variable: "--font-serif",
@@ -29,10 +30,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${playfair.variable} ${inter.variable} antialiased`}
+        className={`${playfair.variable} ${inter.variable} antialiased overflow-x-hidden`}
       >
         <Header />
-        {children}
+        <PageTransition>
+          {children}
+        </PageTransition>
         <BlendieAgent />
       </body>
     </html>
