@@ -14,7 +14,7 @@ export const Header = () => {
     const isActive = pathname === href;
     const baseClass = mobile 
       ? "text-3xl font-serif font-bold text-foreground" 
-      : `text-sm uppercase tracking-widest font-bold font-sans transition-colors hover:text-coffee-brown ${isActive ? 'text-coffee-brown underline underline-offset-4' : 'text-foreground/60'}`;
+      : `text-sm uppercase tracking-widest font-bold font-sans transition-colors hover:text-fruit-berry ${isActive ? 'text-fruit-berry underline underline-offset-4' : 'text-foreground/60'}`;
 
     return (
       <Link 
@@ -30,7 +30,7 @@ export const Header = () => {
   return (
     <>
       {/* Fixed Header Bar */}
-      <header className="fixed top-0 left-0 right-0 z-50 px-8 py-6 flex justify-between items-center bg-background/90 backdrop-blur-md border-b border-black/5 transition-all">
+      <header className="fixed top-0 left-0 right-0 z-50 px-8 py-4 flex justify-between items-center bg-background/90 backdrop-blur-md border-b border-black/5 transition-all">
         
         {/* Desktop Navigation (Left) */}
         <nav className="hidden md:flex gap-8 items-center w-1/3">
@@ -38,19 +38,24 @@ export const Header = () => {
           <NavLink href="/portfolio" label="Portfolio" />
         </nav>
 
-        {/* Logo (Center) */}
+        {/* Logo (Center) - Curved SVG */}
         <div className="w-1/3 flex justify-center">
-          <Link href="/" className="group relative">
-            <span className="font-serif text-4xl tracking-tight text-foreground font-bold lowercase group-hover:text-coffee-brown transition-colors">
-              blend.ie
-            </span>
+          <Link href="/" className="group relative w-40 h-16 flex items-center justify-center">
+            <svg viewBox="0 0 200 60" className="w-full h-full overflow-visible">
+                <path id="curve" d="M 20,50 Q 100,10 180,50" fill="transparent" />
+                <text className="font-serif text-4xl font-bold fill-fruit-plum group-hover:fill-fruit-berry transition-colors duration-300">
+                    <textPath xlinkHref="#curve" startOffset="50%" textAnchor="middle">
+                        blend.ie
+                    </textPath>
+                </text>
+            </svg>
           </Link>
         </div>
 
         {/* Desktop Actions (Right) */}
         <div className="hidden md:flex gap-6 items-center justify-end w-1/3">
            <NavLink href="/production" label="OS" />
-           <button className="text-sm uppercase tracking-widest font-bold font-sans text-foreground hover:text-coffee-brown">
+           <button className="text-sm uppercase tracking-widest font-bold font-sans text-foreground hover:text-fruit-berry">
              Cart (0)
            </button>
         </div>
