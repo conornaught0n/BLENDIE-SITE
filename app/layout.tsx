@@ -1,18 +1,18 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, Mulish } from "next/font/google";
+import { Fraunces, DM_Sans } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/Header";
 import { BlendieAgent } from "@/components/BlendieAgent";
 import PageTransition from "@/components/PageTransition";
 
-const cormorant = Cormorant_Garamond({
+const fraunces = Fraunces({
   variable: "--font-serif",
   subsets: ["latin"],
-  weight: ["400", "600", "700"],
   display: "swap",
+  axes: ["SOFT", "WONK", "opsz"], // Enable Softness axis
 });
 
-const mulish = Mulish({
+const dmSans = DM_Sans({
   variable: "--font-sans",
   subsets: ["latin"],
   display: "swap",
@@ -31,7 +31,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${cormorant.variable} ${mulish.variable} antialiased overflow-x-hidden`}
+        className={`${fraunces.variable} ${dmSans.variable} antialiased overflow-x-hidden`}
       >
         <Header />
         <PageTransition>

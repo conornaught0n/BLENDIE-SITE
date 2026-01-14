@@ -24,8 +24,8 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card-bg);
-  --font-serif: "Cormorant Garamond", serif;
-  --font-sans: "Mulish", sans-serif;
+  --font-serif: "Fraunces", serif;
+  --font-sans: "DM Sans", sans-serif;
   
   /* Mapping to Semantic Names */
   --color-fruit-berry: var(--accent-berry);
