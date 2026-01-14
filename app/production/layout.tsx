@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import ProductionAuth from '@/components/ProductionAuth'; // Wrap the layout
 
 export default function ProductionLayout({
   children,
@@ -7,34 +8,36 @@ export default function ProductionLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex min-h-screen flex-col md:flex-row text-white">
-      {/* Mobile-First Sidebar / Navigation */}
-      <nav className="glass-panel sticky top-0 z-50 flex h-16 w-full items-center justify-between px-6 md:h-screen md:w-64 md:flex-col md:justify-start md:border-r md:border-b-0 md:pt-8">
-        <div className="flex items-center gap-2">
-          <div className="h-8 w-8 rounded-full bg-gradient-to-tr from-green-500 to-emerald-800" />
-          <span className="font-bold tracking-wider text-lg">OS 2026</span>
+    <ProductionAuth>
+        <div className="flex min-h-screen flex-col md:flex-row text-white bg-black">
+        {/* Mobile-First Sidebar / Navigation */}
+        <nav className="glass-panel sticky top-0 z-50 flex h-16 w-full items-center justify-between px-6 md:h-screen md:w-64 md:flex-col md:justify-start md:border-r md:border-b-0 md:pt-8 bg-black/40 border-white/10">
+            <div className="flex items-center gap-2">
+            <div className="h-8 w-8 rounded-full bg-gradient-to-tr from-green-500 to-emerald-800" />
+            <span className="font-bold tracking-wider text-lg font-mono">OS 2026</span>
+            </div>
+
+            <div className="hidden md:mt-10 md:flex md:w-full md:flex-col md:gap-2">
+            <NavLink href="/production" label="Dashboard" active />
+            <NavLink href="/production/orders" label="Live Orders" />
+            <NavLink href="/production/inventory" label="Inventory" />
+            <NavLink href="/production/qc" label="Quality Control" />
+            </div>
+
+            {/* Mobile Menu Icon (Placeholder) */}
+            <button className="md:hidden glass-btn p-2 border-white/20">
+            <span className="block h-0.5 w-6 bg-white mb-1"></span>
+            <span className="block h-0.5 w-6 bg-white mb-1"></span>
+            <span className="block h-0.5 w-6 bg-white"></span>
+            </button>
+        </nav>
+
+        {/* Main Content Area */}
+        <main className="flex-1 overflow-y-auto p-4 md:p-8">
+            {children}
+        </main>
         </div>
-
-        <div className="hidden md:mt-10 md:flex md:w-full md:flex-col md:gap-2">
-          <NavLink href="/production" label="Dashboard" active />
-          <NavLink href="/production/orders" label="Live Orders" />
-          <NavLink href="/production/inventory" label="Inventory" />
-          <NavLink href="/production/qc" label="Quality Control" />
-        </div>
-
-        {/* Mobile Menu Icon (Placeholder) */}
-        <button className="md:hidden glass-btn p-2">
-          <span className="block h-0.5 w-6 bg-white mb-1"></span>
-          <span className="block h-0.5 w-6 bg-white mb-1"></span>
-          <span className="block h-0.5 w-6 bg-white"></span>
-        </button>
-      </nav>
-
-      {/* Main Content Area */}
-      <main className="flex-1 overflow-y-auto p-4 md:p-8">
-        {children}
-      </main>
-    </div>
+    </ProductionAuth>
   );
 }
 
