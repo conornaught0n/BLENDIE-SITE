@@ -1,17 +1,18 @@
 import type { Metadata } from "next";
-import { Playfair_Display, Inter } from "next/font/google";
+import { Cormorant_Garamond, Mulish } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/Header";
 import { BlendieAgent } from "@/components/BlendieAgent";
 import PageTransition from "@/components/PageTransition";
 
-const playfair = Playfair_Display({
+const cormorant = Cormorant_Garamond({
   variable: "--font-serif",
   subsets: ["latin"],
+  weight: ["400", "600", "700"],
   display: "swap",
 });
 
-const inter = Inter({
+const mulish = Mulish({
   variable: "--font-sans",
   subsets: ["latin"],
   display: "swap",
@@ -30,7 +31,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${playfair.variable} ${inter.variable} antialiased overflow-x-hidden`}
+        className={`${cormorant.variable} ${mulish.variable} antialiased overflow-x-hidden`}
       >
         <Header />
         <PageTransition>

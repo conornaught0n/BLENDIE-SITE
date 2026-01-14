@@ -1,43 +1,36 @@
 @import "tailwindcss";
 
 :root {
-  /* CLEAN WHITE THEME (Default) */
-  --background: #FFFFFF;
-  --foreground: #000000;
+  /* COFFEE SPECTRUM THEME */
+  /* Warm, organic, rich background - Off-white with a hint of cream */
+  --background: #FFFCF5; 
+  --foreground: #2C1810; /* Deep Coffee Bean Brown */
   
   --card-bg: #FFFFFF;
-  --border-color: #E5E5E5; /* Subtle Grey */
+  --border-color: #E6DCCD;
   
-  --accent-gold: #C6A87C; /* Muted Champagne Gold */
+  /* The Spectrum Accents */
+  --accent-purple: #7D4E57; /* Dried Fruit / Winey */
+  --accent-red: #C04E3F;    /* Cherry / Berry */
+  --accent-yellow: #E6AA68; /* Honey / Citrus */
+  --accent-brown: #5D4037;  /* Chocolate / Nutty */
   
-  --radius-sm: 2px;
-  --radius-md: 4px;
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    /* Optional Dark Mode override if system requests it, but forcing White by default logic */
-    --background: #FFFFFF;
-    --foreground: #000000;
-    --card-bg: #FFFFFF;
-    --border-color: #E5E5E5;
-  }
-}
-
-.light {
-  --background: #FFFFFF;
-  --foreground: #000000;
-  --card-bg: #FFFFFF;
-  --border-color: #E5E5E5;
-}
-
-/* Glassmorphism Utilities - Adaptive */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card-bg);
-  --font-serif: "Playfair Display", serif;
-  --font-sans: "Inter", sans-serif;
+  --font-serif: "Cormorant Garamond", serif;
+  --font-sans: "Mulish", sans-serif;
+  
+  --color-coffee-purple: var(--accent-purple);
+  --color-coffee-red: var(--accent-red);
+  --color-coffee-yellow: var(--accent-yellow);
+  --color-coffee-brown: var(--accent-brown);
 }
 
 body {
@@ -49,16 +42,15 @@ body {
 
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-serif);
-  font-weight: 500;
-  letter-spacing: -0.02em;
+  font-weight: 700;
 }
 
 @layer components {
-  .btn-paris {
-    @apply px-8 py-3 text-sm uppercase tracking-widest font-bold border border-foreground hover:bg-foreground hover:text-background transition-all duration-300 rounded-sm;
+  .btn-primary {
+    @apply px-8 py-3 rounded-full bg-foreground text-white font-bold transition-all hover:bg-coffee-brown hover:scale-105 active:scale-95 shadow-lg shadow-coffee-brown/20;
   }
   
-  .card-paris {
-    @apply bg-[var(--card-bg)] border border-[var(--border-color)] p-6 transition-all duration-500 hover:shadow-xl hover:border-[var(--accent-gold)];
+  .card-soft {
+    @apply bg-[var(--card-bg)] border border-[var(--border-color)] rounded-[var(--radius-md)] p-6 transition-all duration-300 hover:shadow-xl hover:border-coffee-yellow;
   }
 }
