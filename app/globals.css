@@ -1,19 +1,58 @@
 @import "tailwindcss";
 
 :root {
+  /* Day Mode (Default) - Clean, Minimalist, High Contrast */
+  --background: #fdfdfd;
+  --foreground: #171717;
+  --card-bg: #ffffff;
+  --border-color: #e5e5e5;
+  --accent-gold: #bfa15f; /* Muted Gold for Day */
+  
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(0, 0, 0, 0.05);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Night Mode - Deep Black, High-End, OLED friendly */
+    --background: #000000;
+    --foreground: #ededed;
+    --card-bg: #0a0a0a;
+    --border-color: #262626;
+    --accent-gold: #D4AF37; /* Metallic Gold for Night */
+    
+    --glass-bg: rgba(10, 10, 10, 0.6);
+    --glass-border: rgba(255, 255, 255, 0.1);
+  }
+}
+
+/* Explicit Class Overrides for Toggle */
+.dark {
   --background: #000000;
-  --foreground: #ffffff;
+  --foreground: #ededed;
+  --card-bg: #0a0a0a;
+  --border-color: #262626;
+  --accent-gold: #D4AF37;
+  --glass-bg: rgba(10, 10, 10, 0.6);
   --glass-border: rgba(255, 255, 255, 0.1);
-  --glass-surface: rgba(255, 255, 255, 0.05);
-  --glass-highlight: rgba(255, 255, 255, 0.1);
-  --accent-success: #10B981;
-  --accent-warning: #F59E0B;
-  --accent-alert: #EF4444;
+}
+
+.light {
+  --background: #fdfdfd;
+  --foreground: #171717;
+  --card-bg: #ffffff;
+  --border-color: #e5e5e5;
+  --accent-gold: #bfa15f;
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(0, 0, 0, 0.05);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-card: var(--card-bg);
+  --color-border: var(--border-color);
+  --color-gold: var(--accent-gold);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
@@ -23,26 +62,50 @@ body {
   color: var(--foreground);
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
   antialiased: true;
-  /* Deep textured background for glass effect context */
-  background-image: radial-gradient(circle at 50% 0%, #1a1a1a 0%, #000000 70%);
+  transition: background-color 0.3s ease, color 0.3s ease;
   min-height: 100vh;
 }
 
-/* Glassmorphism Utilities */
+/* Glassmorphism Utilities - Adaptive */
 @layer components {
   .glass-panel {
-    @apply backdrop-blur-xl bg-white/5 border border-white/10 shadow-xl;
+    @apply backdrop-blur-xl shadow-xl transition-colors duration-300;
+    background-color: var(--glass-bg);
+    border: 1px solid var(--glass-border);
   }
   
   .glass-card {
-    @apply backdrop-blur-md bg-white/5 border border-white/5 rounded-xl hover:bg-white/10 transition-all duration-300;
+    @apply backdrop-blur-md rounded-xl transition-all duration-300;
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+  }
+  
+  .glass-card:hover {
+    border-color: var(--accent-gold);
+    transform: translateY(-2px);
   }
 
   .glass-input {
-    @apply bg-black/20 border border-white/10 rounded-lg px-4 py-2 focus:outline-none focus:border-white/30 transition-colors text-white placeholder-white/30;
+    @apply rounded-lg px-4 py-2 focus:outline-none transition-colors;
+    background-color: var(--background);
+    border: 1px solid var(--border-color);
+    color: var(--foreground);
+  }
+  
+  .glass-input:focus {
+    border-color: var(--accent-gold);
   }
   
   .glass-btn {
-    @apply backdrop-blur-sm bg-white/10 border border-white/20 rounded-lg px-4 py-2 hover:bg-white/20 active:bg-white/5 transition-all font-medium;
+    @apply rounded-lg px-4 py-2 font-medium transition-all;
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    color: var(--foreground);
+  }
+  
+  .glass-btn:hover {
+    background-color: var(--accent-gold);
+    color: var(--background); /* Invert text on hover */
+    border-color: var(--accent-gold);
   }
 }
