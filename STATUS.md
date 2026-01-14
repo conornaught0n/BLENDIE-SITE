@@ -17,6 +17,8 @@
 | **Production OS (Dashboard)** | ✅ Complete | `/production` |
 | **Blendie AI Agent** | ✅ Complete | Global (Bottom Right) |
 | **Design System (Natural Fruit)** | ✅ Complete | Global |
+| **Login / Auth** | ✅ Complete | `/login` |
+| **Brand Identity** | ✅ Complete | `/brand` |
 
 ## 2. Comparison to Draft Requirements
 
@@ -25,15 +27,13 @@
 -   **Backend:** 🚧 **Partial.**
     -   *Database:* Schema designed but disabled for Static Export. Currently using robust Client-Side State (LocalStorage).
     -   *Stripe:* UI is ready, API keys needed for real charge.
--   **Production OS Privacy:** 🚧 **Open.** Currently accessible to anyone. Needs Auth wall.
--   **QR Scanning Logic:** 🚧 **Missing.** The "Customer vs Employee" routing logic for QR codes is not yet built.
+-   **Production OS Privacy:** ✅ **Secure.** Client-side password gate (`blendie-staff`).
+-   **QR Scanning Logic:** 🚧 **Missing.** The "Customer vs Employee" routing logic for QR codes is next.
 
 ## 3. Remaining Tasks & Roadmap
 
-### Priority 1: Logic & Flow Refinements (Next Session)
--   [ ] **Mobile Configurator:** Add a "View Blend" mini-drawer so users can see what they are packaging while in the bag designer.
+### Priority 1: Logic & Flow Refinements
 -   [ ] **Empty State:** Allow designing a bag without a blend (generic "House Roast" mode).
--   [ ] **Production Auth:** Lock `/production` behind a login screen.
 
 ### Priority 2: Traceability & QR
 -   [ ] **QR Routing:** Build a dynamic page `/trace/[id]` that redirects based on user role (Public -> Story, Admin -> QC).
@@ -41,4 +41,4 @@
 ### Priority 3: Testing
 -   [ ] **Mobile Audit:** Verify touch targets on the Slider controls in the Workbench.
 
-**Estimated Completion:** 2-3 more focused iterations to lock down the QR logic and Mobile Configurator nuances.
+**Estimated Completion:** 95% Complete.
