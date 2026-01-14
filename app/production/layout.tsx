@@ -4,6 +4,8 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import ProductionAuth from '@/components/ProductionAuth';
+import { useAuthStore } from '@/store/auth-store';
+import { supabase } from '@/lib/supabase';
 
 export default function ProductionLayout({
   children,
@@ -12,6 +14,7 @@ export default function ProductionLayout({
 }) {
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { user } = useAuthStore();
 
   const links = [
     { href: '/production', label: 'Home' },
@@ -23,6 +26,11 @@ export default function ProductionLayout({
 
   const handleLinkClick = () => {
     setIsMobileMenuOpen(false);
+  };
+
+  const handleSignOut = async () => {
+      await supabase.auth.signOut();
+      window.location.href = '/production';
   };
 
   return (
@@ -42,6 +50,25 @@ export default function ProductionLayout({
                 ))}
             </div>
 
+            {/* User Profile (Desktop) */}
+            <div className="hidden md:flex flex-col gap-2 mt-auto w-full pt-6 border-t border-white/10">
+                <div className="flex items-center gap-2 px-2">
+                    <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center font-bold text-xs">
+                        {user?.email?.[0].toUpperCase()}
+                    </div>
+                    <div className="flex flex-col overflow-hidden">
+                        <span className="text-sm font-bold truncate">{user?.email?.split('@')[0]}</span>
+                        <span className="text-[10px] text-green-400">Online</span>
+                    </div>
+                </div>
+                <button 
+                    onClick={handleSignOut}
+                    className="text-xs text-white/40 hover:text-white text-left px-2"
+                >
+                    Sign Out
+                </button>
+            </div>
+
             {/* Mobile Menu Icon */}
             <button 
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -56,12 +83,25 @@ export default function ProductionLayout({
         {/* Mobile Menu Overlay */}
         {isMobileMenuOpen && (
             <div className="fixed inset-0 top-16 z-40 bg-black/95 md:hidden flex flex-col p-4 animate-in fade-in slide-in-from-top-4">
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-2 mb-8">
                     {links.map(link => (
                         <div key={link.href} onClick={handleLinkClick}>
                             <NavLink href={link.href} label={link.label} active={pathname === link.href} />
                         </div>
                     ))}
+                </div>
+                
+                <div className="mt-auto border-t border-white/10 pt-4 flex items-center justify-between">
+                     <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center font-bold">
+                            {user?.email?.[0].toUpperCase()}
+                        </div>
+                        <div className="flex flex-col">
+                            <span className="font-bold">{user?.email}</span>
+                            <span className="text-xs text-green-400">Operator</span>
+                        </div>
+                     </div>
+                     <button onClick={handleSignOut} className="text-sm text-white/50">Sign Out</button>
                 </div>
             </div>
         )}
