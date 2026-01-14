@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { useBlendStore } from '@/store/blend-store';
 import Link from 'next/link';
 
-// Mock Volume Discount Logic
+// Mock Volume Logic
 const VOLUME_TIERS = [
   { kg: 1, discount: 0, label: 'Standard' },
   { kg: 5, discount: 0.15, label: 'Commercial' },
@@ -17,7 +17,6 @@ export default function Checkout() {
   const [selectedTier, setSelectedTier] = useState(VOLUME_TIERS[0]);
   const [step, setStep] = useState<'review' | 'shipping' | 'payment'>('review');
 
-  // Calculation Logic
   const basePricePerKg = currentBlend.reduce((acc, c) => acc + (c.price_250g * 4 * (c.percentage / 100)), 0);
   const discountedPricePerKg = basePricePerKg * (1 - selectedTier.discount);
   const totalOrderValue = discountedPricePerKg * selectedTier.kg;
@@ -26,6 +25,7 @@ export default function Checkout() {
     return (
         <div className="min-h-screen flex flex-col items-center justify-center p-8 text-center bg-background text-foreground">
             <h1 className="text-4xl font-serif mb-4 text-fruit-plum">Cart Empty</h1>
+            <p className="mb-8 opacity-60">You haven't created a blend yet.</p>
             <Link href="/portfolio" className="btn-primary">Create a Blend</Link>
         </div>
     );
@@ -61,7 +61,6 @@ export default function Checkout() {
                                 <div className="h-3 bg-black/5 rounded-full overflow-hidden flex">
                                     <div className="h-full bg-fruit-plum" style={{ width: `${widthPct}%` }} />
                                 </div>
-                                <p className="text-[10px] opacity-40 mt-1">Based on base rate of €{(item.price_250g * 4).toFixed(2)}/kg</p>
                             </div>
                         );
                     })}
@@ -74,7 +73,7 @@ export default function Checkout() {
 
             {/* Volume Tier Selector */}
             <div className="bg-fruit-citrus/10 p-8 rounded-2xl border border-fruit-citrus/20">
-                <h3 className="font-bold text-sm uppercase tracking-widest mb-4 text-fruit-brown">Volume Savings</h3>
+                <h3 className="font-bold text-sm uppercase tracking-widest mb-4 text-fruit-plum">Volume Savings</h3>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
                     {VOLUME_TIERS.map(tier => (
                         <button
@@ -89,7 +88,7 @@ export default function Checkout() {
                             <div className="text-xl font-serif font-bold text-fruit-plum">{tier.kg}kg</div>
                             <div className="text-[10px] uppercase font-bold tracking-wider opacity-60">{tier.label}</div>
                             {tier.discount > 0 && (
-                                <div className="text-[10px] text-green-600 font-bold mt-1">-{tier.discount * 100}%</div>
+                                <div className="text-[10px] text-fruit-berry font-bold mt-1">-{tier.discount * 100}%</div>
                             )}
                         </button>
                     ))}
@@ -105,25 +104,6 @@ export default function Checkout() {
                 <span className="text-4xl text-fruit-plum">€{totalOrderValue.toFixed(2)}</span>
             </h2>
 
-            {/* Order Details */}
-            <div className="space-y-2 text-sm opacity-70 mb-8 border-b border-border-color pb-8">
-                <div className="flex justify-between">
-                    <span>Blend Volume</span>
-                    <span className="font-bold">{selectedTier.kg} kg</span>
-                </div>
-                <div className="flex justify-between">
-                    <span>Price per kg</span>
-                    <span className="font-bold">
-                        {selectedTier.discount > 0 && <span className="line-through mr-2 opacity-50">€{basePricePerKg.toFixed(2)}</span>}
-                        €{discountedPricePerKg.toFixed(2)}
-                    </span>
-                </div>
-                <div className="flex justify-between text-green-600 font-bold">
-                    <span>You Save</span>
-                    <span>€{((basePricePerKg - discountedPricePerKg) * selectedTier.kg).toFixed(2)}</span>
-                </div>
-            </div>
-
             {/* Step Content */}
             {step === 'review' && (
                 <div className="space-y-4">
@@ -138,12 +118,12 @@ export default function Checkout() {
 
             {step === 'shipping' && (
                 <div className="space-y-4 animate-in fade-in slide-in-from-right-4">
-                    <input type="email" placeholder="Email Address" className="w-full bg-background border border-border-color rounded-lg px-4 py-3" />
+                    <input type="email" placeholder="Email Address" className="w-full bg-background border border-border-color rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-fruit-plum/20" />
                     <div className="grid grid-cols-2 gap-4">
-                        <input type="text" placeholder="First Name" className="w-full bg-background border border-border-color rounded-lg px-4 py-3" />
-                        <input type="text" placeholder="Last Name" className="w-full bg-background border border-border-color rounded-lg px-4 py-3" />
+                        <input type="text" placeholder="First Name" className="w-full bg-background border border-border-color rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-fruit-plum/20" />
+                        <input type="text" placeholder="Last Name" className="w-full bg-background border border-border-color rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-fruit-plum/20" />
                     </div>
-                    <input type="text" placeholder="Address" className="w-full bg-background border border-border-color rounded-lg px-4 py-3" />
+                    <input type="text" placeholder="Address" className="w-full bg-background border border-border-color rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-fruit-plum/20" />
                     
                     <button onClick={() => setStep('payment')} className="btn-primary w-full py-4 text-lg mt-4">
                         Continue to Payment
@@ -153,13 +133,29 @@ export default function Checkout() {
             )}
 
             {step === 'payment' && (
-                <div className="space-y-4 animate-in fade-in slide-in-from-right-4 text-center py-8">
-                    <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">💳</div>
-                    <h3 className="font-bold text-lg">Payment Gateway</h3>
-                    <p className="opacity-50 text-sm mb-6">Stripe Secure Checkout would load here.</p>
-                    <button className="btn-primary w-full py-4 text-lg">
+                <div className="space-y-6 animate-in fade-in slide-in-from-right-4">
+                    <div className="bg-[#F5F5F7] p-6 rounded-xl border border-black/5">
+                        <div className="flex justify-between items-center mb-4">
+                            <span className="font-bold text-sm">Card Details</span>
+                            <div className="flex gap-2">
+                                <span className="w-8 h-5 bg-white rounded shadow-sm border border-black/10 block"></span>
+                                <span className="w-8 h-5 bg-white rounded shadow-sm border border-black/10 block"></span>
+                            </div>
+                        </div>
+                        <input type="text" placeholder="0000 0000 0000 0000" className="w-full bg-white border border-black/10 rounded px-3 py-2 mb-3 text-sm font-mono" />
+                        <div className="grid grid-cols-2 gap-3">
+                            <input type="text" placeholder="MM/YY" className="w-full bg-white border border-black/10 rounded px-3 py-2 text-sm font-mono" />
+                            <input type="text" placeholder="CVC" className="w-full bg-white border border-black/10 rounded px-3 py-2 text-sm font-mono" />
+                        </div>
+                    </div>
+                    
+                    <button className="btn-primary w-full py-4 text-lg shadow-xl">
                         Pay €{totalOrderValue.toFixed(2)}
                     </button>
+                    
+                    <p className="text-center text-[10px] opacity-40">
+                        Securely processed by Stripe. 128-bit Encryption.
+                    </p>
                     <button onClick={() => setStep('shipping')} className="text-xs text-center w-full hover:underline opacity-50">Back</button>
                 </div>
             )}

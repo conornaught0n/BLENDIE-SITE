@@ -1,5 +1,6 @@
 import React from 'react';
 import { HeroAnimation } from "@/components/HeroAnimation";
+import Link from 'next/link';
 
 export const Hero = () => {
   return (
@@ -15,12 +16,12 @@ export const Hero = () => {
         </h1>
         
         <div className="mt-12 flex flex-col items-center justify-center gap-6 sm:flex-row">
-          <button className="btn-primary text-lg px-12 py-4">
+          <Link href="/portfolio" className="btn-primary text-lg px-12 py-4">
             Start Creating
-          </button>
-          <button className="px-12 py-4 rounded-full border-2 border-fruit-plum text-fruit-plum font-bold hover:bg-fruit-plum/5 transition-colors">
+          </Link>
+          <Link href="/shop" className="px-12 py-4 rounded-full border-2 border-fruit-plum text-fruit-plum font-bold hover:bg-fruit-plum/5 transition-colors">
             Browse Portfolio
-          </button>
+          </Link>
         </div>
       </div>
 
