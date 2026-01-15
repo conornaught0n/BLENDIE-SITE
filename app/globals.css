@@ -1,38 +1,73 @@
 @import "tailwindcss";
 
 :root {
-  /* NATURAL FRUIT THEME */
-  --background: #FFFDF9;
-  --foreground: #1E1E24;
+  /* NATURAL FRUIT THEME - HSL Values for better alpha control */
+  /* Background: Soft Cream #FFFDF9 */
+  --background-h: 40;
+  --background-s: 100%;
+  --background-l: 99%;
   
-  --card-bg: #FFFFFF;
-  --border-color: #F0F0F0;
+  /* Foreground: Dark Charcoal #1E1E24 */
+  --foreground-h: 240;
+  --foreground-s: 9%;
+  --foreground-l: 13%;
+  
+  /* Card: Pure White #FFFFFF */
+  --card-h: 0;
+  --card-s: 0%;
+  --card-l: 100%;
   
   /* The Fruit Spectrum (Refined) */
-  --accent-berry: #D97706;    /* Amber/Gold */
-  --accent-citrus: #FFB703;   /* Bright Yuzu */
-  --accent-plum: #540D6E;     /* Deep Grape */
-  --accent-green: #8CB369;    /* Fresh Apple */
-  --accent-peach: #F28482;    /* Soft Peach */
-  
+  /* Berry/Amber: #D97706 */
+  --berry-h: 32;
+  --berry-s: 95%;
+  --berry-l: 44%;
+
+  /* Citrus/Yuzu: #FFB703 */
+  --citrus-h: 43;
+  --citrus-s: 100%;
+  --citrus-l: 51%;
+
+  /* Plum/Grape: #540D6E */
+  --plum-h: 284;
+  --plum-s: 79%;
+  --plum-l: 24%;
+
+  /* Green/Apple: #8CB369 */
+  --green-h: 92;
+  --green-s: 34%;
+  --green-l: 56%;
+
+  /* Peach: #F28482 */
+  --peach-h: 359;
+  --peach-s: 80%;
+  --peach-l: 73%;
+
   --radius-sm: 8px;
   --radius-md: 16px;
   --radius-lg: 24px;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card-bg);
+  --color-background: hsl(var(--background-h) var(--background-s) var(--background-l));
+  --color-foreground: hsl(var(--foreground-h) var(--foreground-s) var(--foreground-l));
+  --color-card: hsl(var(--card-h) var(--card-s) var(--card-l));
+  --color-border: hsl(var(--foreground-h) var(--foreground-s) 90%); /* Calculated soft border */
+
   --font-serif: "Fraunces", serif;
   --font-sans: "DM Sans", sans-serif;
   
-  --color-fruit-berry: var(--accent-berry);
-  --color-fruit-citrus: var(--accent-citrus);
-  --color-fruit-plum: var(--accent-plum);
-  --color-fruit-green: var(--accent-green);
-  --color-fruit-peach: var(--accent-peach);
+  --color-fruit-berry: hsl(var(--berry-h) var(--berry-s) var(--berry-l));
+  --color-fruit-citrus: hsl(var(--citrus-h) var(--citrus-s) var(--citrus-l));
+  --color-fruit-plum: hsl(var(--plum-h) var(--plum-s) var(--plum-l));
+  --color-fruit-green: hsl(var(--green-h) var(--green-s) var(--green-l));
+  --color-fruit-peach: hsl(var(--peach-h) var(--peach-s) var(--peach-l));
   
+  /* Soft variants for backgrounds */
+  --color-fruit-berry-light: hsl(var(--berry-h) var(--berry-s) 95%);
+  --color-fruit-plum-light: hsl(var(--plum-h) var(--plum-s) 97%);
+  --color-fruit-green-light: hsl(var(--green-h) var(--green-s) 95%);
+
   --animate-marquee: marquee 25s linear infinite;
   
   @keyframes marquee {
@@ -42,8 +77,8 @@
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--color-background);
+  color: var(--color-foreground);
   font-family: var(--font-sans);
   antialiased: true;
 }
@@ -56,10 +91,14 @@ h1, h2, h3, h4, h5, h6 {
 
 @layer components {
   .btn-primary {
-    @apply px-8 py-3 rounded-full bg-fruit-plum text-white font-bold transition-all hover:bg-fruit-berry hover:scale-105 active:scale-95 shadow-lg shadow-fruit-plum/20;
+    @apply px-8 py-3 rounded-full bg-fruit-plum text-white font-bold transition-all duration-300 hover:bg-fruit-berry hover:scale-[1.02] active:scale-95 shadow-lg shadow-fruit-plum/20;
   }
   
   .card-soft {
-    @apply bg-[var(--card-bg)] border border-[var(--border-color)] rounded-[var(--radius-md)] p-6 transition-all duration-300 hover:shadow-xl hover:border-fruit-peach;
+    @apply bg-card border border-border rounded-[var(--radius-md)] p-6 transition-all duration-300 hover:shadow-xl hover:border-fruit-peach/50 hover:-translate-y-1;
+  }
+
+  .glass-panel {
+      @apply backdrop-blur-md bg-white/60 border border-white/40 shadow-sm;
   }
 }
