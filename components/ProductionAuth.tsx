@@ -10,24 +10,31 @@ export default function ProductionAuth({ children }: { children: React.ReactNode
 
   useEffect(() => {
     const checkSession = async () => {
-      // 1. Check active session
-      const { data: { session } } = await supabase.auth.getSession();
-      
-      if (session?.user) {
-        setUser(session.user);
-      } else if (process.env.NODE_ENV === 'development' && sessionStorage.getItem('mock_bypass') === 'true') {
-        // Dev backdoor if Supabase isn't set up yet
-        setUser({ email: 'dev@blend.ie', id: 'mock-id' } as any);
+      try {
+        // 1. Check active session
+        const { data: { session } } = await supabase.auth.getSession();
+        
+        if (session?.user) {
+          setUser(session.user);
+        } else if (process.env.NODE_ENV === 'development' && sessionStorage.getItem('mock_bypass') === 'true') {
+          // Dev backdoor if Supabase isn't set up yet
+          setUser({ email: 'dev@blend.ie', id: 'mock-id' } as any);
+        }
+      } catch (e) {
+        console.warn("Supabase auth check failed (likely due to missing keys)", e);
+      } finally {
+         setLoading(false);
       }
-      
-      setLoading(false);
 
       // 2. Listen for auth changes
-      const { data: { subscription } } = supabase.auth.onAuthStateChange((_event: any, session: any) => {
-        setUser(session?.user ?? null);
-      });
-
-      return () => subscription.unsubscribe();
+      try {
+        const { data: { subscription } } = supabase.auth.onAuthStateChange((_event: any, session: any) => {
+            setUser(session?.user ?? null);
+        });
+        return () => subscription.unsubscribe();
+      } catch (e) {
+          console.warn("Supabase subscription failed", e);
+      }
     };
 
     checkSession();
@@ -61,7 +68,10 @@ export default function ProductionAuth({ children }: { children: React.ReactNode
   if (loading) {
     return (
         <div className="min-h-screen bg-[var(--background)] text-fruit-plum flex items-center justify-center font-mono">
-            <span className="animate-pulse font-serif text-xl">Connecting to Roastery OS...</span>
+             <div className="text-center">
+                <span className="animate-pulse font-serif text-xl block mb-2">Connecting to Roastery OS...</span>
+                <span className="text-xs text-foreground/40 font-sans">Checking Satellite Uplink</span>
+            </div>
         </div>
     );
   }
