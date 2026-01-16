@@ -13,7 +13,13 @@ export default function Configurator() {
   const [bgContext, setBgContext] = useState<'studio' | 'kitchen' | 'cafe'>('studio');
   const [finish, setFinish] = useState<'matte' | 'gloss'>('matte');
   const [bagStyle, setBagStyle] = useState<'pouch' | 'box'>('box');
-  const [showMobileLedger, setShowMobileLedger] = useState(false); // Mobile Drawer State
+  const [showMobileLedger, setShowMobileLedger] = useState(false);
+  
+  // Label State
+  const [labelImage, setLabelImage] = useState<string | null>(null);
+  const [labelScale, setLabelScale] = useState(1);
+  const [labelY, setLabelY] = useState(0);
+  const [activeTab, setActiveTab] = useState<'style' | 'label'>('style');
 
   const bgImages = {
     studio: 'bg-[#FFFCF5]',
@@ -26,12 +32,21 @@ export default function Configurator() {
     { hex: '#FFFFFF', name: 'White' },
     { hex: '#1A1A1A', name: 'Charcoal' },
     { hex: '#E6DCCD', name: 'Kraft' },
-    { hex: '#7D4E57', name: 'Berry' },
+    { hex: '#D97706', name: 'Amber' },
     { hex: '#5D4037', name: 'Roast' }
   ];
 
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => setLabelImage(e.target?.result as string);
+      reader.readAsDataURL(file);
+    }
+  };
+
   return (
-    <div className="h-screen w-screen overflow-hidden relative font-sans">
+    <div className="h-screen w-screen overflow-hidden relative font-sans text-foreground">
       
       {/* 3D Canvas */}
       <div className={`absolute inset-0 transition-all duration-1000 bg-cover bg-center ${bgImages[bgContext]}`}>
@@ -42,7 +57,13 @@ export default function Configurator() {
           <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} shadow-mapSize={2048} castShadow />
           
           <Suspense fallback={null}>
-            <CoffeeBagModel color={bagColor} finish={finish} />
+            <CoffeeBagModel 
+                color={bagColor} 
+                finish={finish} 
+                labelTexture={labelImage}
+                labelScale={labelScale}
+                labelY={labelY}
+            />
             <ContactShadows position={[0, -2, 0]} opacity={0.4} scale={10} blur={2.5} far={4} />
             <Environment preset={bgContext === 'studio' ? 'studio' : 'city'} />
           </Suspense>
@@ -55,19 +76,12 @@ export default function Configurator() {
       <div className="absolute top-0 left-0 right-0 p-4 md:p-6 flex justify-between items-start pointer-events-none z-20">
         <div className="pointer-events-auto bg-white/90 backdrop-blur-md px-4 py-3 md:px-6 md:py-4 rounded-xl shadow-sm border border-black/5">
             <h1 className="font-serif text-xl md:text-2xl font-bold text-fruit-plum mb-1">Packaging</h1>
-            
-            {/* Mobile: Toggle Blend View */}
-            <button 
-                onClick={() => setShowMobileLedger(!showMobileLedger)}
-                className="md:hidden text-[10px] uppercase font-bold tracking-widest text-fruit-berry underline"
-            >
-                {showMobileLedger ? 'Hide Blend' : 'View Blend'}
-            </button>
-            
-            <p className="hidden md:block text-xs opacity-60 uppercase tracking-widest">{currentBlend.length > 0 ? `${currentBlend.length} Bean Blend` : 'Standard Roast'}</p>
+            <div className="flex gap-4 text-xs font-bold uppercase tracking-widest">
+                <button onClick={() => setActiveTab('style')} className={`${activeTab === 'style' ? 'text-fruit-berry underline' : 'opacity-50'}`}>Style</button>
+                <button onClick={() => setActiveTab('label')} className={`${activeTab === 'label' ? 'text-fruit-berry underline' : 'opacity-50'}`}>Label</button>
+            </div>
         </div>
         
-        {/* Context Switcher */}
         <div className="pointer-events-auto flex gap-1 bg-white/90 backdrop-blur-md p-1.5 rounded-full border border-black/5 shadow-sm">
             {['studio', 'kitchen', 'cafe'].map((ctx) => (
                 <button 
@@ -81,59 +95,75 @@ export default function Configurator() {
         </div>
       </div>
 
-      {/* MOBILE MINI-LEDGER (Overlay) */}
-      <div className={`absolute top-24 left-4 w-64 bg-white/95 backdrop-blur-xl p-4 rounded-xl shadow-xl border border-black/5 transition-all duration-300 origin-top-left z-30 ${showMobileLedger ? 'scale-100 opacity-100' : 'scale-0 opacity-0 pointer-events-none'}`}>
-          <h3 className="font-serif text-sm font-bold mb-2">Blend Composition</h3>
-          <ul className="space-y-2">
-              {currentBlend.map(c => (
-                  <li key={c.id} className="flex justify-between text-xs border-b border-black/5 pb-1">
-                      <span>{c.name}</span>
-                      <span className="font-mono opacity-50">{c.percentage}%</span>
-                  </li>
-              ))}
-          </ul>
-      </div>
-
       {/* BOTTOM CONTROL HUD */}
       <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 w-full max-w-2xl px-4 pointer-events-none z-20">
         
         {/* Control Toolbar */}
-        <div className="pointer-events-auto bg-white/95 backdrop-blur-xl border border-black/5 rounded-xl shadow-xl p-2 flex gap-2 w-full justify-between items-center overflow-x-auto">
+        <div className="pointer-events-auto bg-white/95 backdrop-blur-xl border border-black/5 rounded-xl shadow-xl p-4 w-full">
             
-            {/* Left: Style Toggles */}
-            <div className="flex gap-2 shrink-0">
-                <div className="flex bg-black/5 rounded-lg p-1">
-                    <button onClick={() => setBagStyle('box')} className={`px-3 py-1.5 rounded-md text-[10px] font-bold transition-all ${bagStyle === 'box' ? 'bg-white shadow-sm' : 'opacity-50'}`}>Box</button>
-                    <button onClick={() => setBagStyle('pouch')} className={`px-3 py-1.5 rounded-md text-[10px] font-bold transition-all ${bagStyle === 'pouch' ? 'bg-white shadow-sm' : 'opacity-50'}`}>Pouch</button>
+            {activeTab === 'style' ? (
+                <div className="flex gap-4 items-center justify-between overflow-x-auto">
+                    <div className="flex gap-2 shrink-0">
+                        <div className="flex bg-black/5 rounded-lg p-1">
+                            <button onClick={() => setBagStyle('box')} className={`px-3 py-1.5 rounded-md text-[10px] font-bold transition-all ${bagStyle === 'box' ? 'bg-white shadow-sm' : 'opacity-50'}`}>Box</button>
+                            <button onClick={() => setBagStyle('pouch')} className={`px-3 py-1.5 rounded-md text-[10px] font-bold transition-all ${bagStyle === 'pouch' ? 'bg-white shadow-sm' : 'opacity-50'}`}>Pouch</button>
+                        </div>
+                        <div className="flex bg-black/5 rounded-lg p-1">
+                            <button onClick={() => setFinish('matte')} className={`px-3 py-1.5 rounded-md text-[10px] font-bold transition-all ${finish === 'matte' ? 'bg-white shadow-sm' : 'opacity-50'}`}>Matte</button>
+                            <button onClick={() => setFinish('gloss')} className={`px-3 py-1.5 rounded-md text-[10px] font-bold transition-all ${finish === 'gloss' ? 'bg-white shadow-sm' : 'opacity-50'}`}>Gloss</button>
+                        </div>
+                    </div>
+                    <div className="flex gap-2 items-center shrink-0">
+                        {colors.map(color => (
+                            <button 
+                                key={color.hex}
+                                onClick={() => setBagColor(color.hex)}
+                                className={`w-6 h-6 rounded-full border-2 transition-transform hover:scale-110 ${bagColor === color.hex ? 'border-fruit-plum ring-2 ring-offset-1 ring-fruit-plum' : 'border-black/10'}`}
+                                style={{ backgroundColor: color.hex }}
+                            />
+                        ))}
+                    </div>
                 </div>
-                <div className="flex bg-black/5 rounded-lg p-1">
-                    <button onClick={() => setFinish('matte')} className={`px-3 py-1.5 rounded-md text-[10px] font-bold transition-all ${finish === 'matte' ? 'bg-white shadow-sm' : 'opacity-50'}`}>Matte</button>
-                    <button onClick={() => setFinish('gloss')} className={`px-3 py-1.5 rounded-md text-[10px] font-bold transition-all ${finish === 'gloss' ? 'bg-white shadow-sm' : 'opacity-50'}`}>Gloss</button>
+            ) : (
+                <div className="flex flex-col gap-4 w-full">
+                    <div className="flex gap-4 items-center">
+                        <label className="flex-1 bg-black/5 hover:bg-black/10 cursor-pointer rounded-lg px-4 py-2 text-center text-xs font-bold uppercase tracking-widest border border-dashed border-black/20">
+                            Upload Artwork 📤
+                            <input type="file" accept="image/*" className="hidden" onChange={handleFileUpload} />
+                        </label>
+                        <div className="text-[10px] opacity-50 w-1/3 leading-tight">Supported: PNG, JPG.<br/>Rec: 6x4 Ratio.</div>
+                    </div>
+                    
+                    {labelImage && (
+                        <div className="grid grid-cols-2 gap-4">
+                            <div className="flex items-center gap-2">
+                                <span className="text-[10px] font-bold uppercase w-8">Size</span>
+                                <input 
+                                    type="range" min="0.5" max="1.5" step="0.1" 
+                                    value={labelScale} 
+                                    onChange={(e) => setLabelScale(parseFloat(e.target.value))}
+                                    className="flex-1 h-1 bg-black/10 rounded-lg accent-fruit-plum" 
+                                />
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <span className="text-[10px] font-bold uppercase w-8">Pos Y</span>
+                                <input 
+                                    type="range" min="-1" max="1" step="0.1" 
+                                    value={labelY} 
+                                    onChange={(e) => setLabelY(parseFloat(e.target.value))}
+                                    className="flex-1 h-1 bg-black/10 rounded-lg accent-fruit-plum" 
+                                />
+                            </div>
+                        </div>
+                    )}
                 </div>
-            </div>
-
-            {/* Right: Color Picker */}
-            <div className="flex gap-2 items-center pr-2 shrink-0">
-                {colors.map(color => (
-                    <button 
-                        key={color.hex}
-                        onClick={() => setBagColor(color.hex)}
-                        className={`w-6 h-6 rounded-full border-2 transition-transform hover:scale-110 ${bagColor === color.hex ? 'border-fruit-plum ring-2 ring-offset-1 ring-fruit-plum' : 'border-black/10'}`}
-                        style={{ backgroundColor: color.hex }}
-                    />
-                ))}
-            </div>
+            )}
         </div>
 
         {/* Action Bar */}
-        <div className="pointer-events-auto flex gap-3 w-full">
-            <button className="flex-1 bg-white hover:bg-fruit-peach/10 text-fruit-plum font-bold py-3 rounded-xl shadow-lg border border-white/50 backdrop-blur-md transition-all text-xs">
-                Upload 📤
-            </button>
-            <button className="flex-[2] btn-primary py-3 rounded-xl shadow-xl text-xs uppercase tracking-widest">
-                Confirm & Checkout →
-            </button>
-        </div>
+        <button className="pointer-events-auto w-full btn-primary py-3 rounded-xl shadow-xl text-xs uppercase tracking-widest">
+            Confirm Design & Checkout →
+        </button>
 
       </div>
 
