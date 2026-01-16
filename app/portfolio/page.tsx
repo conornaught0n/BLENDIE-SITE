@@ -17,7 +17,6 @@ const getFlag = (origin: string) => {
   return flags[origin] || '🌍';
 };
 
-// Distinct colors for blend components to help visual differentiation
 const COMPONENT_COLORS = [
     '#D97706', // Amber
     '#540D6E', // Plum
@@ -34,7 +33,7 @@ export default function Portfolio() {
   
   // View State
   const [activeTab, setActiveTab] = useState<'favorites' | 'stock' | 'blends'>('stock');
-  const [isWorkbenchOpen, setWorkbenchOpen] = useState(true); // Always open/visible at top now
+  const [isWorkbenchOpen, setWorkbenchOpen] = useState(true);
   const [vis3D, setVis3D] = useState(false);
 
   // Configuration State
@@ -88,7 +87,7 @@ export default function Portfolio() {
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col font-sans pt-20">
       
-      {/* WORKBENCH (Now at Top - Persistent) */}
+      {/* WORKBENCH */}
       <div className="bg-[#FFFCF5] border-b border-border-color shadow-sm sticky top-20 z-30 transition-all duration-300">
         <div className="max-w-7xl mx-auto p-4 md:p-6 flex flex-col md:flex-row gap-8 items-start">
             
@@ -100,6 +99,24 @@ export default function Portfolio() {
                         Total: {totalPercentage}%
                     </div>
                 </div>
+
+                {/* Composition Bar (New) */}
+                {currentBlend.length > 0 && (
+                    <div className="flex h-4 w-full rounded-full overflow-hidden mb-4 bg-black/5">
+                        {currentBlend.map((item, idx) => {
+                            if (item.percentage === 0) return null;
+                            const color = COMPONENT_COLORS[idx % COMPONENT_COLORS.length];
+                            return (
+                                <div 
+                                    key={item.id} 
+                                    style={{ width: `${item.percentage}%`, backgroundColor: color }} 
+                                    className="h-full transition-all duration-300"
+                                    title={`${item.name}: ${item.percentage}%`}
+                                />
+                            )
+                        })}
+                    </div>
+                )}
 
                 {currentBlend.length === 0 ? (
                     <div className="h-24 flex items-center justify-center border-2 border-dashed border-black/5 rounded-lg text-sm opacity-40">
