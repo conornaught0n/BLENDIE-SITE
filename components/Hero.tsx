@@ -17,12 +17,12 @@ export const Hero = () => {
         </p>
         
         <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
-          <a href="/portfolio/" className="btn-primary text-lg px-10 py-4 shadow-xl">
+          <Link href="/portfolio/" className="btn-primary text-lg px-10 py-4 shadow-xl">
             Create Your Blend
-          </a>
-          <a href="/shop/" className="px-10 py-4 rounded-full bg-white border border-border-color text-foreground font-bold hover:border-fruit-plum transition-all shadow-sm">
+          </Link>
+          <Link href="/shop/" className="px-10 py-4 rounded-full bg-white border border-border-color text-foreground font-bold hover:border-fruit-plum transition-all shadow-sm">
             Browse Market
-          </a>
+          </Link>
         </div>
       </div>
 
