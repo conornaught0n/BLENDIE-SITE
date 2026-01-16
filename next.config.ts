@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
   images: {
     unoptimized: true,
   },
-  trailingSlash: false, // REVERTED: Hostinger prefers flat .html files, not folder/index.html
+  trailingSlash: true, // Re-enabled: Industry standard for static hosting (folder/index.html)
 };
 
 export default nextConfig;

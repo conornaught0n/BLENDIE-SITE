@@ -1,21 +1,15 @@
+
 # Enable Rewrite Engine
 RewriteEngine On
 
-# 1. Force Trailing Slash for directory-like URLs (if not a file)
-# This matches Next.js 'trailingSlash: true' behavior
+# Force Trailing Slash
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_URI} !/$
-RewriteCond %{REQUEST_URI} !\.html$
 RewriteRule ^(.*)$ $1/ [L,R=301]
 
-# 2. Serve index.html if request is a directory
+# Serve Directory Index
 RewriteCond %{REQUEST_FILENAME} -d
 RewriteRule ^(.*)/$ $1/index.html [L]
-
-# 3. Fallback for clean URLs to .html files (legacy support)
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{REQUEST_FILENAME}.html -f
-RewriteRule ^(.*)$ $1.html [L]
 
 # Custom 404
 ErrorDocument 404 /404.html

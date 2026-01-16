@@ -12,10 +12,10 @@ export const Header = () => {
 
   const NavLink = ({ href, label, mobile = false }: { href: string; label: string; mobile?: boolean }) => {
     // Basic active check
-    const isActive = pathname?.startsWith(href.replace('.html', ''));
+    const isActive = pathname?.startsWith(href.replace(/\/$/, ''));
     
-    // Explicitly using .html for robust static hosting compatibility
-    const linkHref = href.endsWith('.html') ? href : `${href.replace(/\/$/, '')}.html`;
+    // Links point to directory roots
+    const linkHref = href;
     
     const baseClass = mobile 
       ? "text-3xl font-serif font-bold text-foreground hover:text-fruit-berry transition-colors py-4 block w-full" 
@@ -25,7 +25,6 @@ export const Header = () => {
       <a 
         href={linkHref}
         onClick={(e) => {
-            // Allow default navigation but ensure menu closes
             setIsOpen(false);
         }}
         className={baseClass}
@@ -42,7 +41,7 @@ export const Header = () => {
         
         {/* Logo */}
         <div className="flex-1 md:flex-none md:w-1/3 flex justify-start md:justify-center">
-          <a href="/index.html" className="group relative h-12 flex items-center">
+          <a href="/" className="group relative h-12 flex items-center">
             <span className="font-serif text-3xl font-bold tracking-tight text-fruit-plum group-hover:text-fruit-berry transition-colors">
               blend.ie
             </span>
@@ -51,13 +50,13 @@ export const Header = () => {
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex gap-8 items-center justify-center w-1/3">
-          <NavLink href="/shop" label="Shop" />
-          <NavLink href="/portfolio" label="Portfolio" />
+          <NavLink href="/shop/" label="Shop" />
+          <NavLink href="/portfolio/" label="Portfolio" />
         </nav>
 
         {/* Desktop Actions */}
         <div className="hidden md:flex gap-6 items-center justify-end w-1/3">
-           <NavLink href="/production" label="OS" />
+           <NavLink href="/production/" label="OS" />
            <button className="text-sm uppercase tracking-widest font-bold font-sans text-foreground hover:text-fruit-berry">
              Cart (0)
            </button>
@@ -86,12 +85,11 @@ export const Header = () => {
         className={`fixed inset-0 bg-background z-40 flex flex-col justify-center items-center transition-all duration-300 ease-in-out ${isOpen ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-full'}`}
       >
         <nav className="flex flex-col gap-2 text-center w-full px-8">
-          <NavLink href="/index" label="Home" mobile />
-          <NavLink href="/shop" label="Shop Coffees" mobile />
-          <NavLink href="/portfolio" label="My Portfolio" mobile />
-          <NavLink href="/blend" label="Blend Builder" mobile />
-          <NavLink href="/configurator" label="Design Bag" mobile />
-          <NavLink href="/production" label="Production OS" mobile />
+          <NavLink href="/" label="Home" mobile />
+          <NavLink href="/shop/" label="Shop Coffees" mobile />
+          <NavLink href="/portfolio/" label="My Portfolio" mobile />
+          <NavLink href="/configurator/" label="Design Bag" mobile />
+          <NavLink href="/production/" label="Production OS" mobile />
         </nav>
 
         <div className="absolute bottom-12 text-center opacity-40 text-xs uppercase tracking-widest font-sans">
