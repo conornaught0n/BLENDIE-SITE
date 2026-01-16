@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
   images: {
     unoptimized: true,
   },
-  trailingSlash: true, // Enabled to ensure directories with index.html are generated (prevents 403 on folder access)
+  trailingSlash: false, // REVERTED: Hostinger prefers flat .html files, not folder/index.html
 };
 
 export default nextConfig;
