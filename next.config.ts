@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
   images: {
     unoptimized: true,
   },
-  trailingSlash: false, // DISABLED to ensure flat .html files (shop.html) match our hardcoded links
+  trailingSlash: true, // Enabled to ensure directories with index.html are generated (prevents 403 on folder access)
 };
 
 export default nextConfig;
