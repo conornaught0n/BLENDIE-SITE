@@ -34,3 +34,5 @@ jobs:
           server-dir: ./v2/
           protocol: ftp
           port: 21
+          # Clean ensures we remove old files that might conflict
+          dangerous-clean-slate: true 
