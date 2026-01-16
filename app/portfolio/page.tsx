@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import { COFFEE_DATA } from '@/lib/coffee-data';
+import { COFFEE_DATA, BLEND_TEMPLATES } from '@/lib/coffee-data';
 import { StarFlower } from '@/components/StarFlower';
 import { FlavorTerrainCanvas } from '@/components/canvas/FlavorTerrain';
 import { useBlendStore } from '@/store/blend-store';
@@ -12,7 +12,7 @@ import { StockGraph } from '@/components/StockGraph';
 // Helper for Flag Emojis
 const getFlag = (origin: string) => {
   const flags: Record<string, string> = {
-    'Ethiopia': '🇪🇹', 'Brazil': '🇧🇷', 'Colombia': '🇨🇴', 'Guatemala': '🇬🇹', 'El Salvador': '🇸🇻', 'Nicaragua': '🇳🇮', 'Kenya': '🇰🇪', 'Indonesia': '🇮🇩'
+    'Ethiopia': '🇪🇹', 'Brazil': '🇧🇷', 'Colombia': '🇨🇴', 'Guatemala': '🇬🇹', 'El Salvador': '🇸🇻', 'Nicaragua': '🇳🇮', 'Kenya': '🇰🇪', 'Indonesia': '🇮🇩', 'Costa Rica': '🇨🇷', 'Honduras': '🇭🇳', 'Peru': '🇵🇪', 'Vietnam': '🇻🇳', 'Papua New Guinea': '🇵🇬', 'India': '🇮🇳'
   };
   return flags[origin] || '🌍';
 };
@@ -28,7 +28,7 @@ const COMPONENT_COLORS = [
 
 export default function Portfolio() {
   const router = useRouter();
-  const { currentBlend, addCoffee, removeCoffee, updatePercentage } = useBlendStore();
+  const { currentBlend, addCoffee, removeCoffee, updatePercentage, clearBlend } = useBlendStore();
   const [expandedId, setExpandedId] = useState<string | null>(null);
   
   // View State
@@ -53,6 +53,22 @@ export default function Portfolio() {
     } else {
       addCoffee(coffee);
     }
+  };
+
+  const loadTemplate = (template: any) => {
+      clearBlend();
+      // Add all components from template
+      template.components.forEach((comp: any) => {
+          const coffee = COFFEE_DATA.find(c => c.id === comp.id);
+          if (coffee) {
+              // We need to add logic to set percentage immediately, 
+              // but addCoffee sets 0. We'll need a batched update in store or loop.
+              // For now, simple add.
+              addCoffee(coffee);
+              // Timeout to allow state update before setting pct (hacky but works for mock)
+              setTimeout(() => updatePercentage(coffee.id, comp.percentage), 10);
+          }
+      });
   };
 
   const toggleExpand = (id: string) => {
@@ -100,7 +116,7 @@ export default function Portfolio() {
                     </div>
                 </div>
 
-                {/* Composition Bar (New) */}
+                {/* Composition Bar */}
                 {currentBlend.length > 0 && (
                     <div className="flex h-4 w-full rounded-full overflow-hidden mb-4 bg-black/5">
                         {currentBlend.map((item, idx) => {
@@ -186,7 +202,7 @@ export default function Portfolio() {
             {/* Filter Bar with Price Toggle */}
             <div className="flex flex-wrap gap-4 items-center">
                 
-                {/* Weight Toggle (Moved Here) */}
+                {/* Weight Toggle */}
                 <div className="flex bg-white rounded-lg border border-black/10 p-1 shadow-sm">
                     <button onClick={() => setWeight('250g')} className={`px-3 py-1 text-[10px] font-bold rounded-md transition-all ${weight === '250g' ? 'bg-fruit-plum text-white shadow-sm' : 'opacity-50 hover:opacity-100'}`}>250g View</button>
                     <button onClick={() => setWeight('1kg')} className={`px-3 py-1 text-[10px] font-bold rounded-md transition-all ${weight === '1kg' ? 'bg-fruit-plum text-white shadow-sm' : 'opacity-50 hover:opacity-100'}`}>1kg View</button>
@@ -205,101 +221,134 @@ export default function Portfolio() {
                     onChange={(e) => setFilterRegion(e.target.value)}
                 >
                     <option value="All">Region: All</option>
-                    <option value="Ethiopia">Ethiopia</option>
-                    <option value="Brazil">Brazil</option>
-                    <option value="Colombia">Colombia</option>
+                    <option value="Africa">Africa</option>
+                    <option value="South America">South America</option>
+                    <option value="Central America">Central America</option>
+                    <option value="Asia">Asia</option>
                 </select>
             </div>
         </header>
 
-        {/* Ledger Table */}
-        <div className="w-full bg-white rounded-2xl border border-black/5 shadow-sm overflow-hidden">
-            <div className="grid grid-cols-[50px_1fr_1fr_80px_100px_40px] text-[10px] uppercase tracking-[0.1em] opacity-40 border-b border-black/5 py-3 px-4 bg-[#F9F9F9]">
-                <span>Add</span>
-                <span>Coffee</span>
-                <span>Process / Farm</span>
-                <span className="text-right">Score</span>
-                <span className="text-right">Price ({weight})</span>
-                <span className="text-center">Info</span>
+        {/* Tabs */}
+        <div className="flex gap-6 border-b border-black/5 pb-2 mb-4 text-xs uppercase tracking-widest font-bold">
+            <button onClick={() => setActiveTab('stock')} className={`${activeTab === 'stock' ? 'border-b-2 border-fruit-plum pb-2 -mb-2.5 text-fruit-plum' : 'opacity-40 hover:opacity-100'}`}>Available</button>
+            <button onClick={() => setActiveTab('favorites')} className={`${activeTab === 'favorites' ? 'border-b-2 border-fruit-plum pb-2 -mb-2.5 text-fruit-plum' : 'opacity-40 hover:opacity-100'}`}>Favorites</button>
+            <button onClick={() => setActiveTab('blends')} className={`${activeTab === 'blends' ? 'border-b-2 border-fruit-plum pb-2 -mb-2.5 text-fruit-plum' : 'opacity-40 hover:opacity-100'}`}>Templates</button>
+        </div>
+
+        {/* TAB CONTENT */}
+        {activeTab === 'blends' ? (
+            /* BLEND TEMPLATES */
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {BLEND_TEMPLATES.map(template => (
+                    <div key={template.id} className="bg-white p-6 rounded-2xl border border-black/5 hover:border-fruit-plum/20 hover:shadow-md transition-all cursor-pointer" onClick={() => loadTemplate(template)}>
+                        <h3 className="font-serif text-xl font-bold mb-2">{template.name}</h3>
+                        <p className="text-xs opacity-60 mb-4 h-10">{template.description}</p>
+                        <div className="flex justify-between items-center">
+                            <span className="font-mono font-bold">€{template.price}</span>
+                            <span className="text-[10px] uppercase font-bold tracking-widest text-fruit-berry">Load Mix →</span>
+                        </div>
+                    </div>
+                ))}
             </div>
+        ) : (
+            /* STOCK / FAVORITES LEDGER */
+            <div className="w-full bg-white rounded-2xl border border-black/5 shadow-sm overflow-hidden">
+                <div className="grid grid-cols-[50px_1fr_1fr_80px_100px_40px] text-[10px] uppercase tracking-[0.1em] opacity-40 border-b border-black/5 py-3 px-4 bg-[#F9F9F9] hidden md:grid">
+                    <span>Add</span>
+                    <span>Coffee</span>
+                    <span>Process / Farm</span>
+                    <span className="text-right">Score</span>
+                    <span className="text-right">Price ({weight})</span>
+                    <span className="text-center">Info</span>
+                </div>
 
-            <div className="divide-y divide-black/5">
-                {filteredData.map((coffee) => {
-                    const displayPrice = weight === '250g' ? coffee.price_250g : coffee.price_250g * 3.8;
-                    const isAdded = isSelected(coffee.id);
-                    // Find assigned color if added
-                    const blendIndex = currentBlend.findIndex(c => c.id === coffee.id);
-                    const rowColor = isAdded ? COMPONENT_COLORS[blendIndex % COMPONENT_COLORS.length] : 'transparent';
+                <div className="divide-y divide-black/5">
+                    {filteredData.map((coffee) => {
+                        const displayPrice = weight === '250g' ? coffee.price_250g : coffee.price_250g * 3.8;
+                        const isAdded = isSelected(coffee.id);
+                        const blendIndex = currentBlend.findIndex(c => c.id === coffee.id);
+                        const rowColor = isAdded ? COMPONENT_COLORS[blendIndex % COMPONENT_COLORS.length] : 'transparent';
 
-                    return (
-                        <div key={coffee.id} className={`group hover:bg-fruit-citrus/5 transition-colors cursor-pointer ${isAdded ? 'bg-fruit-plum/5' : ''}`}>
-                            <div 
-                                onClick={() => toggleExpand(coffee.id)}
-                                className="grid grid-cols-[50px_1fr_1fr_80px_100px_40px] py-3 px-4 items-center"
-                            >
-                                <div onClick={(e) => toggleSelection(e, coffee)} className="flex items-center justify-start pl-1">
-                                    <div 
-                                        className={`w-5 h-5 flex items-center justify-center rounded-md border transition-all shadow-sm ${isAdded ? 'text-white border-transparent' : 'border-black/20 hover:border-fruit-plum text-fruit-plum'}`}
-                                        style={{ backgroundColor: isAdded ? rowColor : 'transparent' }}
-                                    >
-                                        {isAdded ? '✓' : '+'}
+                        return (
+                            <div key={coffee.id} className={`group hover:bg-fruit-citrus/5 transition-colors cursor-pointer ${isAdded ? 'bg-fruit-plum/5' : ''}`}>
+                                <div 
+                                    onClick={() => toggleExpand(coffee.id)}
+                                    className="grid grid-cols-[50px_1fr_80px] md:grid-cols-[50px_1fr_1fr_80px_100px_40px] py-3 px-4 items-center"
+                                >
+                                    <div onClick={(e) => toggleSelection(e, coffee)} className="flex items-center justify-start pl-1">
+                                        <div 
+                                            className={`w-5 h-5 flex items-center justify-center rounded-md border transition-all shadow-sm ${isAdded ? 'text-white border-transparent' : 'border-black/20 hover:border-fruit-plum text-fruit-plum'}`}
+                                            style={{ backgroundColor: isAdded ? rowColor : 'transparent' }}
+                                        >
+                                            {isAdded ? '✓' : '+'}
+                                        </div>
+                                    </div>
+
+                                    <div className="col-span-1 md:col-span-1">
+                                        <div className="flex items-center gap-2">
+                                            <span className="text-lg">{getFlag(coffee.origin)}</span>
+                                            <span className="font-serif font-bold text-sm text-foreground group-hover:text-fruit-plum transition-colors">{coffee.name}</span>
+                                        </div>
+                                        {/* Mobile Metadata */}
+                                        <div className="md:hidden text-[10px] opacity-60 mt-1">
+                                            €{displayPrice.toFixed(2)} • {coffee.quality}
+                                        </div>
+                                    </div>
+
+                                    <div className="hidden md:block text-xs opacity-60">
+                                        {coffee.process} • {coffee.producer}
+                                    </div>
+
+                                    <div className="text-right font-mono font-bold text-fruit-citrus text-sm">
+                                        {((coffee.aroma + coffee.body + coffee.acidity)/3 * 10).toFixed(0)}
+                                    </div>
+
+                                    <div className="hidden md:block text-right font-mono font-bold text-foreground/80 text-sm">
+                                        €{displayPrice.toFixed(2)}
+                                    </div>
+
+                                    <div className="text-center opacity-30 text-xs hidden md:block">
+                                        {expandedId === coffee.id ? '▲' : '▼'}
                                     </div>
                                 </div>
 
-                                <div className="flex items-center gap-2">
-                                    <span className="text-lg">{getFlag(coffee.origin)}</span>
-                                    <span className="font-serif font-bold text-sm text-foreground group-hover:text-fruit-plum transition-colors">{coffee.name}</span>
-                                </div>
-
-                                <div className="text-xs opacity-60">
-                                    {coffee.process} • {coffee.producer}
-                                </div>
-
-                                <div className="text-right font-mono font-bold text-fruit-citrus text-sm">
-                                    {((coffee.aroma + coffee.body + coffee.acidity)/3 * 10).toFixed(0)}
-                                </div>
-
-                                <div className="text-right font-mono font-bold text-foreground/80 text-sm">
-                                    €{displayPrice.toFixed(2)}
-                                </div>
-
-                                <div className="text-center opacity-30 text-xs">
-                                    {expandedId === coffee.id ? '▲' : '▼'}
-                                </div>
-                            </div>
-
-                            {/* Accordion */}
-                            <AnimatePresence>
-                                {expandedId === coffee.id && (
-                                    <motion.div 
-                                        initial={{ height: 0, opacity: 0 }}
-                                        animate={{ height: 'auto', opacity: 1 }}
-                                        exit={{ height: 0, opacity: 0 }}
-                                        className="overflow-hidden bg-[#F5F5F4] border-t border-black/5"
-                                    >
-                                        <div className="p-6 grid grid-cols-1 md:grid-cols-3 gap-8">
-                                            <div className="col-span-2">
-                                                <h4 className="font-bold text-fruit-plum mb-2 flex items-center gap-2">
-                                                    {coffee.flavorEmoji} Flavor Notes
-                                                </h4>
-                                                <p className="text-sm opacity-70 leading-relaxed mb-4">
-                                                    Grown at {coffee.altitude}. {coffee.tags.join(', ')}.
-                                                </p>
-                                            </div>
-                                            <div className="flex flex-col items-center justify-center border-l border-black/5 pl-8">
-                                                <div className="w-24 h-24 mb-2">
-                                                    <StarFlower attributes={{ body: coffee.body, dark: 5, bright: coffee.acidity, fruity: coffee.aroma, sweet: coffee.sweetness }} />
+                                {/* Accordion */}
+                                <AnimatePresence>
+                                    {expandedId === coffee.id && (
+                                        <motion.div 
+                                            initial={{ height: 0, opacity: 0 }}
+                                            animate={{ height: 'auto', opacity: 1 }}
+                                            exit={{ height: 0, opacity: 0 }}
+                                            className="overflow-hidden bg-[#F5F5F4] border-t border-black/5"
+                                        >
+                                            <div className="p-6 grid grid-cols-1 md:grid-cols-3 gap-8">
+                                                <div className="col-span-2">
+                                                    <h4 className="font-bold text-fruit-plum mb-2 flex items-center gap-2">
+                                                        {coffee.flavorEmoji} Flavor Notes
+                                                    </h4>
+                                                    <p className="text-sm opacity-70 leading-relaxed mb-4">
+                                                        Grown at {coffee.altitude}. {coffee.tags.join(', ')}.
+                                                    </p>
+                                                    <div className="inline-block px-3 py-1 bg-white border border-black/10 rounded-full text-[10px] uppercase font-bold tracking-widest text-fruit-green">
+                                                        {coffee.quality}
+                                                    </div>
+                                                </div>
+                                                <div className="flex flex-col items-center justify-center border-l border-black/5 pl-8">
+                                                    <div className="w-24 h-24 mb-2">
+                                                        <StarFlower attributes={{ body: coffee.body, dark: 5, bright: coffee.acidity, fruity: coffee.aroma, sweet: coffee.sweetness }} />
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </motion.div>
-                                )}
-                            </AnimatePresence>
-                        </div>
-                    );
-                })}
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
+                            </div>
+                        );
+                    })}
+                </div>
             </div>
-        </div>
+        )}
 
       </div>
 
