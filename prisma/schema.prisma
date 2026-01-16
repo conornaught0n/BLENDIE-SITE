@@ -1,0 +1,61 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../node_modules/@prisma/client"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model RoastProfile {
+  id              String   @id @default(cuid())
+  batchId         String   @unique
+  date            DateTime @default(now())
+  beanType        String
+  weightIn        Float    // kg
+  weightOut       Float    // kg
+  weightLossPct   Float?
+  totalRoastTime  Int?     // seconds
+  developmentTime Int?     // seconds
+  devTimeRatio    Float?   // percentage
+  roastCurveData  Json?    // Storing the curve points
+  notes           String?
+  
+  inventoryItemId String?
+  inventoryItem   InventoryItem? @relation(fields: [inventoryItemId], references: [id])
+}
+
+model Order {
+  id              String    @id @default(cuid())
+  externalOrderId String    @unique // From Commerce Plugin
+  customerName    String
+  customerEmail   String?
+  items           Json      // simplified for now, could be relation
+  status          String    // PENDING, ROASTING, SHIPPED
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  shipment        Shipment?
+}
+
+model InventoryItem {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  origin      String?
+  stockLevel  Float    // kg
+  alertLevel  Float?   // kg
+  lastUpdated DateTime @updatedAt
+  
+  roasts      RoastProfile[]
+}
+
+model Shipment {
+  id             String   @id @default(cuid())
+  trackingNumber String?
+  carrier        String?
+  labelUrl       String?
+  status         String   // CREATED, IN_TRANSIT, DELIVERED
+  
+  orderId        String   @unique
+  order          Order    @relation(fields: [orderId], references: [id])
+}
