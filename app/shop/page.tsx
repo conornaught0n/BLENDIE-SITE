@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { COFFEE_DATA } from '@/lib/coffee-data';
 import Link from 'next/link';
 import { useBlendStore } from '@/store/blend-store';
@@ -8,6 +8,19 @@ import { useBlendStore } from '@/store/blend-store';
 export default function Shop() {
   const { addCoffee, removeCoffee, currentBlend } = useBlendStore();
   const [activeCard, setActiveCard] = useState<string | null>(null); // For Mobile Flip Logic
+  const [stockLevels, setStockLevels] = useState<Record<string, number>>({});
+
+  useEffect(() => {
+    // Fetch live data (Stock & Marketing)
+    fetch('/api/data')
+        .then(res => res.json())
+        .then(data => {
+            if (data.stock) {
+                setStockLevels(data.stock);
+            }
+        })
+        .catch(console.error);
+  }, []);
 
   const toggleHeart = (e: React.MouseEvent, coffee: any) => {
     e.stopPropagation();
@@ -41,6 +54,11 @@ export default function Shop() {
           const isSelected = currentBlend.some(c => c.id === coffee.id);
           const isActive = activeCard === coffee.id;
           
+          // Match stock by ID or Name (Mock matching logic since IDs might differ in Sheet)
+          // Using Name for demo if ID match fails, or SKU convention
+          const stock = stockLevels[coffee.id] ?? stockLevels[coffee.name] ?? 100;
+          const isLowStock = stock < 10;
+
           return (
             <div 
               key={coffee.id}
@@ -53,9 +71,16 @@ export default function Shop() {
                     <span className="text-6xl font-black rotate-[-15deg]">{coffee.origin.substring(0,3).toUpperCase()}</span>
                  </div>
                  
-                 {/* Quality Marker (New) */}
-                 <div className="absolute top-3 left-3 bg-white/50 backdrop-blur-md px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wide text-fruit-plum border border-white/20">
-                    {coffee.quality || 'Premium'}
+                 {/* Quality Marker */}
+                 <div className="absolute top-3 left-3 flex flex-col gap-1 items-start">
+                     <div className="bg-white/50 backdrop-blur-md px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wide text-fruit-plum border border-white/20">
+                        {coffee.quality || 'Premium'}
+                     </div>
+                     {isLowStock && (
+                        <div className="bg-red-500 text-white px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wide animate-pulse">
+                            Low Stock ({stock}kg)
+                        </div>
+                     )}
                  </div>
 
                  <div className="absolute bottom-4 left-4 right-4">
