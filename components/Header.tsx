@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import * as Dialog from '@radix-ui/react-dialog';
 import { Cart } from './Cart';
 import { useBlendStore } from '@/store/blend-store';
 
@@ -34,8 +35,8 @@ const NavLink = ({ href, label, mobile = false, pathname, onClick }: NavLinkProp
 };
 
 export const Header = () => {
-  const [isOpen, setIsOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
   const { cart } = useBlendStore();
   
@@ -54,8 +55,7 @@ export const Header = () => {
      checkMarketing();
   }, []);
 
-  const toggleMenu = () => setIsOpen(!isOpen);
-  const closeMenu = () => setIsOpen(false);
+  const closeMenu = () => setIsMobileMenuOpen(false);
 
   return (
     <>
@@ -90,47 +90,59 @@ export const Header = () => {
            </button>
         </div>
 
-        {/* Mobile Menu Trigger */}
-        <button 
-          onClick={toggleMenu}
-          className="md:hidden text-foreground w-10 h-10 flex items-center justify-end z-50 p-2"
-          aria-label="Toggle Menu"
-        >
-          {isOpen ? (
-            <span className="font-serif text-2xl">✕</span>
-          ) : (
-            <div className="space-y-1.5 w-6">
-              <span className="block w-full h-0.5 bg-current"></span>
-              <span className="block w-full h-0.5 bg-current"></span>
-              <span className="block w-2/3 h-0.5 bg-current ml-auto"></span>
-            </div>
-          )}
-        </button>
-      </header>
+        {/* Mobile Menu Trigger (Radix Dialog) */}
+        <div className="md:hidden">
+          <Dialog.Root open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
+            <Dialog.Trigger asChild>
+              <button 
+                className="text-foreground w-10 h-10 flex items-center justify-end z-50 p-2"
+                aria-label="Toggle Menu"
+              >
+                <div className="space-y-1.5 w-6">
+                  <span className="block w-full h-0.5 bg-current"></span>
+                  <span className="block w-full h-0.5 bg-current"></span>
+                  <span className="block w-2/3 h-0.5 bg-current ml-auto"></span>
+                </div>
+              </button>
+            </Dialog.Trigger>
+            
+            <Dialog.Portal>
+              <Dialog.Overlay className="fixed inset-0 bg-black/20 backdrop-blur-sm z-[60] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
+              <Dialog.Content className="fixed inset-0 z-[70] bg-background flex flex-col justify-center items-center data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:slide-out-to-top data-[state=open]:slide-in-from-top duration-300">
+                <Dialog.Title className="sr-only">Mobile Menu</Dialog.Title>
+                
+                <Dialog.Close asChild>
+                  <button 
+                    className="absolute top-4 right-6 w-10 h-10 flex items-center justify-center p-2 text-foreground"
+                    aria-label="Close Menu"
+                  >
+                    <span className="font-serif text-2xl">✕</span>
+                  </button>
+                </Dialog.Close>
 
-      {/* Mobile Overlay Menu */}
-      <div 
-        className={`fixed inset-0 bg-background z-40 flex flex-col justify-center items-center transition-all duration-300 ease-in-out ${isOpen ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-full'}`}
-      >
-        <nav className="flex flex-col gap-2 text-center w-full px-8">
-          <NavLink href="/" label="Home" mobile pathname={pathname} onClick={closeMenu} />
-          <NavLink href="/shop/" label="Shop Coffees" mobile pathname={pathname} onClick={closeMenu} />
-          <NavLink href="/portfolio/" label="My Portfolio" mobile pathname={pathname} onClick={closeMenu} />
-          <NavLink href="/configurator/" label="Design Bag" mobile pathname={pathname} onClick={closeMenu} />
-          <NavLink href="/production/" label="Production OS" mobile pathname={pathname} onClick={closeMenu} />
-          <button 
-            onClick={() => { setIsOpen(false); setIsCartOpen(true); }}
-            className="text-3xl font-serif font-bold text-foreground hover:text-fruit-berry transition-colors py-4 block w-full"
-          >
-            Cart ({cart.items.length})
-          </button>
-        </nav>
+                <nav className="flex flex-col gap-2 text-center w-full px-8">
+                  <NavLink href="/" label="Home" mobile pathname={pathname} onClick={closeMenu} />
+                  <NavLink href="/shop/" label="Shop Coffees" mobile pathname={pathname} onClick={closeMenu} />
+                  <NavLink href="/portfolio/" label="My Portfolio" mobile pathname={pathname} onClick={closeMenu} />
+                  <NavLink href="/configurator/" label="Design Bag" mobile pathname={pathname} onClick={closeMenu} />
+                  <NavLink href="/production/" label="Production OS" mobile pathname={pathname} onClick={closeMenu} />
+                  <button 
+                    onClick={() => { closeMenu(); setIsCartOpen(true); }}
+                    className="text-3xl font-serif font-bold text-foreground hover:text-fruit-berry transition-colors py-4 block w-full"
+                  >
+                    Cart ({cart.items.length})
+                  </button>
+                </nav>
 
-        <div className="absolute bottom-12 text-center opacity-40 text-xs uppercase tracking-widest font-sans">
-          <p>Dublin, Ireland</p>
-          <p>© 2026 Blendie</p>
+                <div className="absolute bottom-12 text-center opacity-40 text-xs uppercase tracking-widest font-sans">
+                  <p>Dublin, Ireland</p>
+                  <p>© 2026 Blendie</p>
+                </div>
+              </Dialog.Content>
+            </Dialog.Portal>
+          </Dialog.Root>
         </div>
-      </div>
+      </header>
     </>
   );
 };

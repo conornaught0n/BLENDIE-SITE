@@ -4,6 +4,7 @@ import { persist } from 'zustand/middleware';
 type Coffee = {
   id: string;
   name: string;
+  origin: string;
   price_250g: number;
   aroma: number;
   body: number;
