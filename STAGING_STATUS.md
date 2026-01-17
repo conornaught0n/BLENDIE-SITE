@@ -16,7 +16,20 @@
 - [x] **WWW Redirect**: `middleware.ts` redirects www -> non-www.
 - [x] **UI Standardization**: Verified `app/page.tsx` containers.
 
-## 4. Verification Protocol
+## 4. Mobile Stabilization (HOTFIX)
+- [x] **Radix UI Dialog**: Replaced custom overlay with `@radix-ui/react-dialog`.
+- [x] **Touch Events**: Eliminated `setTimeout` hacks; relying on robust pointer events.
+- [x] **Z-Index**: Header (`z-50`), Overlay (`z-[60]`), Menu (`z-[70]`).
+- [x] **Type Safety**: Fixed `origin` property missing in `BlendItem` / `Coffee` type.
+
+## 5. Verification Protocol
+
+### Verify Mobile Menu
+1. Open site on Mobile viewport (< 768px).
+2. Tap Hamburger icon.
+3. Verify Menu opens immediately with animation.
+4. Tap any link (e.g., "Shop Coffees").
+5. Verify Menu closes immediately and navigation occurs.
 
 ### Verify Data API
 ```bash
